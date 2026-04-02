@@ -1,4 +1,4 @@
-# Riser Marketplaces
+# Rizer Marketplaces
 
 Este repositório contém dois projetos principais:
 
