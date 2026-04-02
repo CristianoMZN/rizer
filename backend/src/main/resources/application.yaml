@@ -1,0 +1,59 @@
+spring:
+  security:
+    user:
+      name: admin
+      password: admin
+    oauth2:
+      client:
+        registration:
+          google:
+            client-id: ${GOOGLE_OAUTH_CLIENT_ID}
+            client-secret: ${GOOGLE_OAUTH_CLIENT_SECRET}
+            scope:
+              - email
+              - profile
+  application:
+    name: core-marketplace
+  datasource:
+    url: ${SPRING_DATASOURCE_URL}
+    driver-class-name: org.postgresql.Driver
+    username: ${SPRING_DATASOURCE_USERNAME}
+    password: ${SPRING_DATASOURCE_PASSWORD}
+  jpa:
+    hibernate:
+      ddl-auto: validate
+    show-sql: true
+  flyway:
+    enabled: true
+    locations: classpath:db/migration
+    baseline-on-migrate: true
+    baseline-version: 0
+  sql:
+    init:
+      mode: never
+  data:
+    redis:
+      host: ${SPRING_DATA_REDIS_HOST}
+      port: ${SPRING_DATA_REDIS_PORT}
+      password: ${SPRING_DATA_REDIS_PASSWORD}
+      timeout: 2s
+  ai:
+    vectorstore:
+      redis:
+        index: ${SPRING_AI_VECTORSTORE_REDIS_INDEX}
+        prefix: ${SPRING_AI_VECTORSTORE_REDIS_PREFIX}
+        initialize-schema: ${SPRING_AI_VECTORSTORE_REDIS_INITIALIZE_SCHEMA}
+springdoc:
+  api-docs:
+    path: /openapi
+  swagger-ui:
+    enabled: false
+
+app:
+  s3:
+    bucket: ${APP_S3_BUCKET}
+    region: ${APP_S3_REGION}
+    endpoint: ${APP_S3_ENDPOINT}
+    path-style-access: ${APP_S3_PATH_STYLE}
+    key-prefix: ${APP_S3_KEY_PREFIX}
+    presigned-duration-minutes: ${APP_S3_PRESIGNED_DURATION_MINUTES}

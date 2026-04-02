@@ -1,0 +1,302 @@
+# Backend — core-marketplace
+
+API Spring Boot do projeto Riser Marketplaces.
+
+---
+
+## Stack
+
+- Java 25
+- Spring Boot 4.0.5
+- Spring Security + OAuth2 (Google)
+- Spring Data JPA + Hibernate
+- PostgreSQL 16 + PostGIS
+- Redis Stack (vector store via Spring AI)
+- WebSocket
+- OpenFeign
+- SpringDoc OpenAPI + Scalar (API Reference)
+
+---
+
+## Rodar em desenvolvimento
+
+Pré-requisito: banco e Redis rodando via Docker Compose (raiz do projeto):
+
+```bash
+docker compose up -d
+```
+
+Iniciar backend:
+
+```bash
+./mvnw spring-boot:run
+```
+
+No primeiro startup, o Flyway aplica automaticamente:
+
+- schema base (`V1`, `V2`, `V3`)
+- dados iniciais para desenvolvimento e testes (`V4`)
+
+---
+
+## Documentação da API
+
+Com a aplicação rodando localmente:
+
+- Scalar UI: `http://localhost:8080/docs`
+- OpenAPI (JSON): `http://localhost:8080/openapi`
+
+Notas:
+- A interface visual está em Scalar (tema roxo customizado).
+- O Swagger UI está desabilitado.
+- O endpoint legado `http://localhost:8080/swagger-ui.html` redireciona para `/docs`.
+
+### Padrão para descrever endpoints e grupos
+
+Para manter a documentação consistente no Scalar:
+
+1. Defina grupo por controller com `@Tag(name = "...", description = "...")`.
+2. Descreva cada rota com `@Operation(summary = "...", description = "...")`.
+3. Documente status HTTP com `@ApiResponses` e `@ApiResponse`.
+4. Prefira DTOs de resposta com `@Schema` em vez de expor entidade JPA diretamente.
+
+Exemplo já aplicado:
+
+- `HomeController` usa a tag `Sistema` para endpoints gerais.
+- `UserController` usa a tag `Usuarios` para conta/perfil.
+- `GET /users/me` retorna `UserMeResponse` com schema detalhado no OpenAPI.
+
+### Base Region-Aware e Tenant-Aware implementada
+
+Fluxo inicial entregue para marketplace multi-seller com tenant por seller:
+
+- Filtro de contexto por pais via primeiro segmento da URL.
+- Context holder por request (`ThreadLocal`) para regras regionais.
+- Entidades `Product` + `ProductLocalization` com `attributes` em JSONB.
+- Tenant por seller (`tenants`) com vinculo de operadores (`seller_users`).
+- RBAC por role global (`users.system_role`) + escopo por seller.
+- Configuracoes desacopladas por pais (`country_configurations`) e por tenant (`tenant_configurations`).
+- Metadados dinamicos de atributos por categoria (`attribute_groups`, `attribute_definitions`, `category_attribute_groups`).
+- Persistencia tipada dos atributos preenchidos por anuncio (`product_attribute_values`).
+- Geolocalizacao com PostGIS (`geometry(Point,4326)`).
+- Categoria hierarquica em `category_path` com tipo `ltree`.
+
+Endpoints iniciais:
+
+- `POST /{countryCode}/products` (autenticado + validacao de role/escopo do seller)
+- `GET /{countryCode}/products/search?lat=-28.448&lon=-52.203&radiusKm=50`
+- `GET /tenants/public` (vitrines publicas para visitantes anonimos)
+- `POST /media/upload` (upload autenticado de imagem para bucket S3 privado)
+
+Exemplo de payload para `POST /BR/products`:
+
+```json
+{
+  "sellerId": 1,
+  "subsubcategorySlug": "suv",
+  "realm": "VEHICLES",
+  "categoryPath": "veiculos.passeio.suvs",
+  "attributes": {
+    "marca": "Toyota",
+    "modelo": "Corolla Cross",
+    "quilometragem": 50000,
+    "cor": "Prata"
+  },
+  "title": "SUV seminovo",
+  "description": "Unico dono, revisoes em dia",
+  "price": 85000.00,
+  "currency": "BRL",
+  "status": "ACTIVE",
+  "location": {
+    "lat": -28.448,
+    "lon": -52.203
+  }
+}
+```
+
+Observacao para ambiente local:
+
+- O bootstrap do Postgres agora habilita: `postgis`, `postgis_topology` e `ltree`.
+- Se o banco ja existia antes da mudanca, recrie os containers com `docker compose down -v && docker compose up -d`.
+
+### Comentarios exibidos no /docs (Scalar)
+
+Os endpoints regionais ja foram enriquecidos com descricoes no OpenAPI, e aparecem no `/docs` com:
+
+- Grupo/tag de rotas (`Products`).
+- `summary` e `description` por endpoint.
+- Campos do request/response com `@Schema(description, example)`.
+- Parametros de busca (`lat`, `lon`, `radiusKm`, `realm`, `limit`) com exemplos.
+
+Arquivos principais dessas anotacoes:
+
+- `ProductController` (operacoes e parametros).
+- `CreateProductRequest` (schema de entrada).
+- `ProductCreatedResponse` e `ProductSearchResultResponse` (schemas de saida).
+- `OpenApiConfig` (titulo, versao e descricao geral da API).
+
+---
+
+## Decisões técnicas
+
+### Migrations de banco (schema)
+
+O projeto esta configurado para Flyway em desenvolvimento e producao.
+
+Configuracao ativa em [src/main/resources/application.yaml](src/main/resources/application.yaml):
+
+- `spring.flyway.enabled=true`
+- `spring.flyway.locations=classpath:db/migration`
+- `spring.flyway.baseline-on-migrate=true`
+- `spring.flyway.baseline-version=0`
+- `spring.jpa.hibernate.ddl-auto=validate`
+- `spring.sql.init.mode=never`
+
+Arquivos de migration:
+
+- [src/main/resources/db/migration/V1__enable_extensions.sql](src/main/resources/db/migration/V1__enable_extensions.sql)
+- [src/main/resources/db/migration/V2__create_core_marketplace_tables.sql](src/main/resources/db/migration/V2__create_core_marketplace_tables.sql)
+- [src/main/resources/db/migration/V3__create_categories_sellers_and_product_links.sql](src/main/resources/db/migration/V3__create_categories_sellers_and_product_links.sql)
+- [src/main/resources/db/migration/V4__seed_initial_catalog_and_sellers.sql](src/main/resources/db/migration/V4__seed_initial_catalog_and_sellers.sql)
+- [src/main/resources/db/migration/V5__multi_tenant_roles_and_dynamic_attributes.sql](src/main/resources/db/migration/V5__multi_tenant_roles_and_dynamic_attributes.sql)
+
+Como aplicar as migrations no ambiente local:
+
+1. Suba o banco com `docker compose up -d` na raiz do repositorio.
+2. No backend, rode `./mvnw spring-boot:run`.
+3. No startup, o Flyway aplica automaticamente todas as migrations pendentes.
+
+Aplicacao manual via Maven (opcional):
+
+```bash
+./mvnw \
+  -Dflyway.url=jdbc:postgresql://localhost:5432/riser_marketplaces \
+  -Dflyway.user=riser \
+  -Dflyway.password=riser \
+  -Dflyway.baselineOnMigrate=true \
+  -Dflyway.baselineVersion=0 \
+  flyway:migrate
+```
+
+Validar status das migrations:
+
+```bash
+./mvnw \
+  -Dflyway.url=jdbc:postgresql://localhost:5432/riser_marketplaces \
+  -Dflyway.user=riser \
+  -Dflyway.password=riser \
+  flyway:info
+```
+
+Reaplicar tudo do zero (somente desenvolvimento):
+
+1. `docker compose down -v` na raiz do projeto.
+2. `docker compose up -d`.
+3. `cd backend && ./mvnw spring-boot:run`.
+
+Sobre os dados iniciais (`V4`):
+
+- cria categorias, subcategorias e subsubcategorias
+- cria vendedores e usuarios seed
+- cria produtos e localizacoes iniciais
+
+Esses dados existem para acelerar integracao do frontend e testes de backend em ambiente local.
+
+---
+
+## Upload de imagens (S3 privado)
+
+Foi adicionado um endpoint para upload de imagens com:
+
+- autenticacao obrigatoria
+- processamento por contexto (formato, compressao e tamanho)
+- armazenamento em bucket S3 privado
+- retorno de URL assinada temporaria para exibicao
+
+Endpoint:
+
+- `POST /media/upload`
+- `Content-Type: multipart/form-data`
+
+Campos esperados:
+
+- `file` (arquivo)
+- `type` (atualmente: `picture`)
+- `context` (exemplos: `announce-gallery`, `store-logo`)
+- `width` (opcional)
+- `height` (opcional)
+
+Observacao:
+
+- o alias `annoince-galery` e aceito e mapeado para `announce-gallery`
+
+Regras de contexto atualmente implementadas:
+
+- `announce-gallery`: `webp`, qualidade 70%, tamanho padrao 400x400
+- `store-logo`: `png`, qualidade 90%, tamanho padrao 512x512
+
+Exemplo com curl:
+
+```bash
+curl -X POST "http://localhost:8080/media/upload" \
+  -H "Authorization: Bearer <SEU_TOKEN>" \
+  -F "file=@/caminho/imagem.jpg" \
+  -F "type=picture" \
+  -F "context=announce-gallery" \
+  -F "width=400" \
+  -F "height=400"
+```
+
+Exemplo de resposta:
+
+```json
+{
+  "type": "picture",
+  "context": "announce-gallery",
+  "objectKey": "uploads/announce-gallery/9f8e7d6c-4b3a-4f8d-b457-9ad8c31f5bde.webp",
+  "objectUrl": "https://<bucket>.s3.<region>.amazonaws.com/uploads/announce-gallery/9f8e7d6c-4b3a-4f8d-b457-9ad8c31f5bde.webp",
+  "accessUrl": "https://<bucket>.s3.<region>.amazonaws.com/uploads/announce-gallery/9f8e7d6c-4b3a-4f8d-b457-9ad8c31f5bde.webp?X-Amz-Algorithm=AWS4-HMAC-SHA256&...",
+  "authorizationToken": "X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=...",
+  "width": 400,
+  "height": 400,
+  "format": "webp",
+  "sizeBytes": 81234
+}
+```
+
+### Configuracao S3
+
+Propriedades configuraveis em `application.yaml`:
+
+- `app.s3.bucket`
+- `app.s3.region`
+- `app.s3.key-prefix`
+- `app.s3.presigned-duration-minutes`
+
+Variaveis de ambiente equivalentes:
+
+```bash
+export APP_S3_BUCKET=riser-marketplaces-private
+export APP_S3_REGION=us-east-1
+export APP_S3_KEY_PREFIX=uploads
+export APP_S3_PRESIGNED_DURATION_MINUTES=15
+```
+
+Credenciais AWS:
+
+- o backend usa a cadeia padrao do AWS SDK (env vars, profile local, role, etc.)
+- em ambiente local, normalmente: `AWS_ACCESS_KEY_ID` e `AWS_SECRET_ACCESS_KEY`
+
+---
+
+## Variáveis de ambiente
+
+Veja `backend/.env.example` para a lista completa de variáveis configuráveis.
+
+---
+
+## Referências
+
+- [Spring Boot](https://docs.spring.io/spring-boot/4.0.5)
+- [Flyway](https://documentation.red-gate.com/flyway)
+- [SpringDoc OpenAPI](https://springdoc.org)

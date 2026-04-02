@@ -1,0 +1,53 @@
+// app global css in SCSS form
+
+// ─── CSS Custom Properties ───────────────────────────────────────────────────
+:root {
+  --gradient-primary: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  --gradient-success: linear-gradient(135deg, #11998e 0%, #38ef7d 100%);
+  --gradient-premium: linear-gradient(135deg, #ffecd2 0%, #fcb69f 100%);
+  --gradient-dark: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+  --shadow-card: 0 4px 24px rgba(0, 0, 0, 0.08);
+  --shadow-hover: 0 12px 32px rgba(0, 0, 0, 0.14);
+}
+
+// ─── Glassmorphism utility ────────────────────────────────────────────────────
+.glass-card {
+  background: rgba(255, 255, 255, 0.72);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  border-radius: 16px;
+  box-shadow: var(--shadow-card);
+}
+
+.body--dark .glass-card {
+  background: rgba(29, 29, 29, 0.72);
+  border-color: rgba(255, 255, 255, 0.1);
+}
+
+// ─── Rounded borders helper ───────────────────────────────────────────────────
+.rounded-borders { border-radius: 16px !important; }
+
+// ─── Typography ──────────────────────────────────────────────────────────────
+body {
+  font-family: 'Inter', 'Roboto', sans-serif;
+  -webkit-font-smoothing: antialiased;
+}
+
+// ─── Page transitions ─────────────────────────────────────────────────────────
+.q-router-link--active { font-weight: 600; }
+
+.page-enter-active,
+.page-leave-active {
+  transition: opacity 0.25s ease, transform 0.25s ease;
+}
+
+.page-enter-from {
+  opacity: 0;
+  transform: translateY(8px);
+}
+
+.page-leave-to {
+  opacity: 0;
+  transform: translateY(-8px);
+}
