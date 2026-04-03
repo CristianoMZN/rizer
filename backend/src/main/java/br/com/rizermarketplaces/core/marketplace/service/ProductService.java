@@ -4,7 +4,6 @@ import br.com.rizermarketplaces.core.marketplace.dto.product.CreateProductReques
 import br.com.rizermarketplaces.core.marketplace.dto.product.ProductCreatedResponse;
 import br.com.rizermarketplaces.core.marketplace.dto.product.ProductSearchResultResponse;
 import br.com.rizermarketplaces.core.marketplace.model.Product;
-import br.com.rizermarketplaces.core.marketplace.model.ProductAttributeValue;
 import br.com.rizermarketplaces.core.marketplace.model.ProductStatus;
 import br.com.rizermarketplaces.core.marketplace.model.ProductLocalization;
 import br.com.rizermarketplaces.core.marketplace.model.ProductRealm;
@@ -12,7 +11,6 @@ import br.com.rizermarketplaces.core.marketplace.model.SellerUserRole;
 import br.com.rizermarketplaces.core.marketplace.model.SystemRole;
 import br.com.rizermarketplaces.core.marketplace.model.Tenant;
 import br.com.rizermarketplaces.core.marketplace.repository.NearbyProductProjection;
-import br.com.rizermarketplaces.core.marketplace.repository.ProductAttributeValueRepository;
 import br.com.rizermarketplaces.core.marketplace.repository.ProductLocalizationRepository;
 import br.com.rizermarketplaces.core.marketplace.repository.ProductRepository;
 import br.com.rizermarketplaces.core.marketplace.repository.SellerUserRepository;
@@ -51,7 +49,6 @@ public class ProductService {
 
     private final ProductRepository productRepository;
     private final ProductLocalizationRepository productLocalizationRepository;
-    private final ProductAttributeValueRepository productAttributeValueRepository;
     private final TenantRepository tenantRepository;
     private final SellerUserRepository sellerUserRepository;
     private final SubsubcategoryRepository subsubcategoryRepository;
@@ -62,7 +59,6 @@ public class ProductService {
     public ProductService(
         ProductRepository productRepository,
         ProductLocalizationRepository productLocalizationRepository,
-        ProductAttributeValueRepository productAttributeValueRepository,
         TenantRepository tenantRepository,
         SellerUserRepository sellerUserRepository,
         SubsubcategoryRepository subsubcategoryRepository,
@@ -72,7 +68,6 @@ public class ProductService {
     ) {
         this.productRepository = productRepository;
         this.productLocalizationRepository = productLocalizationRepository;
-        this.productAttributeValueRepository = productAttributeValueRepository;
         this.tenantRepository = tenantRepository;
         this.sellerUserRepository = sellerUserRepository;
         this.subsubcategoryRepository = subsubcategoryRepository;
@@ -91,12 +86,11 @@ public class ProductService {
         Tenant tenant = tenantRepository.findBySellerId(request.sellerId())
             .orElseThrow(() -> new ResponseStatusException(NOT_FOUND, "Tenant not found for seller"));
 
-        Long subsubcategoryId = subsubcategoryRepository.findBySlug(request.subsubcategorySlug())
-            .orElseThrow(() -> new ResponseStatusException(NOT_FOUND, "Subsubcategory not found"))
-            .getId();
+        var subsubcategory = subsubcategoryRepository.findBySlug(request.subsubcategorySlug())
+            .orElseThrow(() -> new ResponseStatusException(NOT_FOUND, "Subsubcategory not found"));
 
-        List<DynamicAttributeValidationService.ResolvedAttributeValue> resolvedAttributes =
-            dynamicAttributeValidationService.validate(subsubcategoryId, request.attributes());
+        // Nova arquitetura: validação de atributos dinâmicos por contexto (país + categoryPath).
+        dynamicAttributeValidationService.validate(normalizedCountryCode, request.categoryPath(), request.attributes());
 
         // Seleciona um serviço de regra de medidas baseado no país (ex: BR x US)
         MeasurementService measurementService = measurementServiceFactory.getForCountry(normalizedCountryCode);
@@ -106,15 +100,13 @@ public class ProductService {
         product.setMerchantId(request.merchantId() != null ? request.merchantId() : authenticatedUser.userId());
         product.setTenantId(tenant.getId());
         product.setSellerId(request.sellerId());
-        product.setSubsubcategoryId(subsubcategoryId);
+        product.setSubsubcategoryId(subsubcategory.getId());
         product.setCreatedByUserId(authenticatedUser.userId());
         product.setStatus(request.status() != null ? request.status() : ProductStatus.ACTIVE);
         product.setRealm(request.realm());
         product.setCategoryPath(request.categoryPath());
         product.setAttributes(normalizeAttributes(measurementService, request.attributes()));
         product = productRepository.save(product);
-
-        saveAttributeValues(product, resolvedAttributes);
 
         // Cria a projeção regional (ProductLocalization) com preço, moeda e localização
         ProductLocalization localization = new ProductLocalization();
@@ -179,25 +171,6 @@ public class ProductService {
         Map<String, Object> normalized = new LinkedHashMap<>();
         attributes.forEach((key, value) -> normalized.put(measurementService.normalizeAttributeKey(key), value));
         return OBJECT_MAPPER.valueToTree(normalized);
-    }
-
-    private void saveAttributeValues(
-        Product product,
-        List<DynamicAttributeValidationService.ResolvedAttributeValue> resolvedAttributes
-    ) {
-        List<ProductAttributeValue> rows = resolvedAttributes.stream().map(value -> {
-            ProductAttributeValue row = new ProductAttributeValue();
-            row.setProduct(product);
-            row.setAttributeDefinitionId(value.attributeDefinitionId());
-            row.setValueText(value.textValue());
-            row.setValueNumber(value.numberValue());
-            row.setValueBoolean(value.booleanValue());
-            row.setValueDate(value.dateValue());
-            row.setValueJson(value.jsonValue());
-            return row;
-        }).toList();
-
-        productAttributeValueRepository.saveAll(rows);
     }
 
     private void authorizeCreation(CurrentUserContextService.AuthenticatedUser authenticatedUser, Long sellerId) {

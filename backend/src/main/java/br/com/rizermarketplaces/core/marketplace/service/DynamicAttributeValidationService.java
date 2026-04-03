@@ -1,8 +1,7 @@
 package br.com.rizermarketplaces.core.marketplace.service;
 
-import br.com.rizermarketplaces.core.marketplace.model.AttributeDataType;
-import br.com.rizermarketplaces.core.marketplace.repository.AttributeDefinitionRuleProjection;
-import br.com.rizermarketplaces.core.marketplace.repository.AttributeMetadataRepository;
+import br.com.rizermarketplaces.core.marketplace.model.AttributeSchema;
+import br.com.rizermarketplaces.core.marketplace.repository.AttributeSchemaRepository;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.http.HttpStatus;
@@ -10,153 +9,209 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.math.BigDecimal;
-import java.time.LocalDate;
-import java.time.format.DateTimeParseException;
-import java.util.*;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Locale;
+import java.util.Map;
+import java.util.Objects;
+import java.util.regex.Pattern;
 
 @Service
 public class DynamicAttributeValidationService {
 
     private static final ObjectMapper OBJECT_MAPPER = new ObjectMapper();
+    private static final String ENTITY_TYPE_PRODUCT_ATTRIBUTES = "PRODUCT_ATTRIBUTES";
+    private static final Pattern CATEGORY_PATH_PATTERN = Pattern.compile("^[a-z0-9_]+(\\.[a-z0-9_]+)*$");
 
-    private final AttributeMetadataRepository attributeMetadataRepository;
+    private final AttributeSchemaRepository attributeSchemaRepository;
 
-    public DynamicAttributeValidationService(AttributeMetadataRepository attributeMetadataRepository) {
-        this.attributeMetadataRepository = attributeMetadataRepository;
+    public DynamicAttributeValidationService(AttributeSchemaRepository attributeSchemaRepository) {
+        this.attributeSchemaRepository = attributeSchemaRepository;
     }
 
-    public List<ResolvedAttributeValue> validate(Long subsubcategoryId, Map<String, Object> attributes) {
-        List<AttributeDefinitionRuleProjection> rules = attributeMetadataRepository.findRulesBySubsubcategoryId(subsubcategoryId);
-        if (rules.isEmpty()) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "No attribute metadata configured for category");
+    // Valida atributos dinâmicos usando JSON Schema persistido em JSONB por país e categoria.
+    public void validate(String countryCode, String categoryPath, Map<String, Object> attributes) {
+        if (!CATEGORY_PATH_PATTERN.matcher(categoryPath).matches()) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "categoryPath must use ltree format");
         }
 
-        Map<String, AttributeDefinitionRuleProjection> ruleByCode = new LinkedHashMap<>();
-        for (AttributeDefinitionRuleProjection rule : rules) {
-            ruleByCode.put(rule.getCode(), rule);
+        String normalizedCountry = countryCode.toUpperCase(Locale.ROOT);
+
+        AttributeSchema schema = attributeSchemaRepository
+            .findActiveByContext(ENTITY_TYPE_PRODUCT_ATTRIBUTES, normalizedCountry, categoryPath)
+            .orElseThrow(() -> new ResponseStatusException(
+                HttpStatus.BAD_REQUEST,
+                "No active attribute schema configured for country/category"
+            ));
+
+        JsonNode schemaNode = schema.getSchemaDefinition();
+        if (schemaNode == null || !schemaNode.isObject()) {
+            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Invalid schema_definition metadata");
         }
 
-        for (String attributeKey : attributes.keySet()) {
-            if (!ruleByCode.containsKey(attributeKey)) {
-                throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Attribute not allowed for category: " + attributeKey);
+        validateObject("attributes", attributes, schemaNode);
+    }
+
+    private void validateObject(String path, Map<String, Object> objectValue, JsonNode schemaNode) {
+        JsonNode propertiesNode = schemaNode.path("properties");
+        if (!propertiesNode.isObject()) {
+            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Schema properties must be an object");
+        }
+
+        boolean additionalProperties = schemaNode.path("additionalProperties").asBoolean(true);
+
+        JsonNode requiredNode = schemaNode.path("required");
+        if (requiredNode.isArray()) {
+            for (JsonNode requiredProp : requiredNode) {
+                String propName = requiredProp.asText();
+                if (!objectValue.containsKey(propName) || objectValue.get(propName) == null) {
+                    throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Required attribute missing: " + joinPath(path, propName));
+                }
             }
         }
 
-        List<ResolvedAttributeValue> resolved = new ArrayList<>();
-        for (AttributeDefinitionRuleProjection rule : rules) {
-            Object rawValue = attributes.get(rule.getCode());
-            if (rawValue == null) {
-                if (rule.getRequired()) {
-                    throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Required attribute missing: " + rule.getCode());
+        for (Map.Entry<String, Object> entry : objectValue.entrySet()) {
+            String key = entry.getKey();
+            Object value = entry.getValue();
+
+            if (!propertiesNode.has(key)) {
+                if (!additionalProperties) {
+                    throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Attribute not allowed in schema: " + joinPath(path, key));
                 }
                 continue;
             }
 
-            JsonNode validationRules = parseValidationRules(rule.getValidationRules());
-            resolved.add(convertAndValidate(rule, rawValue, validationRules));
+            validateValue(joinPath(path, key), value, propertiesNode.get(key));
         }
-
-        return resolved;
     }
 
-    private JsonNode parseValidationRules(String json) {
+    private void validateValue(String path, Object rawValue, JsonNode fieldSchema) {
+        if (rawValue == null) {
+            return;
+        }
+
+        String type = fieldSchema.path("type").asText();
+        switch (type) {
+            case "string" -> validateString(path, rawValue, fieldSchema);
+            case "number" -> validateNumber(path, rawValue, fieldSchema, false);
+            case "integer" -> validateNumber(path, rawValue, fieldSchema, true);
+            case "boolean" -> {
+                if (!(rawValue instanceof Boolean)) {
+                    throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Attribute must be boolean: " + path);
+                }
+            }
+            case "object" -> {
+                if (!(rawValue instanceof Map<?, ?> objectMap)) {
+                    throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Attribute must be object: " + path);
+                }
+                @SuppressWarnings("unchecked")
+                Map<String, Object> typedMap = (Map<String, Object>) objectMap;
+                validateObject(path, typedMap, fieldSchema);
+            }
+            case "array" -> validateArray(path, rawValue, fieldSchema);
+            default -> {
+                if (!type.isBlank()) {
+                    throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Unsupported schema type: " + type);
+                }
+            }
+        }
+
+        validateEnum(path, rawValue, fieldSchema.path("enum"));
+    }
+
+    private void validateString(String path, Object rawValue, JsonNode fieldSchema) {
+        if (!(rawValue instanceof String value)) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Attribute must be string: " + path);
+        }
+
+        int minLength = readIntRule(fieldSchema, "minLength", 0);
+        int maxLength = readIntRule(fieldSchema, "maxLength", Integer.MAX_VALUE);
+        if (value.length() < minLength) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Attribute below minLength: " + path);
+        }
+        if (value.length() > maxLength) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Attribute exceeds maxLength: " + path);
+        }
+
+        String pattern = fieldSchema.path("pattern").asText();
+        if (!pattern.isBlank() && !Pattern.compile(pattern).matcher(value).matches()) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Attribute does not match pattern: " + path);
+        }
+    }
+
+    private void validateNumber(String path, Object rawValue, JsonNode fieldSchema, boolean integerOnly) {
+        BigDecimal value;
         try {
-            return json == null || json.isBlank() ? OBJECT_MAPPER.createObjectNode() : OBJECT_MAPPER.readTree(json);
-        } catch (Exception ex) {
-            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Invalid validation rules metadata");
+            value = new BigDecimal(String.valueOf(rawValue));
+        } catch (NumberFormatException ex) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Attribute must be numeric: " + path);
+        }
+
+        if (integerOnly && value.stripTrailingZeros().scale() > 0) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Attribute must be integer: " + path);
+        }
+
+        BigDecimal min = readNumericRule(fieldSchema, "minimum", "min");
+        BigDecimal max = readNumericRule(fieldSchema, "maximum", "max");
+        if (min != null && value.compareTo(min) < 0) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Attribute below minimum: " + path);
+        }
+        if (max != null && value.compareTo(max) > 0) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Attribute above maximum: " + path);
         }
     }
 
-    private ResolvedAttributeValue convertAndValidate(
-        AttributeDefinitionRuleProjection rule,
-        Object rawValue,
-        JsonNode validationRules
-    ) {
-        AttributeDataType dataType;
-        try {
-            dataType = AttributeDataType.valueOf(rule.getDataType());
-        } catch (IllegalArgumentException ex) {
-            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Unsupported attribute data type: " + rule.getDataType());
+    private void validateArray(String path, Object rawValue, JsonNode fieldSchema) {
+        if (!(rawValue instanceof List<?> values)) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Attribute must be array: " + path);
         }
 
-        return switch (dataType) {
-            case STRING -> {
-                String value = String.valueOf(rawValue);
-                int maxLength = validationRules.path("maxLength").asInt(Integer.MAX_VALUE);
-                if (value.length() > maxLength) {
-                    throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Attribute exceeds maxLength: " + rule.getCode());
-                }
-                yield ResolvedAttributeValue.text(rule.getAttributeDefinitionId(), rule.getCode(), value);
-            }
-            case NUMBER -> {
-                BigDecimal value;
-                try {
-                    value = new BigDecimal(String.valueOf(rawValue));
-                } catch (NumberFormatException ex) {
-                    throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Attribute must be numeric: " + rule.getCode());
-                }
+        JsonNode itemSchema = fieldSchema.path("items");
+        if (itemSchema.isMissingNode()) {
+            return;
+        }
 
-                if (validationRules.has("min") && value.compareTo(validationRules.path("min").decimalValue()) < 0) {
-                    throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Attribute below min: " + rule.getCode());
-                }
-                if (validationRules.has("max") && value.compareTo(validationRules.path("max").decimalValue()) > 0) {
-                    throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Attribute above max: " + rule.getCode());
-                }
-                yield ResolvedAttributeValue.number(rule.getAttributeDefinitionId(), rule.getCode(), value);
-            }
-            case BOOLEAN -> {
-                if (!(rawValue instanceof Boolean boolValue)) {
-                    throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Attribute must be boolean: " + rule.getCode());
-                }
-                yield ResolvedAttributeValue.bool(rule.getAttributeDefinitionId(), rule.getCode(), boolValue);
-            }
-            case DATE -> {
-                try {
-                    LocalDate date = LocalDate.parse(String.valueOf(rawValue));
-                    yield ResolvedAttributeValue.date(rule.getAttributeDefinitionId(), rule.getCode(), date);
-                } catch (DateTimeParseException ex) {
-                    throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Attribute must be ISO date (yyyy-MM-dd): " + rule.getCode());
-                }
-            }
-            case JSON -> {
-                String value;
-                try {
-                    value = OBJECT_MAPPER.writeValueAsString(rawValue);
-                } catch (Exception ex) {
-                    throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Attribute JSON value is invalid: " + rule.getCode());
-                }
-                yield ResolvedAttributeValue.json(rule.getAttributeDefinitionId(), rule.getCode(), value);
-            }
-        };
+        for (int i = 0; i < values.size(); i++) {
+            validateValue(path + "[" + i + "]", values.get(i), itemSchema);
+        }
     }
 
-    public record ResolvedAttributeValue(
-        Long attributeDefinitionId,
-        String code,
-        String textValue,
-        BigDecimal numberValue,
-        Boolean booleanValue,
-        LocalDate dateValue,
-        String jsonValue
-    ) {
-        public static ResolvedAttributeValue text(Long id, String code, String value) {
-            return new ResolvedAttributeValue(id, code, value, null, null, null, null);
+    private void validateEnum(String path, Object rawValue, JsonNode enumNode) {
+        if (!enumNode.isArray()) {
+            return;
         }
 
-        public static ResolvedAttributeValue number(Long id, String code, BigDecimal value) {
-            return new ResolvedAttributeValue(id, code, null, value, null, null, null);
+        JsonNode candidate = OBJECT_MAPPER.valueToTree(rawValue);
+        Iterator<JsonNode> allowed = enumNode.elements();
+        while (allowed.hasNext()) {
+            if (Objects.equals(allowed.next(), candidate)) {
+                return;
+            }
         }
 
-        public static ResolvedAttributeValue bool(Long id, String code, Boolean value) {
-            return new ResolvedAttributeValue(id, code, null, null, value, null, null);
+        throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Attribute value not allowed by enum: " + path);
+    }
+
+    private int readIntRule(JsonNode fieldSchema, String key, int defaultValue) {
+        JsonNode node = fieldSchema.get(key);
+        return node != null && node.isInt() ? node.intValue() : defaultValue;
+    }
+
+    private BigDecimal readNumericRule(JsonNode fieldSchema, String primaryKey, String fallbackKey) {
+        JsonNode primary = fieldSchema.get(primaryKey);
+        if (primary != null && primary.isNumber()) {
+            return primary.decimalValue();
         }
 
-        public static ResolvedAttributeValue date(Long id, String code, LocalDate value) {
-            return new ResolvedAttributeValue(id, code, null, null, null, value, null);
+        JsonNode fallback = fieldSchema.get(fallbackKey);
+        if (fallback != null && fallback.isNumber()) {
+            return fallback.decimalValue();
         }
 
-        public static ResolvedAttributeValue json(Long id, String code, String value) {
-            return new ResolvedAttributeValue(id, code, null, null, null, null, value);
-        }
+        return null;
+    }
+
+    private String joinPath(String base, String child) {
+        return base + "." + child;
     }
 }
