@@ -40,8 +40,7 @@ Observacoes de ambiente local:
 
 No primeiro startup, o Flyway aplica automaticamente:
 
-- schema base (`V1`, `V2`, `V3`)
-- dados iniciais para desenvolvimento e testes (`V4`)
+- schema base para banco zerado (`V1`, `V2`)
 
 ---
 
@@ -82,8 +81,8 @@ Fluxo inicial entregue para marketplace multi-seller com tenant por seller:
 - Tenant por seller (`tenants`) com vinculo de operadores (`seller_users`).
 - RBAC por role global (`users.system_role`) + escopo por seller.
 - Configuracoes desacopladas por pais (`country_configurations`) e por tenant (`tenant_configurations`).
-- Metadados dinamicos de atributos por categoria (`attribute_groups`, `attribute_definitions`, `category_attribute_groups`).
-- Persistencia tipada dos atributos preenchidos por anuncio (`product_attribute_values`).
+- Metadados dinamicos de atributos por contexto (`attribute_schemas`) com JSONB schema-driven.
+- Persistencia dos atributos no proprio `products.attributes` (JSONB).
 - Geolocalizacao com PostGIS (`geometry(Point,4326)`).
 - Categoria hierarquica em `category_path` com tipo `ltree`.
 
@@ -161,10 +160,7 @@ Configuracao ativa em [src/main/resources/application.yaml](src/main/resources/a
 Arquivos de migration:
 
 - [src/main/resources/db/migration/V1__enable_extensions.sql](src/main/resources/db/migration/V1__enable_extensions.sql)
-- [src/main/resources/db/migration/V2__create_core_marketplace_tables.sql](src/main/resources/db/migration/V2__create_core_marketplace_tables.sql)
-- [src/main/resources/db/migration/V3__create_categories_sellers_and_product_links.sql](src/main/resources/db/migration/V3__create_categories_sellers_and_product_links.sql)
-- [src/main/resources/db/migration/V4__seed_initial_catalog_and_sellers.sql](src/main/resources/db/migration/V4__seed_initial_catalog_and_sellers.sql)
-- [src/main/resources/db/migration/V5__multi_tenant_roles_and_dynamic_attributes.sql](src/main/resources/db/migration/V5__multi_tenant_roles_and_dynamic_attributes.sql)
+- [src/main/resources/db/migration/V2__create_core_schema_with_dynamic_attribute_schemas.sql](src/main/resources/db/migration/V2__create_core_schema_with_dynamic_attribute_schemas.sql)
 
 Como aplicar as migrations no ambiente local:
 
@@ -200,13 +196,26 @@ Reaplicar tudo do zero (somente desenvolvimento):
 2. `docker compose up -d`.
 3. `cd backend && ./mvnw spring-boot:run`.
 
-Sobre os dados iniciais (`V4`):
+Sobre os dados iniciais no banco zerado:
 
-- cria categorias, subcategorias e subsubcategorias
-- cria vendedores e usuarios seed
-- cria produtos e localizacoes iniciais
+- `V2` cria o schema completo usado pelas entidades JPA atuais.
+- `V2` inclui seed minima de `subsubcategories` e `attribute_schemas` para contexto BR de veiculos.
+- O schema global (`country_code='*'`) funciona como fallback quando nao existir schema especifico do pais.
 
-Esses dados existem para acelerar integracao do frontend e testes de backend em ambiente local.
+### Validacao dinamica via schema JSONB
+
+Implementacao nova no backend:
+
+- O servico `DynamicAttributeValidationService` agora resolve schema por (`entityType`, `countryCode`, `categoryPath`).
+- A validacao e recursiva para objetos/arrays e suporta regras comuns de JSON Schema.
+- O endpoint `POST /{countryCode}/products` usa esse fluxo antes de salvar `products.attributes`.
+
+Arquivos principais desta implementacao:
+
+- `AttributeSchema` (entidade JPA da tabela `attribute_schemas`)
+- `AttributeSchemaRepository` (lookup com fallback por pais)
+- `DynamicAttributeValidationService` (validacao schema-driven)
+- `ProductService` (integracao da validacao no fluxo de criacao)
 
 ---
 
