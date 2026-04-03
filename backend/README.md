@@ -1,6 +1,6 @@
 # Backend — core-marketplace
 
-API Spring Boot do projeto Riser Marketplaces.
+API Spring Boot do projeto rizer Marketplaces.
 
 ---
 
@@ -23,6 +23,7 @@ API Spring Boot do projeto Riser Marketplaces.
 Pré-requisito: banco e Redis rodando via Docker Compose (raiz do projeto):
 
 ```bash
+cd ..
 docker compose up -d
 ```
 
@@ -54,7 +55,6 @@ Com a aplicação rodando localmente:
 Notas:
 - A interface visual está em Scalar (tema roxo customizado).
 - O Swagger UI está desabilitado.
-- O endpoint legado `http://localhost:8080/swagger-ui.html` redireciona para `/docs`.
 
 ### Padrão para descrever endpoints e grupos
 
@@ -88,10 +88,10 @@ Fluxo inicial entregue para marketplace multi-seller com tenant por seller:
 
 Endpoints iniciais:
 
-- `POST /{countryCode}/products` (autenticado + validacao de role/escopo do seller)
+- `POST /{countryCode}/products` (lista todos os produtos publico)
 - `GET /{countryCode}/products/search?lat=-28.448&lon=-52.203&radiusKm=50`
-- `GET /tenants/public` (vitrines publicas para visitantes anonimos)
-- `POST /media/upload` (upload autenticado de imagem para bucket S3 privado)
+- `GET /{countryCode}/tenants/public` (vitrines publicas para visitantes anonimos)
+- `POST /{countryCode}/media/upload` (upload autenticado de imagem para bucket S3 privado)
 
 Exemplo de payload para `POST /BR/products`:
 
@@ -172,23 +172,42 @@ Aplicacao manual via Maven (opcional):
 
 ```bash
 ./mvnw \
-  -Dflyway.url=jdbc:postgresql://localhost:5432/riser_marketplaces \
-  -Dflyway.user=riser \
-  -Dflyway.password=riser \
-  -Dflyway.baselineOnMigrate=true \
-  -Dflyway.baselineVersion=0 \
-  flyway:migrate
+-Dflyway.url=jdbc:postgresql://localhost:5432/rizer_marketplaces \
+-Dflyway.user=rizer \
+-Dflyway.password=rizer \
+-Dflyway.baselineOnMigrate=true \
+-Dflyway.baselineVersion=0 \
+flyway:migrate
 ```
 
 Validar status das migrations:
 
 ```bash
 ./mvnw \
-  -Dflyway.url=jdbc:postgresql://localhost:5432/riser_marketplaces \
-  -Dflyway.user=riser \
-  -Dflyway.password=riser \
-  flyway:info
+-Dflyway.url=jdbc:postgresql://localhost:5432/rizer_marketplaces \
+-Dflyway.user=rizer \
+-Dflyway.password=rizer \
+flyway:info
 ```
+
+
+gerar migrações:
+instalar migra:
+```bash
+sudo apt update
+sudo apt install python3-setuptools pipx libpq-dev postgresql-client build-essential
+python3 -m venv .venv
+source .venv/bin/activate
+pip install --upgrade pip wheel "setuptools<70" psycopg2-binary psycopg2-binary migra sqlbag
+migra --version
+pipx inject migra setuptools
+migra --unsafe --schema public \
+postgresql://rizer:rizer@localhost:5432/rizer_marketplaces \
+postgresql://rizer:rizer@localhost:5432/rizer_model \
+| grep -vE "flyway_schema_history|valid_detail|geometry_dump|postgis|ltree" \
+> ./src/main/resources/db/migration/V3__schema_changes.sql
+```
+
 
 Reaplicar tudo do zero (somente desenvolvimento):
 
@@ -291,7 +310,7 @@ Propriedades configuraveis em `application.yaml`:
 Variaveis de ambiente equivalentes:
 
 ```bash
-export APP_S3_BUCKET=riser-marketplaces-private
+export APP_S3_BUCKET=rizer-marketplaces-private
 export APP_S3_REGION=us-east-1
 export APP_S3_KEY_PREFIX=uploads
 export APP_S3_PRESIGNED_DURATION_MINUTES=15
