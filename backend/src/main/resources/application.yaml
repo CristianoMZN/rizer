@@ -1,17 +1,6 @@
 spring:
-  security:
-    user:
-      name: admin
-      password: admin
-    oauth2:
-      client:
-        registration:
-          google:
-            client-id: ${GOOGLE_OAUTH_CLIENT_ID}
-            client-secret: ${GOOGLE_OAUTH_CLIENT_SECRET}
-            scope:
-              - email
-              - profile
+  config:
+    import: optional:file:.env[.properties]
   application:
     name: core-marketplace
   datasource:
@@ -35,7 +24,7 @@ spring:
     redis:
       host: ${SPRING_DATA_REDIS_HOST}
       port: ${SPRING_DATA_REDIS_PORT}
-      password: ${SPRING_DATA_REDIS_PASSWORD}
+      password: ${SPRING_DATA_REDIS_PASSWORD:}
       timeout: 2s
   ai:
     vectorstore:
@@ -53,7 +42,7 @@ app:
   s3:
     bucket: ${APP_S3_BUCKET}
     region: ${APP_S3_REGION}
-    endpoint: ${APP_S3_ENDPOINT}
-    path-style-access: ${APP_S3_PATH_STYLE}
+    endpoint: ${APP_S3_ENDPOINT:}
+    path-style-access: ${APP_S3_PATH_STYLE:false}
     key-prefix: ${APP_S3_KEY_PREFIX}
     presigned-duration-minutes: ${APP_S3_PRESIGNED_DURATION_MINUTES}

@@ -14,6 +14,8 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.time.OffsetDateTime;
+
 @RestController
 @Tag(name = "Sistema", description = "Endpoints de status e informacoes gerais da API")
 public class HomeController {
@@ -25,12 +27,28 @@ public class HomeController {
         @ApiResponse(
             responseCode = "200",
             description = "API online",
-            // content com exemplo simples para documentação Swagger/OpenAPI
-            content = @Content(schema = @Schema(example = "Bem-vindo ao Riser Marketplaces!"))
+            content = @Content(schema = @Schema(implementation = HomeResponse.class))
         )
     })
-    public String home() {
-        // Retorna uma mensagem simples; frameworks e clientes usam esse endpoint para health-checks.
-        return "Bem-vindo ao Riser Marketplaces!";
-    }   
+    
+    public HomeResponse home() {
+        return new HomeResponse(
+            "ok",
+            "Bem-vindo ao Riser Marketplaces!",
+            "/docs",
+            OffsetDateTime.now()
+        );
+    }
+
+    public record HomeResponse(
+        @Schema(description = "Status do backend", example = "ok")
+        String status,
+        @Schema(description = "Mensagem de boas-vindas", example = "Bem-vindo ao Riser Marketplaces!")
+        String message,
+        @Schema(description = "URL da documentação da API", example = "/docs")
+        String documentation,
+        @Schema(description = "Data/hora atual do servidor", example = "2026-04-02T19:50:00Z")
+        OffsetDateTime timestamp
+    ) {
+    }
 }

@@ -32,6 +32,12 @@ Iniciar backend:
 ./mvnw spring-boot:run
 ```
 
+Observacoes de ambiente local:
+
+- O repositório nao carrega credenciais em `application.yaml`; elas devem vir de variaveis de ambiente ou de um arquivo local `backend/.env`.
+- `backend/.env` ja esta ignorado pelo git. Use `backend/.env.example` apenas como referencia para montar o ambiente local.
+- `GOOGLE_OAUTH_CLIENT_ID` e `GOOGLE_OAUTH_CLIENT_SECRET` so sao necessarios para usar login OAuth2 do Google; sem eles, o backend sobe normalmente e responde `401` nas rotas protegidas.
+
 No primeiro startup, o Flyway aplica automaticamente:
 
 - schema base (`V1`, `V2`, `V3`)
