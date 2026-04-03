@@ -24,9 +24,9 @@ docker compose up -d
 
 Isso sobe:
 - PostgreSQL 16 + PostGIS (`postgis/postgis:16-3.4`)
-- Banco: `riser_marketplaces`
-- Usuário: `riser`
-- Senha: `riser`
+- Banco: `rizer_marketplaces`
+- Usuário: `rizer`
+- Senha: `rizer`
 - Porta: `5432`
 - Redis Stack Server (`redis/redis-stack-server`)
 - Porta Redis: `6379`
@@ -53,15 +53,15 @@ Comandos uteis (na pasta `backend`):
 
 ```bash
 ./mvnw \
-  -Dflyway.url=jdbc:postgresql://localhost:5432/riser_marketplaces \
-  -Dflyway.user=riser \
-  -Dflyway.password=riser \
+  -Dflyway.url=jdbc:postgresql://localhost:5432/rizer_marketplaces \
+  -Dflyway.user=rizer \
+  -Dflyway.password=rizer \
   flyway:info
 
 ./mvnw \
-  -Dflyway.url=jdbc:postgresql://localhost:5432/riser_marketplaces \
-  -Dflyway.user=riser \
-  -Dflyway.password=riser \
+  -Dflyway.url=jdbc:postgresql://localhost:5432/rizer_marketplaces \
+  -Dflyway.user=rizer \
+  -Dflyway.password=rizer \
   -Dflyway.baselineOnMigrate=true \
   -Dflyway.baselineVersion=0 \
   flyway:migrate

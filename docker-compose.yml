@@ -1,7 +1,7 @@
 services:
   postgres:
     image: postgis/postgis:16-3.4
-    container_name: rizer-postgres
+    container_name: rizer_postgres
     restart: unless-stopped
     environment:
       POSTGRES_DB: rizer_marketplaces
@@ -21,7 +21,7 @@ services:
 
   redis:
     image: redis/redis-stack-server:7.4.0-v6
-    container_name: rizer-redis
+    container_name: rizer_redis
     restart: unless-stopped
     ports:
       - "6379:6379"
@@ -35,13 +35,14 @@ services:
 
   redis-insight:
     image: redis/redisinsight:2.54
-    container_name: rizer-redis-insight
+    container_name: rizer_redis_insight
     restart: unless-stopped
     ports:
       - "5540:5540"
     depends_on:
       redis:
         condition: service_healthy
+
 
 volumes:
   rizer_postgres_data:
