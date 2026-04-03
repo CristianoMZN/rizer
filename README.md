@@ -44,9 +44,10 @@ Ao executar o backend (`cd backend && ./mvnw spring-boot:run`), as migrations pe
 Migrations atuais:
 
 - `V1`: extensoes do Postgres (`postgis`, `postgis_topology`, `ltree`)
-- `V2`: tabelas base (`users`, `products`, `product_localizations`)
-- `V3`: categorias em 3 niveis, vendedores e vinculos com produtos
-- `V4`: dados iniciais para frontend e testes de backend
+- `V2`: schema inicial para banco zerado com:
+  - identidade e sellers (`users`, `tenants`, `seller_users`)
+  - catalogo regional (`products`, `product_localizations`, `subsubcategories`)
+  - arquitetura nova de atributos dinamicos (`attribute_schemas` em JSONB por contexto)
 
 Comandos uteis (na pasta `backend`):
 
@@ -95,12 +96,32 @@ Observações:
 Estrutura region-aware ja implementada na API:
 
 - Prefixo regional na rota: `/{countryCode}/...` (ex: `/BR/products`).
-- Modelo de dados hibrido para catalogo:
+- Modelo de dados para catalogo com JSONB por contexto:
   - `Product` com `attributes` em JSONB e `categoryPath` em `ltree`.
+  - `AttributeSchema` com `schemaDefinition` em JSONB por `entityType + countryCode + categoryPath`.
   - `ProductLocalization` com `geometry(Point,4326)` para busca geoespacial.
 - Busca por raio inicial: `GET /{countryCode}/products/search?lat=-28.448&lon=-52.203&radiusKm=50`.
 
+### Nova arquitetura de atributos dinamicos (JSONB)
+
+Agora a validacao dos atributos do produto ocorre por contexto:
+
+- pais da loja/request (`countryCode` da rota)
+- categoria do produto (`categoryPath` em formato `ltree`)
+
+Fluxo da criacao de produto:
+
+1. `POST /{countryCode}/products` recebe `attributes` no payload.
+2. O backend resolve o schema ativo em `attribute_schemas` por (`PRODUCT_ATTRIBUTES`, `countryCode`, `categoryPath`).
+3. Se nao encontrar schema especifico do pais, aplica fallback de `countryCode='*'`.
+4. Valida `required`, `type`, `enum`, `minimum/maximum`, `minLength/maxLength`, `pattern`, objetos e arrays.
+5. Salva o JSON validado em `products.attributes`.
+
+Esse modelo permite que um carro, um imovel ou um alimento tenham estruturas totalmente diferentes sem alterar o schema relacional principal.
+
 Obs: no `/docs`, os endpoints de products ja incluem descricoes de campos e exemplos de payload.
+
+Obs 2: os comentarios de codigo foram atualizados no backend para destacar explicitamente a validacao schema-driven por contexto e o papel de `attribute_schemas`.
 
 ### Upload de imagens (S3 privado)
 
