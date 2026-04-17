@@ -27,11 +27,18 @@ cd ..
 docker compose up -d
 ```
 
+Caso tenha algum container rodando conflitando na rede:
+```bash
+docker stop $(docker ps -q)
+```
+
 Iniciar backend:
 
 ```bash
 ./mvnw spring-boot:run
 ```
+
+
 
 Observacoes de ambiente local:
 
@@ -329,8 +336,22 @@ Veja `backend/.env.example` para a lista completa de variáveis configuráveis.
 
 ---
 
+## Controle RBAC:
+Descrição das Roles:
+- `sys_admin`:  Role de administração, tem acesso permissivo à toda a aplicação.
+- `sys_manager`:  Role de administração de baixo nível, algumas informações e segredos da plataforma e crientes são ocultos
+- `sys_employee`: Role utilizado por agente de suporte, não ve diversas informações.
+- `agency_owner`: Role utilizada por contas que são proprietárias de uma concessionária, ou garagem de revenda de veículos
+- `agency_admin`: Role utilizada por contas administradoras de concessionárias, garagem ou revendas.
+- `agency_employee`: Role utilizada por contas que são vendedores ou atendentes das concessionárias e garagens
+- `user`: Role utilizada por um usuário consumidor na plataforma.
+- `none` ou sem role: Role para usuários não registrados, que não estão autenticados.
+
 ## Referências
 
 - [Spring Boot](https://docs.spring.io/spring-boot/4.0.5)
 - [Flyway](https://documentation.red-gate.com/flyway)
 - [SpringDoc OpenAPI](https://springdoc.org)
+
+
+
