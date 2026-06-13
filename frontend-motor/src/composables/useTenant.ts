@@ -42,7 +42,9 @@ export function useTenant() {
   const storeName = computed(() => _tenant.value.storeName)
   const logoUrl = computed(() => _tenant.value.logoUrl)
   const footerTagline = computed(() => _tenant.value.footerTagline)
-  const tenant = computed(() => _tenant.value)
+  // `tenant` é exposto como ref mutável para permitir override em runtime
+  // (ex.: página de parceiro injeta tema vindo do backend).
+  const tenant = _tenant
 
   return {
     tenant,

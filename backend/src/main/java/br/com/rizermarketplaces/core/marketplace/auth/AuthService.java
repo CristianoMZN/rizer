@@ -124,12 +124,17 @@ public class AuthService {
 
     public List<TenantMembership> loadMemberships(UUID userId) {
         return tenantUserRepository.findAllByUserIdAndIsActiveTrue(userId).stream()
-            .map(tu -> new TenantMembership(
-                tu.getTenantId(),
-                tu.getRole().name(),
-                tu.getRole() == TenantUserRole.OWNER,
-                tu.getRole() == TenantUserRole.MANAGER || tu.getRole() == TenantUserRole.OWNER
-            ))
+            .map(tu -> {
+                var tenant = tenantRepository.findById(tu.getTenantId()).orElse(null);
+                return new TenantMembership(
+                    tu.getTenantId(),
+                    tenant != null ? tenant.getSlug() : null,
+                    tenant != null ? tenant.getTradeName() : null,
+                    tu.getRole().name(),
+                    tu.getRole() == TenantUserRole.OWNER,
+                    tu.getRole() == TenantUserRole.MANAGER || tu.getRole() == TenantUserRole.OWNER
+                );
+            })
             .toList();
     }
 
@@ -151,5 +156,5 @@ public class AuthService {
         UUID id, String email, String name, String avatarUrl, SystemRole systemRole,
         String phone, List<TenantMembership> memberships, UUID currentTenantId
     ) {}
-    public record TenantMembership(UUID tenantId, String role, boolean isOwner, boolean isManagerOrOwner) {}
+    public record TenantMembership(UUID tenantId, String tenantSlug, String tenantName, String role, boolean isOwner, boolean isManagerOrOwner) {}
 }

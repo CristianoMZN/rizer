@@ -15,6 +15,8 @@ export type SystemRole =
 
 export interface TenantMembership {
   tenantId: string
+  tenantSlug?: string
+  tenantName?: string
   role: 'OWNER' | 'MANAGER' | 'SELLER'
   isOwner: boolean
   isManagerOrOwner: boolean

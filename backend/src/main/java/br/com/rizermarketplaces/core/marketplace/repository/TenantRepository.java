@@ -20,6 +20,12 @@ public interface TenantRepository extends JpaRepository<Tenant, UUID> {
         TenantStatus status
     );
 
+    default List<Tenant> findActivePartners() {
+        return findAllByIsPublicTrueAndIsPartnerPageEnabledTrueAndStatusAndDeletedAtIsNullOrderByTradeNameAsc(
+            TenantStatus.active
+        );
+    }
+
     List<Tenant> findAllByStatusAndDeletedAtIsNull(TenantStatus status);
 
     boolean existsBySlugAndCountryCodeAndDeletedAtIsNull(String slug, String countryCode);

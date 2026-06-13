@@ -1,38 +1,64 @@
 package br.com.rizermarketplaces.core.marketplace.billing;
 
+import br.com.rizermarketplaces.core.marketplace.dto.BillingDtos.PlanView;
+import br.com.rizermarketplaces.core.marketplace.model.Plan;
+import br.com.rizermarketplaces.core.marketplace.repository.PlanRepository;
 import br.com.rizermarketplaces.core.marketplace.tenant.TenantExceptions;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
-/**
- * Stub do PlanService para a Fase 2. Substituído por leitura real de
- * `plans`/`subscriptions` na Fase 5.
- *
- * Regra atual: PRO = até 3 lojas (configurável). Basicamente um teto fixo
- * por enquanto, suficiente para a Fase 2 demonstrar o guard.
- */
+import java.math.BigDecimal;
+import java.util.List;
+import java.util.UUID;
+
 @Service
 public class PlanService {
 
-    @Value("${app.tenant.default-max-stores:3}")
-    private int defaultMaxStores;
+    private final PlanRepository planRepository;
 
-    public int getMaxStoresFor(java.util.UUID tenantId) {
-        // TODO(fase-5): ler de subscriptions.plan_code → plans.max_physical_stores
-        return defaultMaxStores;
+    public PlanService(PlanRepository planRepository) {
+        this.planRepository = planRepository;
     }
 
-    public boolean isUnlimited(java.util.UUID tenantId) {
-        return getMaxStoresFor(tenantId) <= 0;
+    @Transactional(readOnly = true)
+    public List<PlanView> listActive() {
+        return planRepository.findAllByIsActiveTrueOrderBySortOrderAsc()
+            .stream().map(this::toView).toList();
     }
 
-    public void requireStoreSlot(java.util.UUID tenantId, long currentActive) {
-        if (isUnlimited(tenantId)) return;
-        int max = getMaxStoresFor(tenantId);
-        if (currentActive >= max) {
+    @Transactional(readOnly = true)
+    public Plan get(String code) {
+        return planRepository.findById(code)
+            .orElseThrow(() -> TenantExceptions.badRequest("Plano inválido: " + code));
+    }
+
+    public int getMaxStoresFor(Plan p) {
+        return p.getMaxPhysicalStores() != null ? p.getMaxPhysicalStores() : Integer.MAX_VALUE;
+    }
+
+    public boolean isUnlimited(Plan p) {
+        return p.getMaxPhysicalStores() == null;
+    }
+
+    public void requireStoreSlot(Plan p, long currentActive) {
+        if (isUnlimited(p)) return;
+        if (currentActive >= p.getMaxPhysicalStores()) {
             throw TenantExceptions.paymentRequired(
-                "Limite de " + max + " lojas ativas atingido. Faça upgrade do plano."
+                "Limite de " + p.getMaxPhysicalStores() + " lojas ativas atingido. Faça upgrade do plano."
             );
         }
+    }
+
+    private PlanView toView(Plan p) {
+        return new PlanView(
+            p.getCode(), p.getName(), p.getDescription(),
+            p.getMaxPhysicalStores(),
+            p.isHasPartnerPage(), p.isHasCustomDomain(),
+            p.isHasInstagram(), p.isHasMetaDpa(), p.isHasGoogleShopping(),
+            BigDecimal.valueOf(p.getPriceCents(), 2),
+            p.getCurrency(),
+            p.getTrialDays(),
+            p.getSortOrder()
+        );
     }
 }
