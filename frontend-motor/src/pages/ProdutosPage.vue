@@ -75,7 +75,7 @@
 import { ref, onMounted, watch } from 'vue'
 import { useRoute } from 'vue-router'
 import type { Vehicle, VehicleFilters, VehicleType } from 'src/data/types'
-import { api } from 'src/services/api'
+import { api } from 'src/services/apiMock'
 import VehicleCard from 'components/vehicle/VehicleCard.vue'
 import FilterPanel from 'components/form/FilterPanel.vue'
 import LoadingSpinner from 'components/layout/LoadingSpinner.vue'

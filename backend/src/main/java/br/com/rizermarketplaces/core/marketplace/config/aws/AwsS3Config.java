@@ -10,12 +10,9 @@ import software.amazon.awssdk.services.s3.presigner.S3Presigner;
 
 import java.net.URI;
 
-// @Configuration: classe que define beans para integração com AWS S3.
 @Configuration
 public class AwsS3Config {
 
-    // @Bean: registra um bean no contexto do Spring para S3Client.
-    // @Value: injeta o valor da propriedade configurada em application.yaml (.properties), por exemplo app.s3.region=us-east-1
     @Bean
     public S3Client s3Client(
         @Value("${app.s3.region}") String region,
@@ -31,7 +28,6 @@ public class AwsS3Config {
         return builder.build();
     }
 
-    // Bean responsável por gerar URLs assinadas (S3Presigner).
     @Bean
     public S3Presigner s3Presigner(
         @Value("${app.s3.region}") String region,

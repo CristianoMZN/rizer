@@ -1,9 +1,9 @@
 package br.com.rizermarketplaces.core.marketplace.model;
 
-public enum TanentStatus {
+public enum TenantStatus {
     pending,
     active,
     paused,
     suspended,
-    calceled
+    canceled
 }

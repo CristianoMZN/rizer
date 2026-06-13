@@ -88,8 +88,9 @@
           <div class="col">
             <p class="footer-label">Legal</p>
             <div class="column q-gutter-xs">
-              <a href="#" class="footer-link">Termos de Uso</a>
-              <a href="#" class="footer-link">Privacidade (LGPD)</a>
+              <router-link to="/legal/termos-de-uso" class="footer-link">Termos de Uso</router-link>
+              <router-link to="/legal/politica-de-privacidade" class="footer-link">Privacidade (LGPD)</router-link>
+              <router-link to="/legal/politica-de-cookies" class="footer-link">Cookies</router-link>
             </div>
           </div>
         </div>
@@ -103,13 +104,15 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue'
+import { ref, computed } from 'vue'
 import AppHeader from 'components/layout/AppHeader.vue'
 import { useTenant } from 'src/composables/useTenant'
+import { useAuthStore } from 'src/stores/authStore'
 
 const leftDrawerOpen = ref(false)
-const isAuthenticated = ref(false)
-const userName = ref('')
+const auth = useAuthStore()
+const isAuthenticated = computed(() => auth.isAuthenticated.value)
+const userName = computed(() => auth.user.value?.name ?? '')
 
 const {
   storeName: tenantStoreName,

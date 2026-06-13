@@ -60,7 +60,7 @@
 
 <script setup lang="ts">
 import { ref, reactive, watch } from 'vue'
-import { api } from 'src/services/api'
+import { api } from 'src/services/apiMock'
 
 interface LocationData {
   zipCode: string

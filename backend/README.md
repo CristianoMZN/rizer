@@ -248,14 +248,13 @@ Arquivos principais desta implementacao:
 
 ---
 
-## Upload de imagens (S3 privado)
+## Upload de imagens (S3 publico) Magalu cloud
 
 Foi adicionado um endpoint para upload de imagens com:
 
 - autenticacao obrigatoria
 - processamento por contexto (formato, compressao e tamanho)
-- armazenamento em bucket S3 privado
-- retorno de URL assinada temporaria para exibicao
+- armazenamento em bucket S3 publico
 
 Endpoint:
 
@@ -291,6 +290,8 @@ curl -X POST "http://localhost:8080/media/upload" \
   -F "height=400"
 ```
 
+
+
 Exemplo de resposta:
 
 ```json
@@ -298,8 +299,7 @@ Exemplo de resposta:
   "type": "picture",
   "context": "announce-gallery",
   "objectKey": "uploads/announce-gallery/9f8e7d6c-4b3a-4f8d-b457-9ad8c31f5bde.webp",
-  "objectUrl": "https://<bucket>.s3.<region>.amazonaws.com/uploads/announce-gallery/9f8e7d6c-4b3a-4f8d-b457-9ad8c31f5bde.webp",
-  "accessUrl": "https://<bucket>.s3.<region>.amazonaws.com/uploads/announce-gallery/9f8e7d6c-4b3a-4f8d-b457-9ad8c31f5bde.webp?X-Amz-Algorithm=AWS4-HMAC-SHA256&...",
+  "objectUrl": "https://rizer-pic.br-se1.magaluobjects.com/announce-gallery/9f8e7d6c-4b3a-4f8d-b457-9ad8c31f5bde.webp",
   "authorizationToken": "X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=...",
   "width": 400,
   "height": 400,

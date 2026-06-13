@@ -57,7 +57,7 @@
 <script setup lang="ts">
 import { ref, computed, onMounted } from 'vue'
 import type { Lead, LeadStatus } from 'src/data/types'
-import { api } from 'src/services/api'
+import { api } from 'src/services/apiMock'
 
 interface Props { storeId: string }
 const props = defineProps<Props>()

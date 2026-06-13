@@ -1,5 +1,6 @@
-import enUS from './en-US';
+// i18n: apenas pt-BR no MVP; estrutura mantida para ativação futura.
+import ptBR from './pt-BR';
 
 export default {
-  'en-US': enUS,
+  'pt-BR': ptBR,
 };

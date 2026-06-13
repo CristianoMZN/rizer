@@ -1,222 +1,202 @@
-import type { Vehicle, Store, Lead, Notification, User, VehicleFilters } from '../data/types'
-import {
-  MOCK_VEHICLES,
-  MOCK_STORES,
-  MOCK_LEADS,
-  MOCK_NOTIFICATIONS,
-  MOCK_USER,
-} from '../data/mock'
-import { getTenantScope } from 'src/composables/useTenant'
+// ─── API Real (Axios) ─────────────────────────────────────────────────────────
+// Clientes tipados para os endpoints do backend. Quando o backend não
+// está acessível, o caller trata o erro. Mantemos isto isolado dos
+// mocks de `api` (legado), para que a UI possa alternar via MOCK_CONFIG.
 
-// ─── Config ───────────────────────────────────────────────────────────────────
+import axios, { type AxiosInstance } from 'axios'
 
 export const MOCK_CONFIG = {
   useBackend: false,
   apiBase: import.meta.env.VITE_API_URL || '/api',
-  delay: 300, // simulate network delay (ms)
+  delay: 300,
 }
 
-const delay = (ms = MOCK_CONFIG.delay) => new Promise((r) => setTimeout(r, ms))
+const http: AxiosInstance = axios.create({
+  baseURL: MOCK_CONFIG.apiBase,
+  withCredentials: true,
+})
 
-// ─── Helpers de escopo ────────────────────────────────────────────────────────
-
-/**
- * Retorna headers HTTP para requisições ao backend.
- * Quando em modo `store`, injeta X-Tenant-Slug para que o servidor
- * filtre os recursos no contexto daquele tenant (loja).
- */
-function getTenantHeaders(): Record<string, string> {
-  const scope = getTenantScope()
-  if (scope.mode === 'store') {
-    return { 'X-Tenant-Slug': scope.storeSlug }
+http.interceptors.request.use((config) => {
+  if (typeof document !== 'undefined' && config.headers) {
+    const match = document.cookie.match(/(?:^|; )motorise_access_token=([^;]*)/)
+    if (match && match[1]) {
+      config.headers['Authorization'] = `Bearer ${decodeURIComponent(match[1])}`
+    }
   }
-  return {}
+  return config
+})
+
+export type TenantStatus = 'pending' | 'active' | 'paused' | 'suspended' | 'canceled'
+export type TenantUserRole = 'OWNER' | 'MANAGER' | 'SELLER'
+
+export interface TenantView {
+  id: string
+  slug: string
+  countryCode: string
+  tradeName: string
+  legalName?: string
+  cnpj?: string
+  description?: string
+  logoUrl?: string
+  bannerUrl?: string
+  phone?: string
+  whatsapp?: string
+  email?: string
+  website?: string
+  status: TenantStatus
+  isPublic: boolean
+  isPartnerPageEnabled: boolean
+  hadTrial: boolean
+  customDomain?: string
+  customDomainStatus?: 'NONE' | 'PENDING' | 'VERIFIED' | 'FAILED'
+  ownerUserId?: string
+  ownerEmail?: string
+  ownerName?: string
+  activeStoresCount: number
+  membersCount: number
+  stores: StoreView[]
+  createdAt: string
+  updatedAt: string
 }
 
-/**
- * Aplica o filtro de loja no mock quando em modo `store`.
- * No modo `marketplace`, retorna todos os recursos sem restrição.
- */
-function applyStoreScope<T extends { store: Store }>(items: T[]): T[] {
-  const scope = getTenantScope()
-  if (scope.mode === 'store') {
-    return items.filter((item) => item.store.slug === scope.storeSlug)
-  }
-  return items
+export interface StoreView {
+  id: string
+  tenantId: string
+  name: string
+  slug: string
+  phone?: string
+  whatsapp?: string
+  email?: string
+  isMain: boolean
+  isActive: boolean
+  latitude?: number
+  longitude?: number
+  createdAt: string
+  updatedAt: string
 }
 
-/**
- * Aplica filtro de loja em coleções de leads (que referenciam storeId,
- * não diretamente store.slug). Resolve via mapa reverso de stores mock.
- */
-function applyStoreScopeToLeads(leads: Lead[]): Lead[] {
-  const scope = getTenantScope()
-  if (scope.mode !== 'store') return leads
-  const store = MOCK_STORES.find((s) => s.slug === scope.storeSlug)
-  if (!store) return []
-  return leads.filter((l) => l.storeId === store.id)
+export interface MemberView {
+  id: string
+  tenantId: string
+  tenantSlug?: string
+  tenantName?: string
+  userId: string
+  name?: string
+  email?: string
+  role: TenantUserRole
+  physicalStoreIds: string[]
+  isActive: boolean
+  acceptedAt?: string
+  expireAt?: string
 }
 
-// ─── Vehicles ─────────────────────────────────────────────────────────────────
+export interface CreateTenantRequest {
+  slug: string
+  tradeName: string
+  legalName?: string
+  cnpj?: string
+  countryCode: string
+  description?: string
+  phone?: string
+  whatsapp?: string
+  email?: string
+  website?: string
+  ownerName: string
+  ownerEmail: string
+  ownerPhone?: string
+  ownerPassword: string
+  startWithTrial: boolean
+}
 
-export const api = {
-  async getVehicles(filters?: VehicleFilters): Promise<Vehicle[]> {
-    if (MOCK_CONFIG.useBackend) {
-      const params = new URLSearchParams(filters as Record<string, string>)
-      const res = await fetch(`${MOCK_CONFIG.apiBase}/vehicles?${params}`, {
-        headers: getTenantHeaders(),
-      })
-      return res.json()
-    }
-    await delay()
-    let vehicles = applyStoreScope([...MOCK_VEHICLES])
-    if (filters?.type) vehicles = vehicles.filter((v) => v.type === filters.type)
-    if (filters?.brand) vehicles = vehicles.filter((v) => v.brand === filters.brand)
-    if (filters?.priceMin) vehicles = vehicles.filter((v) => v.price >= filters.priceMin!)
-    if (filters?.priceMax) vehicles = vehicles.filter((v) => v.price <= filters.priceMax!)
-    if (filters?.fuel) vehicles = vehicles.filter((v) => v.fuel === filters.fuel)
-    if (filters?.storeId) vehicles = vehicles.filter((v) => v.store.id === filters.storeId)
-    if (filters?.search) {
-      const q = filters.search.toLowerCase()
-      vehicles = vehicles.filter((v) =>
-        v.title.toLowerCase().includes(q) ||
-        v.brand.toLowerCase().includes(q) ||
-        v.model.toLowerCase().includes(q),
-      )
-    }
-    return vehicles
+export interface CreateStoreRequest {
+  tenantId?: string
+  name: string
+  slug?: string
+  phone?: string
+  whatsapp?: string
+  email?: string
+  isMain?: boolean
+  latitude?: number
+  longitude?: number
+}
+
+export interface UpdateStoreRequest {
+  name?: string
+  phone?: string
+  whatsapp?: string
+  email?: string
+  isMain?: boolean
+  isActive?: boolean
+  latitude?: number
+  longitude?: number
+}
+
+export interface InviteMemberRequest {
+  tenantId?: string
+  email: string
+  name: string
+  role: TenantUserRole
+  physicalStoreIds?: string[]
+}
+
+// ─── Admin (sys_admin) ───────────────────────────────────────────────────────
+
+export const adminApi = {
+  async listTenants(): Promise<TenantView[]> {
+    const res = await http.get<TenantView[]>('/admin/tenants')
+    return res.data
   },
-
-  async getVehicleById(id: string): Promise<Vehicle | undefined> {
-    if (MOCK_CONFIG.useBackend) {
-      const res = await fetch(`${MOCK_CONFIG.apiBase}/vehicles/${id}`, {
-        headers: getTenantHeaders(),
-      })
-      return res.json()
-    }
-    await delay()
-    // Em modo store: garante que o veículo pertence à loja do tenant
-    const scoped = applyStoreScope([...MOCK_VEHICLES])
-    return scoped.find((v) => v.id === id)
+  async getTenant(id: string): Promise<TenantView> {
+    const res = await http.get<TenantView>(`/admin/tenants/${id}`)
+    return res.data
   },
-
-  async getFeaturedVehicles(): Promise<Vehicle[]> {
-    if (MOCK_CONFIG.useBackend) {
-      const res = await fetch(`${MOCK_CONFIG.apiBase}/vehicles?featured=true`, {
-        headers: getTenantHeaders(),
-      })
-      return res.json()
-    }
-    await delay()
-    return applyStoreScope(MOCK_VEHICLES.filter((v) => v.featured))
+  async createTenant(req: CreateTenantRequest): Promise<TenantView> {
+    const res = await http.post<TenantView>('/admin/tenants', req)
+    return res.data
   },
-
-  // ─── Stores ─────────────────────────────────────────────────────────────────
-
-  async getStores(): Promise<Store[]> {
-    if (MOCK_CONFIG.useBackend) {
-      const res = await fetch(`${MOCK_CONFIG.apiBase}/stores`, {
-        headers: getTenantHeaders(),
-      })
-      return res.json()
-    }
-    await delay()
-    // Em modo store, exibe apenas a própria loja
-    const scope = getTenantScope()
-    if (scope.mode === 'store') {
-      return MOCK_STORES.filter((s) => s.slug === scope.storeSlug)
-    }
-    return MOCK_STORES
+  async updateTenant(id: string, patch: Partial<CreateTenantRequest>): Promise<TenantView> {
+    const res = await http.patch<TenantView>(`/admin/tenants/${id}`, patch)
+    return res.data
   },
-
-  async getStoreBySlug(slug: string): Promise<Store | undefined> {
-    if (MOCK_CONFIG.useBackend) {
-      const res = await fetch(`${MOCK_CONFIG.apiBase}/stores/${slug}`, {
-        headers: getTenantHeaders(),
-      })
-      return res.json()
-    }
-    await delay()
-    return MOCK_STORES.find((s) => s.slug === slug)
-  },
-
-  // ─── Leads ──────────────────────────────────────────────────────────────────
-
-  async getLeads(storeId?: string): Promise<Lead[]> {
-    if (MOCK_CONFIG.useBackend) {
-      const res = await fetch(`${MOCK_CONFIG.apiBase}/leads?storeId=${storeId ?? ''}`, {
-        headers: getTenantHeaders(),
-      })
-      return res.json()
-    }
-    await delay()
-    const filtered = storeId
-      ? MOCK_LEADS.filter((l) => l.storeId === storeId)
-      : MOCK_LEADS
-    return applyStoreScopeToLeads(filtered)
-  },
-
-  async createLead(lead: Omit<Lead, 'id' | 'status' | 'createdAt' | 'updatedAt'>): Promise<Lead> {
-    if (MOCK_CONFIG.useBackend) {
-      const res = await fetch(`${MOCK_CONFIG.apiBase}/leads`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json', ...getTenantHeaders() },
-        body: JSON.stringify(lead),
-      })
-      return res.json()
-    }
-    await delay()
-    return {
-      ...lead,
-      id: `l${Date.now()}`,
-      status: 'new',
-      createdAt: new Date().toISOString(),
-      updatedAt: new Date().toISOString(),
-    }
-  },
-
-  // ─── Notifications ──────────────────────────────────────────────────────────
-
-  async getNotifications(): Promise<Notification[]> {
-    if (MOCK_CONFIG.useBackend) {
-      const res = await fetch(`${MOCK_CONFIG.apiBase}/notifications`, {
-        headers: getTenantHeaders(),
-      })
-      return res.json()
-    }
-    await delay()
-    return MOCK_NOTIFICATIONS
-  },
-
-  // ─── Auth ────────────────────────────────────────────────────────────────────
-
-  async getMe(): Promise<User> {
-    if (MOCK_CONFIG.useBackend) {
-      const res = await fetch(`${MOCK_CONFIG.apiBase}/me`, {
-        headers: getTenantHeaders(),
-      })
-      return res.json()
-    }
-    await delay()
-    return MOCK_USER
-  },
-
-  // ─── ViaCEP ──────────────────────────────────────────────────────────────────
-
-  async lookupCep(cep: string): Promise<{ city: string; state: string; street: string; neighborhood: string } | null> {
-    try {
-      const cleaned = cep.replace(/\D/g, '')
-      const res = await fetch(`https://viacep.com.br/ws/${cleaned}/json/`)
-      const data = await res.json()
-      if (data.erro) return null
-      return {
-        city: data.localidade,
-        state: data.uf,
-        street: data.logradouro,
-        neighborhood: data.bairro,
-      }
-    } catch {
-      return null
-    }
+  async deleteTenant(id: string): Promise<void> {
+    await http.delete(`/admin/tenants/${id}`)
   },
 }
+
+// ─── Tenant (autenticado) ────────────────────────────────────────────────────
+
+export const tenantApi = {
+  async listStores(): Promise<StoreView[]> {
+    const res = await http.get<StoreView[]>('/tenant/stores')
+    return res.data
+  },
+  async createStore(req: CreateStoreRequest): Promise<StoreView> {
+    const res = await http.post<StoreView>('/tenant/stores', req)
+    return res.data
+  },
+  async updateStore(id: string, patch: UpdateStoreRequest): Promise<StoreView> {
+    const res = await http.patch<StoreView>(`/tenant/stores/${id}`, patch)
+    return res.data
+  },
+  async deleteStore(id: string): Promise<void> {
+    await http.delete(`/tenant/stores/${id}`)
+  },
+
+  async listMembers(): Promise<MemberView[]> {
+    const res = await http.get<MemberView[]>('/tenant/members')
+    return res.data
+  },
+  async inviteMember(req: InviteMemberRequest): Promise<MemberView> {
+    const res = await http.post<MemberView>('/tenant/members', req)
+    return res.data
+  },
+  async updateMember(id: string, patch: { role?: TenantUserRole; physicalStoreIds?: string[] }): Promise<MemberView> {
+    const res = await http.patch<MemberView>(`/tenant/members/${id}`, patch)
+    return res.data
+  },
+  async removeMember(id: string): Promise<void> {
+    await http.delete(`/tenant/members/${id}`)
+  },
+}
+
+export { http }

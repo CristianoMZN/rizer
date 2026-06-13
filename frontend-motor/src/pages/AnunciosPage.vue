@@ -33,7 +33,7 @@
 <script setup lang="ts">
 import { ref, onMounted } from 'vue'
 import type { Vehicle } from 'src/data/types'
-import { api } from 'src/services/api'
+import { api } from 'src/services/apiMock'
 import LoadingSpinner from 'components/layout/LoadingSpinner.vue'
 
 const vehicles = ref<Vehicle[]>([])

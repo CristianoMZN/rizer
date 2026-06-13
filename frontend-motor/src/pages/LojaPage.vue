@@ -29,7 +29,7 @@
 import { ref, onMounted } from 'vue'
 import { useRoute } from 'vue-router'
 import type { Store, Vehicle, VehicleFilters } from 'src/data/types'
-import { api } from 'src/services/api'
+import { api } from 'src/services/apiMock'
 import StoreProfile from 'components/business/StoreProfile.vue'
 import VehicleCard from 'components/vehicle/VehicleCard.vue'
 import FilterPanel from 'components/form/FilterPanel.vue'

@@ -254,24 +254,63 @@ VITE_BASE_DOMAIN=motorise.com.br
 
 ---
 
-## 6) Dockerfile de produção (backend)
+## 6) Docker & Deploy
 
-Foi criado `backend/Dockerfile` (build multi-stage com Maven + runtime Java).
+### Container Registry
 
-Build da imagem:
-
-```bash
-docker build -t riser-backend:prod ./backend
+```
+container-registry.br-se1.magalu.cloud/rizer/
+├── backend    # Spring Boot API
+└── motorise   # Quasar SSR/PWA
 ```
 
-Executar container (exemplo):
+### Login no Registry
 
 ```bash
-docker run --rm -p 8080:8080 \
-  -e SPRING_DATASOURCE_URL=jdbc:postgresql://host.docker.internal:5432/riser_marketplaces \
-  -e SPRING_DATASOURCE_USERNAME=riser \
-  -e SPRING_DATASOURCE_PASSWORD=riser \
-  riser-backend:prod
+docker login container-registry.br-se1.magalu.cloud
 ```
 
-Se estiver em Linux e `host.docker.internal` não resolver, use o IP do host (ou rode backend e banco na mesma rede Docker).
+### Build Images
+
+```bash
+REGISTRY=container-registry.br-se1.magalu.cloud/rizer
+VERSION=1.0.0
+
+# Backend
+docker build -t $REGISTRY/backend:latest -t $REGISTRY/backend:$VERSION ./backend
+
+# Frontend (SSR)
+docker build -t $REGISTRY/motorise:latest -t $REGISTRY/motorise:$VERSION ./frontend-motor
+```
+
+### Push Images
+
+```bash
+REGISTRY=container-registry.br-se1.magalu.cloud/rizer
+VERSION=1.0.1
+
+docker push $REGISTRY/backend:latest && docker push $REGISTRY/backend:$VERSION
+docker push $REGISTRY/motorise:latest && docker push $REGISTRY/motorise:$VERSION
+```
+
+### Pull Images (em outro servidor)
+
+```bash
+docker login container-registry.br-se1.magalu.cloud
+
+REGISTRY=container-registry.br-se1.magalu.cloud/rizer
+
+docker pull $REGISTRY/backend:latest
+docker pull $REGISTRY/motorise:latest
+```
+
+### Run Production
+
+```bash
+docker compose -f docker-compose.prod.yml up -d
+```
+
+- Backend: `http://localhost:8080`
+- Frontend: `http://localhost:3000`
+- PostgreSQL: `localhost:5432`
+- Redis: `localhost:6379`

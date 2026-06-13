@@ -1,160 +1,136 @@
 package br.com.rizermarketplaces.core.marketplace.model;
 
-import com.fasterxml.jackson.databind.JsonNode;
-import jakarta.persistence.*;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.PrePersist;
+import jakarta.persistence.PreUpdate;
+import jakarta.persistence.Table;
 import org.hibernate.annotations.JdbcTypeCode;
 import org.hibernate.type.SqlTypes;
 
 import java.time.OffsetDateTime;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.UUID;
 
-// Entidade Product que representa anúncios/catalogo de itens.
-// Observações:
-// - Usa JSONB para armazenar atributos dinâmicos (flexível por realm)
-// - Usa ltree no campo category_path para hierarquias de categoria
 @Entity
-@Table(name = "products", indexes = {
-    @Index(name = "idx_products_uuid", columnList = "uuid", unique = true),
-    @Index(name = "idx_products_realm", columnList = "realm"),
-    @Index(name = "idx_products_merchant_id", columnList = "merchant_id")
-})
+@Table(name = "products")
 public class Product {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
+    @GeneratedValue(strategy = GenerationType.UUID)
+    private UUID id;
 
-    // UUID público usado para exposição externa
-    @Column(nullable = false, unique = true)
-    private UUID uuid = UUID.randomUUID();
-
-    @Column(name = "merchant_id", nullable = false)
-    private UUID merchantId;
-
-    @Column(name = "tenant_id")
+    @Column(name = "tenant_id", nullable = false)
     private UUID tenantId;
 
-    @Column(name = "seller_id")
-    private UUID sellerId;
+    @Column(name = "physical_store_id", nullable = false)
+    private UUID physicalStoreId;
 
-    @Column(name = "subsubcategory_id")
-    private UUID subsubcategoryId;
+    @Column(name = "category_id", nullable = false)
+    private UUID categoryId;
+
+    @Column(name = "brand_id")
+    private Integer brandId;
+
+    @Column(name = "model_id")
+    private Integer modelId;
+
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false, length = 20)
+    private VehicleRealm realm;
+
+    @Column(name = "year_model")
+    private Short yearModel;
+
+    @Column(name = "year_build")
+    private Short yearBuild;
+
+    @Column(name = "mileage_km")
+    private Integer mileageKm;
+
+    @Column(length = 40)
+    private String fuel;
+
+    @Column(length = 40)
+    private String transmission;
+
+    @JdbcTypeCode(SqlTypes.JSON)
+    @Column(nullable = false, columnDefinition = "jsonb")
+    private Map<String, Object> attributes = new HashMap<>();
+
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false, length = 20)
+    private ProductStatus status = ProductStatus.DRAFT;
+
+    @Column(name = "posted_to_instagram_at")
+    private OffsetDateTime postedToInstagramAt;
+
+    @Column(name = "instagram_media_id", length = 80)
+    private String instagramMediaId;
 
     @Column(name = "created_by_user_id")
     private UUID createdByUserId;
 
-    @Enumerated(EnumType.STRING)
-    @Column(name = "status", nullable = false, length = 30)
-    private ProductStatus status = ProductStatus.DRAFT;
-
-    @Enumerated(EnumType.STRING)
-    @Column(nullable = false, length = 40)
-    private ProductRealm realm;
-
-    @Column(name = "category_path", nullable = false)
-    private String categoryPath;
-
-    // Atributos dinâmicos armazenados como JSONB no Postgres. @JdbcTypeCode informa o tipo JDBC usado.
-    @JdbcTypeCode(SqlTypes.JSON)
-    @Column(nullable = false, columnDefinition = "jsonb")
-    private JsonNode attributes;
-
     @Column(name = "created_at", nullable = false, updatable = false)
-    private OffsetDateTime createdAt = OffsetDateTime.now();
+    private OffsetDateTime createdAt;
 
     @Column(name = "updated_at", nullable = false)
-    private OffsetDateTime updatedAt = OffsetDateTime.now();
+    private OffsetDateTime updatedAt;
+
+    @Column(name = "deleted_at")
+    private OffsetDateTime deletedAt;
+
+    @PrePersist
+    public void onCreate() {
+        OffsetDateTime now = OffsetDateTime.now();
+        if (createdAt == null) createdAt = now;
+        if (updatedAt == null) updatedAt = now;
+    }
 
     @PreUpdate
-    public void onUpdate() {
-        this.updatedAt = OffsetDateTime.now();
-    }
+    public void onUpdate() { this.updatedAt = OffsetDateTime.now(); }
 
-    public Integer getId() {
-        return id;
-    }
-
-    public UUID getUuid() {
-        return uuid;
-    }
-
-    public UUID getMerchantId() {
-        return merchantId;
-    }
-
-    public void setMerchantId(UUID merchantId) {
-        this.merchantId = merchantId;
-    }
-
-    public UUID getTenantId() {
-        return tenantId;
-    }
-
-    public void setTenantId(UUID tenantId) {
-        this.tenantId = tenantId;
-    }
-
-    public UUID getSellerId() {
-        return sellerId;
-    }
-
-    public void setSellerId(UUID sellerId) {
-        this.sellerId = sellerId;
-    }
-
-    public UUID getSubsubcategoryId() {
-        return subsubcategoryId;
-    }
-
-    public void setSubsubcategoryId(UUID subsubcategoryId) {
-        this.subsubcategoryId = subsubcategoryId;
-    }
-
-    public UUID getCreatedByUserId() {
-        return createdByUserId;
-    }
-
-    public void setCreatedByUserId(UUID createdByUserId) {
-        this.createdByUserId = createdByUserId;
-    }
-
-    public ProductStatus getStatus() {
-        return status;
-    }
-
-    public void setStatus(ProductStatus status) {
-        this.status = status;
-    }
-
-    public ProductRealm getRealm() {
-        return realm;
-    }
-
-    public void setRealm(ProductRealm realm) {
-        this.realm = realm;
-    }
-
-    public String getCategoryPath() {
-        return categoryPath;
-    }
-
-    public void setCategoryPath(String categoryPath) {
-        this.categoryPath = categoryPath;
-    }
-
-    public JsonNode getAttributes() {
-        return attributes;
-    }
-
-    public void setAttributes(JsonNode attributes) {
-        this.attributes = attributes;
-    }
-
-    public OffsetDateTime getCreatedAt() {
-        return createdAt;
-    }
-
-    public OffsetDateTime getUpdatedAt() {
-        return updatedAt;
-    }
+    public UUID getId() { return id; }
+    public UUID getTenantId() { return tenantId; }
+    public void setTenantId(UUID tenantId) { this.tenantId = tenantId; }
+    public UUID getPhysicalStoreId() { return physicalStoreId; }
+    public void setPhysicalStoreId(UUID physicalStoreId) { this.physicalStoreId = physicalStoreId; }
+    public UUID getCategoryId() { return categoryId; }
+    public void setCategoryId(UUID categoryId) { this.categoryId = categoryId; }
+    public Integer getBrandId() { return brandId; }
+    public void setBrandId(Integer brandId) { this.brandId = brandId; }
+    public Integer getModelId() { return modelId; }
+    public void setModelId(Integer modelId) { this.modelId = modelId; }
+    public VehicleRealm getRealm() { return realm; }
+    public void setRealm(VehicleRealm realm) { this.realm = realm; }
+    public Short getYearModel() { return yearModel; }
+    public void setYearModel(Short yearModel) { this.yearModel = yearModel; }
+    public Short getYearBuild() { return yearBuild; }
+    public void setYearBuild(Short yearBuild) { this.yearBuild = yearBuild; }
+    public Integer getMileageKm() { return mileageKm; }
+    public void setMileageKm(Integer mileageKm) { this.mileageKm = mileageKm; }
+    public String getFuel() { return fuel; }
+    public void setFuel(String fuel) { this.fuel = fuel; }
+    public String getTransmission() { return transmission; }
+    public void setTransmission(String transmission) { this.transmission = transmission; }
+    public Map<String, Object> getAttributes() { return attributes; }
+    public void setAttributes(Map<String, Object> attributes) { this.attributes = attributes; }
+    public ProductStatus getStatus() { return status; }
+    public void setStatus(ProductStatus status) { this.status = status; }
+    public OffsetDateTime getPostedToInstagramAt() { return postedToInstagramAt; }
+    public void setPostedToInstagramAt(OffsetDateTime postedToInstagramAt) { this.postedToInstagramAt = postedToInstagramAt; }
+    public String getInstagramMediaId() { return instagramMediaId; }
+    public void setInstagramMediaId(String instagramMediaId) { this.instagramMediaId = instagramMediaId; }
+    public UUID getCreatedByUserId() { return createdByUserId; }
+    public void setCreatedByUserId(UUID createdByUserId) { this.createdByUserId = createdByUserId; }
+    public OffsetDateTime getCreatedAt() { return createdAt; }
+    public OffsetDateTime getUpdatedAt() { return updatedAt; }
+    public OffsetDateTime getDeletedAt() { return deletedAt; }
+    public void setDeletedAt(OffsetDateTime deletedAt) { this.deletedAt = deletedAt; }
 }

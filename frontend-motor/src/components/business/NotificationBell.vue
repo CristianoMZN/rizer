@@ -54,7 +54,7 @@
 import { ref, computed, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
 import type { Notification, NotificationType } from 'src/data/types'
-import { api } from 'src/services/api'
+import { api } from 'src/services/apiMock'
 
 const router = useRouter()
 const notifications = ref<Notification[]>([])
