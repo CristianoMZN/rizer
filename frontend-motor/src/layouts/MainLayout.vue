@@ -101,6 +101,7 @@
       </footer>
     </q-page-container>
     <ConsentBanner />
+    <LoadingOverlay />
   </q-layout>
 </template>
 
@@ -108,6 +109,7 @@
 import { ref, computed, onMounted } from 'vue'
 import AppHeader from 'components/layout/AppHeader.vue'
 import ConsentBanner from 'components/common/ConsentBanner.vue'
+import LoadingOverlay from 'components/common/LoadingOverlay.vue'
 import { useTenant } from 'src/composables/useTenant'
 import { useAuthStore } from 'src/stores/authStore'
 import { useConsent } from 'src/composables/useConsent'

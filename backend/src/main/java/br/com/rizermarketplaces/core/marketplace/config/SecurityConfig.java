@@ -47,8 +47,8 @@ public class SecurityConfig {
             .cors(cors -> cors.configurationSource(corsConfigurationSource()))
             .sessionManagement(sm -> sm.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
             .authorizeHttpRequests(auth -> auth
-                // Documentação
-                .requestMatchers("/", "/docs", "/docs/**", "/openapi", "/openapi/**", "/swagger-ui.html").permitAll()
+                // Documentação + health
+                .requestMatchers("/", "/docs", "/docs/**", "/openapi", "/openapi/**", "/swagger-ui.html", "/health", "/health/**").permitAll()
                 // Auth + OAuth callbacks
                 .requestMatchers("/auth/**", "/login/**", "/oauth2/**", "/error").permitAll()
                 // Webhooks (assinados pelos provedores, validados no service)

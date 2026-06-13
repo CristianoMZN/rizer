@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+  <include resource="org/springframework/boot/logging/logback/defaults.xml"/>
+
+  <property name="LOG_PATTERN"
+    value="%d{yyyy-MM-dd HH:mm:ss.SSS} %-5level [%thread] [cid=%X{correlationId:-}] %logger{36} - %msg%n"/>
+
+  <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+    <encoder>
+      <pattern>${LOG_PATTERN}</pattern>
+    </encoder>
+  </appender>
+
+  <appender name="JSON" class="ch.qos.logback.core.rolling.RollingFileAppender">
+    <file>${LOG_PATH:-./logs}/app.json</file>
+    <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
+      <fileNamePattern>${LOG_PATH:-./logs}/app.%d{yyyy-MM-dd}.%i.json.gz</fileNamePattern>
+      <maxFileSize>50MB</maxFileSize>
+      <maxHistory>14</maxHistory>
+      <totalSizeCap>1GB</totalSizeCap>
+    </rollingPolicy>
+    <encoder class="net.logstash.logback.encoder.LogstashEncoder">
+      <includeMdcKeyName>correlationId</includeMdcKeyName>
+      <customFields>{"service":"core-marketplace"}</customFields>
+    </encoder>
+  </appender>
+
+  <root level="INFO">
+    <appender-ref ref="STDOUT"/>
+    <appender-ref ref="JSON"/>
+  </root>
+
+  <logger name="br.com.rizermarketplaces" level="DEBUG"/>
+  <logger name="org.springframework.web" level="INFO"/>
+  <logger name="org.hibernate.SQL" level="WARN"/>
+  <logger name="org.flywaydb" level="INFO"/>
+</configuration>

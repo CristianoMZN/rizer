@@ -1,5 +1,6 @@
 package br.com.rizermarketplaces.core.marketplace.admin;
 
+import br.com.rizermarketplaces.core.marketplace.audit.AuditService;
 import br.com.rizermarketplaces.core.marketplace.auth.AuthService;
 import br.com.rizermarketplaces.core.marketplace.dto.CreateTenantRequest;
 import br.com.rizermarketplaces.core.marketplace.dto.TenantView;
@@ -39,6 +40,7 @@ public class AdminTenantService {
     private final PhysicalStoreRepository physicalStoreRepository;
     private final PasswordEncoder passwordEncoder;
     private final AuthService authService;
+    private final AuditService auditService;
 
     public AdminTenantService(
         TenantRepository tenantRepository,
@@ -47,7 +49,8 @@ public class AdminTenantService {
         CountryRepository countryRepository,
         PhysicalStoreRepository physicalStoreRepository,
         PasswordEncoder passwordEncoder,
-        AuthService authService
+        AuthService authService,
+        AuditService auditService
     ) {
         this.tenantRepository = tenantRepository;
         this.tenantUserRepository = tenantUserRepository;
@@ -56,6 +59,7 @@ public class AdminTenantService {
         this.physicalStoreRepository = physicalStoreRepository;
         this.passwordEncoder = passwordEncoder;
         this.authService = authService;
+        this.auditService = auditService;
     }
 
     @Transactional
@@ -118,6 +122,10 @@ public class AdminTenantService {
         link.setInvitedByUserId(currentUserId);
         tenantUserRepository.save(link);
 
+        auditService.record("tenant.create", "tenant", tenant.getId().toString(),
+            java.util.Map.of("slug", tenant.getSlug(), "tradeName", tenant.getTradeName(),
+                "hadTrial", req.startWithTrial(), "ownerEmail", owner.getEmail()));
+
         return TenantMapper.toView(tenant, owner, 0, 1, List.of());
     }
 
@@ -177,6 +185,7 @@ public class AdminTenantService {
         t.setDeletedAt(OffsetDateTime.now());
         t.setStatus(TenantStatus.canceled);
         tenantRepository.save(t);
+        auditService.record("tenant.delete", "tenant", id.toString(), java.util.Map.of("slug", t.getSlug()));
     }
 
     private User findOwner(UUID tenantId) {
