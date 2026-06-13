@@ -5,6 +5,7 @@ import br.com.rizermarketplaces.core.marketplace.model.SystemRole;
 import br.com.rizermarketplaces.core.marketplace.model.TenantUser;
 import br.com.rizermarketplaces.core.marketplace.model.TenantUserRole;
 import br.com.rizermarketplaces.core.marketplace.model.User;
+import br.com.rizermarketplaces.core.marketplace.repository.TenantRepository;
 import br.com.rizermarketplaces.core.marketplace.repository.TenantUserRepository;
 import br.com.rizermarketplaces.core.marketplace.repository.UserRepository;
 import io.jsonwebtoken.Claims;
@@ -25,17 +26,20 @@ public class AuthService {
 
     private final UserRepository userRepository;
     private final TenantUserRepository tenantUserRepository;
+    private final TenantRepository tenantRepository;
     private final PasswordEncoder passwordEncoder;
     private final JwtTokenProvider jwtTokenProvider;
 
     public AuthService(
         UserRepository userRepository,
         TenantUserRepository tenantUserRepository,
+        TenantRepository tenantRepository,
         PasswordEncoder passwordEncoder,
         JwtTokenProvider jwtTokenProvider
     ) {
         this.userRepository = userRepository;
         this.tenantUserRepository = tenantUserRepository;
+        this.tenantRepository = tenantRepository;
         this.passwordEncoder = passwordEncoder;
         this.jwtTokenProvider = jwtTokenProvider;
     }

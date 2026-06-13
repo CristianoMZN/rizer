@@ -327,6 +327,94 @@ export const tenantProductApi = {
   },
 }
 
+// ─── Settings (perfil do tenant + custom domain) ────────────────────────────
+
+export type CustomDomainStatus = 'NONE' | 'PENDING' | 'VERIFIED' | 'FAILED'
+
+export interface TenantSettingsView {
+  id: string
+  slug: string
+  countryCode: string
+  tradeName: string
+  legalName?: string
+  description?: string
+  phone?: string
+  whatsapp?: string
+  email?: string
+  website?: string
+  logoUrl?: string
+  bannerUrl?: string
+  cnpj?: string
+  status: string
+  isPublic: boolean
+  isPartnerPageEnabled: boolean
+  hadTrial: boolean
+  customDomain?: string
+  customDomainStatus: CustomDomainStatus
+  customDomainError?: string
+  customDomainLastCheckAt?: string
+  theme: Record<string, string>
+}
+
+export interface CustomDomainCheck {
+  id: string
+  tenantId: string
+  domain: string
+  expectedTarget: string
+  cnameFound?: string
+  resolvedIp?: string
+  status: string
+  errorMessage?: string
+  checkedAt: string
+}
+
+export interface CustomDomainView {
+  domain?: string
+  status: string
+  lastCheckAt?: string
+  lastError?: string
+  expectedCname: string
+}
+
+export interface UpdateProfileRequest {
+  tradeName?: string
+  legalName?: string
+  description?: string
+  phone?: string
+  whatsapp?: string
+  email?: string
+  website?: string
+  logoUrl?: string
+  bannerUrl?: string
+}
+
+export const settingsApi = {
+  async get(): Promise<TenantSettingsView> {
+    const res = await http.get<TenantSettingsView>('/tenant/settings')
+    return res.data
+  },
+  async updateProfile(req: UpdateProfileRequest): Promise<TenantSettingsView> {
+    const res = await http.post<TenantSettingsView>('/tenant/settings/profile', req)
+    return res.data
+  },
+  async getCustomDomain(): Promise<CustomDomainView> {
+    const res = await http.get<CustomDomainView>('/tenant/settings/custom-domain')
+    return res.data
+  },
+  async setCustomDomain(domain: string): Promise<CustomDomainView> {
+    const res = await http.post<CustomDomainView>('/tenant/settings/custom-domain', { domain })
+    return res.data
+  },
+  async verifyCustomDomain(): Promise<CustomDomainCheck> {
+    const res = await http.post<CustomDomainCheck>('/tenant/settings/custom-domain/verify')
+    return res.data
+  },
+  async customDomainHistory(): Promise<CustomDomainCheck[]> {
+    const res = await http.get<CustomDomainCheck[]>('/tenant/settings/custom-domain/history')
+    return res.data
+  },
+}
+
 // ─── Integrações de marketing ────────────────────────────────────────────────
 
 export type IntegrationProvider = 'INSTAGRAM' | 'META_BUSINESS' | 'GOOGLE_MERCHANT'
