@@ -21,7 +21,10 @@ const routes: RouteRecordRaw[] = [
       { path: 'produtos', component: () => import('pages/ProdutosPage.vue') },
       { path: 'produto/:id', component: () => import('pages/ProdutoPage.vue') },
       { path: 'comparar', component: () => import('pages/CompararPage.vue') },
-      { path: 'lojas-parceiras', component: () => import('pages/LojasParceirasPage.vue') },
+      { path: 'lojas-parceiras', redirect: '/parceiros' },
+      { path: 'parceiros', name: 'parceiros', component: () => import('pages/partner/PartnerListPage.vue') },
+      { path: 'parceiros/:slug', name: 'parceiro', component: () => import('pages/partner/PartnerPage.vue') },
+      { path: 'parceiros/:slug/loja/:storeSlug', name: 'parceiro-loja', component: () => import('pages/partner/PartnerStorePage.vue') },
       { path: 'seja-parceiro', component: () => import('pages/SejaParceiroPage.vue') },
       { path: 'registro', component: () => import('pages/RegistroPage.vue') },
       { path: 'entrar', component: () => import('pages/EntrarPage.vue') },
@@ -75,6 +78,18 @@ const routes: RouteRecordRaw[] = [
         meta: { title: 'Anúncios' },
       },
       {
+        path: 'anuncios/novo',
+        name: 'app-product-new',
+        component: () => import('pages/app/ProductWizardPage.vue'),
+        meta: { title: 'Novo anúncio' },
+      },
+      {
+        path: 'anuncios/:id/editar',
+        name: 'app-product-edit',
+        component: () => import('pages/app/ProductEditPage.vue'),
+        meta: { title: 'Editar anúncio' },
+      },
+      {
         path: 'leads',
         name: 'app-leads',
         component: () => import('pages/app/LeadsPage.vue'),
@@ -97,6 +112,12 @@ const routes: RouteRecordRaw[] = [
         name: 'app-integrations',
         component: () => import('pages/app/IntegrationsPage.vue'),
         meta: { title: 'Integrações' },
+      },
+      {
+        path: 'integracoes/instagram/callback',
+        name: 'app-integrations-callback',
+        component: () => import('pages/app/IntegrationsPage.vue'),
+        meta: { title: 'Integrações · Callback' },
       },
       {
         path: 'configuracoes',
