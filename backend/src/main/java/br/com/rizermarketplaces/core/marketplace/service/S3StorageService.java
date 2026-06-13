@@ -122,6 +122,21 @@ public class S3StorageService {
         );
     }
 
+    /**
+     * Upload de bytes brutos (útil para exports LGPD gerados em memória).
+     */
+    public void uploadBytes(byte[] bytes, String key, String contentType, String prefix) {
+        String finalKey = prefix + "/" + key;
+        s3Client.putObject(
+            PutObjectRequest.builder()
+                .bucket(privateBucket)
+                .key(finalKey)
+                .contentType(contentType)
+                .build(),
+            software.amazon.awssdk.core.sync.RequestBody.fromBytes(bytes)
+        );
+    }
+
     private String generatePresignedUrl(String bucket, String key) {
         var presignRequest = GetObjectPresignRequest.builder()
             .signatureDuration(Duration.ofMinutes(presignedDurationMinutes))

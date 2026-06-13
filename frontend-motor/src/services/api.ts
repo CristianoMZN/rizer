@@ -415,6 +415,61 @@ export const settingsApi = {
   },
 }
 
+// ─── LGPD ───────────────────────────────────────────────────────────────────────
+
+export type ConsentPurpose =
+  | 'terms_of_use' | 'privacy_policy' | 'cookies_essential'
+  | 'cookies_analytics' | 'cookies_marketing' | 'marketing_emails'
+  | 'data_sharing_integrations'
+
+export type DataExportStatus = 'pending' | 'processing' | 'ready' | 'expired' | 'failed'
+
+export interface ConsentView {
+  id: string
+  purpose: ConsentPurpose
+  granted: boolean
+  documentVersion: string
+  ip?: string
+  userAgent?: string
+  createdAt: string
+}
+
+export interface DataExportRequestView {
+  id: string
+  status: DataExportStatus
+  storageKey?: string
+  downloadUrl?: string
+  urlExpiresAt?: string
+  errorMessage?: string
+  requestedAt: string
+  completedAt?: string
+}
+
+export const lgpdApi = {
+  async recordConsent(purpose: ConsentPurpose, granted: boolean, documentVersion: string): Promise<ConsentView> {
+    const res = await http.post<ConsentView>('/me/consents', { purpose, granted, documentVersion })
+    return res.data
+  },
+  async myConsents(): Promise<ConsentView[]> {
+    const res = await http.get<ConsentView[]>('/me/consents')
+    return res.data
+  },
+  async requestDataExport(): Promise<DataExportRequestView> {
+    const res = await http.post<DataExportRequestView>('/me/data-export')
+    return res.data
+  },
+  async myExports(): Promise<DataExportRequestView[]> {
+    const res = await http.get<DataExportRequestView[]>('/me/data-export')
+    return res.data
+  },
+  async deleteAccount(reason?: string): Promise<{ status: string; message: string }> {
+    const res = await http.delete<{ status: string; message: string }>('/me/account', {
+      data: { reason: reason ?? '' },
+    })
+    return res.data
+  },
+}
+
 // ─── Integrações de marketing ────────────────────────────────────────────────
 
 export type IntegrationProvider = 'INSTAGRAM' | 'META_BUSINESS' | 'GOOGLE_MERCHANT'

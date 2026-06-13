@@ -100,17 +100,21 @@
         </p>
       </footer>
     </q-page-container>
+    <ConsentBanner />
   </q-layout>
 </template>
 
 <script setup lang="ts">
-import { ref, computed } from 'vue'
+import { ref, computed, onMounted } from 'vue'
 import AppHeader from 'components/layout/AppHeader.vue'
+import ConsentBanner from 'components/common/ConsentBanner.vue'
 import { useTenant } from 'src/composables/useTenant'
 import { useAuthStore } from 'src/stores/authStore'
+import { useConsent } from 'src/composables/useConsent'
 
 const leftDrawerOpen = ref(false)
 const auth = useAuthStore()
+const consent = useConsent()
 const isAuthenticated = computed(() => auth.isAuthenticated.value)
 const userName = computed(() => auth.user.value?.name ?? '')
 
@@ -120,6 +124,10 @@ const {
   footerTagline: tenantFooterTagline,
   isMenuVisible,
 } = useTenant()
+
+onMounted(() => {
+  consent.init()
+})
 </script>
 
 <style scoped lang="scss">
