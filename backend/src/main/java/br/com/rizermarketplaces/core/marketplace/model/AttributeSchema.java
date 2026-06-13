@@ -20,7 +20,7 @@ public class AttributeSchema {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private Integer id;
 
     @Column(name = "entity_type", nullable = false, length = 50)
     private String entityType;
@@ -28,11 +28,11 @@ public class AttributeSchema {
     @Column(name = "country_code", nullable = false, length = 2)
     private String countryCode;
 
-    @Column(name = "category_path", nullable = false, columnDefinition = "ltree")
+    @Column(name = "category_path", nullable = false, length = 255)
     private String categoryPath;
 
-    @Column(name = "version", nullable = false)
-    private Integer version;
+    @Column(name = "version", nullable = false, length = 50)
+    private String version;
 
     @Column(name = "is_active", nullable = false)
     private boolean active;
@@ -52,7 +52,7 @@ public class AttributeSchema {
         this.updatedAt = OffsetDateTime.now();
     }
 
-    public Long getId() {
+    public Integer getId() {
         return id;
     }
 
@@ -68,7 +68,7 @@ public class AttributeSchema {
         return categoryPath;
     }
 
-    public Integer getVersion() {
+    public String getVersion() {
         return version;
     }
 

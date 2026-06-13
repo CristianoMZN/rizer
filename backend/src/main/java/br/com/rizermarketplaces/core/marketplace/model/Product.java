@@ -22,7 +22,7 @@ public class Product {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private Integer id;
 
     // UUID público usado para exposição externa
     @Column(nullable = false, unique = true)
@@ -35,10 +35,10 @@ public class Product {
     private UUID tenantId;
 
     @Column(name = "seller_id")
-    private Long sellerId;
+    private UUID sellerId;
 
     @Column(name = "subsubcategory_id")
-    private Long subsubcategoryId;
+    private UUID subsubcategoryId;
 
     @Column(name = "created_by_user_id")
     private UUID createdByUserId;
@@ -51,7 +51,7 @@ public class Product {
     @Column(nullable = false, length = 40)
     private ProductRealm realm;
 
-    @Column(name = "category_path", nullable = false, columnDefinition = "ltree")
+    @Column(name = "category_path", nullable = false)
     private String categoryPath;
 
     // Atributos dinâmicos armazenados como JSONB no Postgres. @JdbcTypeCode informa o tipo JDBC usado.
@@ -70,7 +70,7 @@ public class Product {
         this.updatedAt = OffsetDateTime.now();
     }
 
-    public Long getId() {
+    public Integer getId() {
         return id;
     }
 
@@ -94,19 +94,19 @@ public class Product {
         this.tenantId = tenantId;
     }
 
-    public Long getSellerId() {
+    public UUID getSellerId() {
         return sellerId;
     }
 
-    public void setSellerId(Long sellerId) {
+    public void setSellerId(UUID sellerId) {
         this.sellerId = sellerId;
     }
 
-    public Long getSubsubcategoryId() {
+    public UUID getSubsubcategoryId() {
         return subsubcategoryId;
     }
 
-    public void setSubsubcategoryId(Long subsubcategoryId) {
+    public void setSubsubcategoryId(UUID subsubcategoryId) {
         this.subsubcategoryId = subsubcategoryId;
     }
 

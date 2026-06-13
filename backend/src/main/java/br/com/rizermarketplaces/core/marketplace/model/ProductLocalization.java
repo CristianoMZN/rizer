@@ -19,7 +19,7 @@ public class ProductLocalization {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private Integer id;
 
     // Relacionamento ManyToOne com Product. FetchType.LAZY evita carregar o Product automaticamente.
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
@@ -29,16 +29,16 @@ public class ProductLocalization {
     @Column(name = "country_code", nullable = false, length = 2)
     private String countryCode;
 
-    @Column(nullable = false, length = 200)
+    @Column(name = "title", nullable = false, length = 200)
     private String title;
 
-    @Column(length = 2000)
+    @Column(name = "description", length = 2000)
     private String description;
 
-    @Column(nullable = false, precision = 14, scale = 2)
+    @Column(name = "price", nullable = false, precision = 14, scale = 2)
     private BigDecimal price;
 
-    @Column(nullable = false, length = 3)
+    @Column(name = "currency", nullable = false, length = 3)
     private String currency;
 
     @Enumerated(EnumType.STRING)
@@ -46,7 +46,7 @@ public class ProductLocalization {
     private UnitSystem unitSystem;
 
     // Coluna do tipo geometry(Point,4326) para armazenar coordenadas geográficas (PostGIS)
-    @Column(nullable = false, columnDefinition = "geometry(Point,4326)")
+    @Column(name = "location", nullable = false, columnDefinition = "geometry(Point,4326)")
     private Point location;
 
     @Column(name = "created_at", nullable = false, updatable = false)
@@ -60,7 +60,7 @@ public class ProductLocalization {
         this.updatedAt = OffsetDateTime.now();
     }
 
-    public Long getId() {
+    public Integer getId() {
         return id;
     }
 

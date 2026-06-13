@@ -20,7 +20,7 @@ services:
       retries: 5
 
   redis:
-    image: redis/redis-stack-server:7.4.0-v6
+    image: redis/redis-stack:7.4.0-v8
     container_name: rizer_redis
     restart: unless-stopped
     ports:

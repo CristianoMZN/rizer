@@ -179,7 +179,7 @@ Aplicacao manual via Maven (opcional):
 
 ```bash
 ./mvnw \
--Dflyway.url=jdbc:postgresql://localhost:5432/rizer_marketplaces \
+-Dflyway.url=jdbc:postgresql://localhost:5432/rizer_prod \
 -Dflyway.user=rizer \
 -Dflyway.password=rizer \
 -Dflyway.baselineOnMigrate=true \
@@ -191,15 +191,14 @@ Validar status das migrations:
 
 ```bash
 ./mvnw \
--Dflyway.url=jdbc:postgresql://localhost:5432/rizer_marketplaces \
+-Dflyway.url=jdbc:postgresql://localhost:5432/rizer_prod \
 -Dflyway.user=rizer \
 -Dflyway.password=rizer \
 flyway:info
 ```
 
 
-gerar migrações:
-instalar migra:
+Instalar Migra:
 ```bash
 sudo apt update
 sudo apt install python3-setuptools pipx libpq-dev postgresql-client build-essential
@@ -208,11 +207,15 @@ source .venv/bin/activate
 pip install --upgrade pip wheel "setuptools<70" psycopg2-binary psycopg2-binary migra sqlbag
 migra --version
 pipx inject migra setuptools
+
+```
+Gerar migrações:
+```bash
 migra --unsafe --schema public \
-postgresql://rizer:rizer@localhost:5432/rizer_marketplaces \
-postgresql://rizer:rizer@localhost:5432/rizer_model \
+postgresql://rizer:rizer@localhost:5432/rizer_dev \
+postgresql://rizer:rizer@localhost:5432/rizer_prod \
 | grep -vE "flyway_schema_history|valid_detail|geometry_dump|postgis|ltree" \
-> ./src/main/resources/db/migration/V3__schema_changes.sql
+> ./src/main/resources/db/migration/V11__schema_changes.sql
 ```
 
 

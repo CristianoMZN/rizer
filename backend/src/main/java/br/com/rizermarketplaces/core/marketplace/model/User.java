@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import java.time.OffsetDateTime;
 import java.util.UUID;
 
+
 // Entidade JPA que representa um usuário do sistema.
 // @Entity: informa ao JPA que esta classe é uma entidade persistente.
 // @Table(name = "users"): mapeia a entidade para a tabela 'users' do banco.
@@ -34,7 +35,7 @@ public class User {
 
     @Enumerated(EnumType.STRING)
     @Column(name = "system_role", nullable = false, length = 30)
-    private SystemRole systemRole = SystemRole.USER;
+    private SystemRole systemRole = SystemRole.user;
 
     @Column(name = "created_at", nullable = false, updatable = false)
     private OffsetDateTime createdAt = OffsetDateTime.now();

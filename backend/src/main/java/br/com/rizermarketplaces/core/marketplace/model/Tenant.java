@@ -2,6 +2,8 @@ package br.com.rizermarketplaces.core.marketplace.model;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 
@@ -27,8 +29,9 @@ public class Tenant {
     @Column(name = "is_public", nullable = false)
     private boolean isPublic;
 
+    @Enumerated(EnumType.STRING)
     @Column(nullable = false, length = 30)
-    private String status;
+    private TanentStatus status;
 
     @Column(name = "created_at", nullable = false, updatable = false)
     private OffsetDateTime createdAt;
@@ -56,7 +59,7 @@ public class Tenant {
         return isPublic;
     }
 
-    public String getStatus() {
+    public TanentStatus getStatus() {
         return status;
     }
 }
