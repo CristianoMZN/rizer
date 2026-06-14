@@ -9,24 +9,12 @@
 
         <!-- Results -->
         <div class="col">
-          <!-- Header -->
           <div class="row items-center justify-between q-mb-md">
             <div>
               <h1 class="results-title">Veículos</h1>
               <p class="text-grey-6 q-mb-none">{{ vehicles.length }} resultado(s) encontrado(s)</p>
             </div>
             <div class="row q-gutter-sm">
-              <q-select
-                v-model="sortBy"
-                :options="sortOptions"
-                label="Ordenar"
-                outlined
-                dense
-                emit-value
-                map-options
-                style="min-width: 180px"
-                @update:model-value="sortVehicles"
-              />
               <q-btn-toggle
                 v-model="viewMode"
                 :options="[{ icon: 'grid_view', value: 'grid' }, { icon: 'view_list', value: 'list' }]"
@@ -45,17 +33,13 @@
           </div>
 
           <div v-else :class="viewMode === 'grid' ? 'vehicles-grid' : 'vehicles-list'">
-            <VehicleCard
-              v-for="vehicle in vehicles"
-              :key="vehicle.id"
-              :vehicle="vehicle"
-              :is-wishlisted="wishlist.includes(vehicle.id)"
-              @toggle-wishlist="toggleWishlist"
-              @click="(v) => $router.push(`/produto/${v.id}`)"
+            <PublicProductCard
+              v-for="v in vehicles"
+              :key="v.id"
+              :product="v"
             />
           </div>
 
-          <!-- Load more -->
           <div v-if="vehicles.length && hasMore" class="flex flex-center q-mt-xl">
             <q-btn
               unelevated
@@ -75,41 +59,33 @@
 import { ref, onMounted, watch } from 'vue'
 import { useRoute } from 'vue-router'
 import type { Vehicle, VehicleFilters, VehicleType } from 'src/data/types'
-import { api } from 'src/services/apiMock'
-import VehicleCard from 'components/vehicle/VehicleCard.vue'
+import { catalogApi, MOCK_CONFIG, type PublicProductView } from 'src/services/api'
+import { api as mockApi } from 'src/services/apiMock'
 import FilterPanel from 'components/form/FilterPanel.vue'
 import LoadingSpinner from 'components/layout/LoadingSpinner.vue'
+import PublicProductCard from 'components/vehicle/PublicProductCard.vue'
 
 const route = useRoute()
-const vehicles = ref<Vehicle[]>([])
+const vehicles = ref<PublicProductView[]>([])
 const loading = ref(true)
 const loadingMore = ref(false)
-const hasMore = ref(true)
+const hasMore = ref(false)
 const viewMode = ref<'grid' | 'list'>('grid')
-const sortBy = ref('createdAt')
-const wishlist = ref<string[]>([])
+
+const filters = ref<VehicleFilters>(parseFiltersFromRoute())
 
 function parseFiltersFromRoute(): VehicleFilters {
   const f: VehicleFilters = {}
   if (route.query.search) f.search = route.query.search as string
   if (route.query.type) f.type = route.query.type as VehicleType
   if (route.query.brand) f.brand = route.query.brand as string
-  if (route.query.fuel) f.fuel = route.query.fuel as Vehicle['fuel']
+  if (route.query.fuel) f.fuel = route.query.fuel as NonNullable<VehicleFilters['fuel']>
   if (route.query.priceMax) {
     const value = Number(route.query.priceMax)
     if (!Number.isNaN(value)) f.priceMax = value
   }
   return f
 }
-
-const filters = ref<VehicleFilters>(parseFiltersFromRoute())
-
-const sortOptions = [
-  { label: 'Mais recentes', value: 'createdAt' },
-  { label: 'Menor preço', value: 'price_asc' },
-  { label: 'Maior preço', value: 'price_desc' },
-  { label: 'Menor KM', value: 'mileage' },
-]
 
 onMounted(async () => {
   await loadVehicles()
@@ -122,10 +98,83 @@ watch(() => route.query, () => {
 
 async function loadVehicles() {
   loading.value = true
-  vehicles.value = await api.getVehicles(filters.value)
-  sortVehicles()
+  if (MOCK_CONFIG.useBackend) {
+    try {
+      const params = buildBackendParams(filters.value)
+      const result = await catalogApi.searchProducts({ ...params, limit: 60 })
+      vehicles.value = result
+      hasMore.value = result.length >= 60
+    } catch {
+      vehicles.value = []
+      hasMore.value = false
+    }
+  } else {
+    const mockList = await mockApi.getVehicles(filters.value)
+    vehicles.value = mockList.map(toPublic)
+    hasMore.value = false
+  }
   loading.value = false
-  hasMore.value = vehicles.value.length >= 6
+}
+
+function buildBackendParams(f: VehicleFilters): Record<string, unknown> {
+  const params: Record<string, unknown> = {}
+  if (f.type) params.realm = toRealm(f.type)
+  if (f.fuel) params.fuel = f.fuel
+  if (f.transmission) {
+    params.transmission = f.transmission
+    params.transmissionDetail = f.transmission
+  }
+  if (f.color) params.color = f.color
+  if (f.bodyType) params.bodyType = f.bodyType
+  if (f.drivetrain) params.drivetrain = f.drivetrain
+  if (f.steering) params.steering = f.steering
+  if (f.condition) params.condition = f.condition
+  if (f.engine) params.engine = f.engine
+  if (f.cylinders !== undefined) params.cylinders = f.cylinders
+  if (f.armored !== undefined) params.armored = f.armored
+  if (f.abs !== undefined) params.abs = f.abs
+  return params
+}
+
+function toRealm(t: VehicleType): 'CAR' | 'MOTORCYCLE' | 'TRUCK' | 'NAUTICAL' | 'BUS' {
+  switch (t) {
+    case 'Moto': return 'MOTORCYCLE'
+    case 'Caminhão': return 'TRUCK'
+    case 'Ônibus': return 'BUS'
+    case 'Van/Furgão': return 'CAR'
+    case 'Carro':
+    default: return 'CAR'
+  }
+}
+
+function toPublic(v: Vehicle): PublicProductView {
+  return {
+    id: v.id,
+    title: v.title,
+    ...(v.description ? { description: v.description } : {}),
+    price: v.price,
+    currency: 'BRL',
+    realm: toRealm(v.type),
+    yearModel: v.year,
+    yearBuild: v.year,
+    ...(v.mileage !== undefined ? { mileageKm: v.mileage } : {}),
+    ...(v.fuel ? { fuel: v.fuel } : {}),
+    ...(v.transmission ? { transmission: v.transmission } : {}),
+    ...(v.brand ? { brandName: v.brand } : {}),
+    ...(v.model ? { modelName: v.model } : {}),
+    ...(v.subtype ? { categoryName: v.subtype } : {}),
+    ...(v.store?.id ? { physicalStoreId: v.store.id } : {}),
+    ...(v.store?.name ? { physicalStoreName: v.store.name } : {}),
+    ...(v.store?.address?.city ? { physicalStoreCity: v.store.address.city } : {}),
+    ...(v.store?.address?.state ? { physicalStoreState: v.store.address.state } : {}),
+    attributes: {},
+    images: (v.images ?? []).map((url: string, i: number) => ({
+      id: `${v.id}-${i}`,
+      url,
+      isCover: i === 0,
+    })),
+    createdAt: v.createdAt,
+  }
 }
 
 function onFiltersChange(f: VehicleFilters) {
@@ -133,28 +182,24 @@ function onFiltersChange(f: VehicleFilters) {
   void loadVehicles()
 }
 
-function sortVehicles() {
-  if (sortBy.value === 'price_asc') vehicles.value.sort((a, b) => a.price - b.price)
-  else if (sortBy.value === 'price_desc') vehicles.value.sort((a, b) => b.price - a.price)
-  else if (sortBy.value === 'mileage') vehicles.value.sort((a, b) => a.mileage - b.mileage)
-  else vehicles.value.sort((a, b) => b.createdAt.localeCompare(a.createdAt))
-}
-
 function clearFilters() {
   filters.value = {}
   void loadVehicles()
 }
 
-function toggleWishlist(id: string) {
-  const idx = wishlist.value.indexOf(id)
-  if (idx >= 0) wishlist.value.splice(idx, 1)
-  else wishlist.value.push(id)
-}
-
 async function loadMore() {
   loadingMore.value = true
-  await new Promise((r) => setTimeout(r, 800))
-  hasMore.value = false
+  if (MOCK_CONFIG.useBackend) {
+    const params = buildBackendParams(filters.value)
+    const more = await catalogApi.searchProducts({ ...params, limit: 60, offset: vehicles.value.length }).catch(() => [])
+    if (more.length === 0) {
+      hasMore.value = false
+    } else {
+      vehicles.value = [...vehicles.value, ...more]
+    }
+  } else {
+    hasMore.value = false
+  }
   loadingMore.value = false
 }
 </script>
@@ -165,7 +210,7 @@ async function loadMore() {
 
 .vehicles-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
   gap: 16px;
 }
 

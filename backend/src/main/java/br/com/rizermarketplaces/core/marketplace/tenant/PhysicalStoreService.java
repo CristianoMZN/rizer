@@ -1,5 +1,6 @@
 package br.com.rizermarketplaces.core.marketplace.tenant;
 
+import br.com.rizermarketplaces.core.marketplace.dto.CepLookupView;
 import br.com.rizermarketplaces.core.marketplace.dto.CreateStoreRequest;
 import br.com.rizermarketplaces.core.marketplace.dto.StoreView;
 import br.com.rizermarketplaces.core.marketplace.dto.UpdateStoreRequest;
@@ -24,16 +25,19 @@ public class PhysicalStoreService {
     private final PhysicalStoreRepository repository;
     private final TenantRepository tenantRepository;
     private final StoreLimitGuard storeLimitGuard;
+    private final CepLookupService cepLookupService;
     private final GeometryFactory geometryFactory = new GeometryFactory(new PrecisionModel(), 4326);
 
     public PhysicalStoreService(
         PhysicalStoreRepository repository,
         TenantRepository tenantRepository,
-        StoreLimitGuard storeLimitGuard
+        StoreLimitGuard storeLimitGuard,
+        CepLookupService cepLookupService
     ) {
         this.repository = repository;
         this.tenantRepository = tenantRepository;
         this.storeLimitGuard = storeLimitGuard;
+        this.cepLookupService = cepLookupService;
     }
 
     @Transactional(readOnly = true)
@@ -59,6 +63,16 @@ public class PhysicalStoreService {
         boolean wantsMain = Boolean.TRUE.equals(req.isMain());
         if (wantsMain) clearMainFlag(tenantId);
 
+        Double lat = req.latitude();
+        Double lng = req.longitude();
+        if ((lat == null || lng == null) && req.addressZipCode() != null && !req.addressZipCode().isBlank()) {
+            CepLookupView geo = cepLookupService.lookup(req.addressZipCode());
+            if (geo != null) {
+                if (lat == null) lat = geo.latitude();
+                if (lng == null) lng = geo.longitude();
+            }
+        }
+
         PhysicalStore s = new PhysicalStore();
         s.setTenantId(tenantId);
         s.setName(req.name().trim());
@@ -66,9 +80,21 @@ public class PhysicalStoreService {
         s.setPhone(req.phone());
         s.setWhatsapp(req.whatsapp());
         s.setEmail(req.email());
+        s.setAdminPhone(req.adminPhone());
+        s.setCnpj(req.cnpj());
+        s.setLegalName(req.legalName());
+        s.setBannerUrl(req.bannerUrl());
+        s.setBranch(Boolean.TRUE.equals(req.isBranch()));
         s.setMain(wantsMain);
         s.setActive(true);
-        s.setLocation(toPoint(req.latitude(), req.longitude()));
+        s.setLocation(toPoint(lat, lng));
+        s.setAddressZipCode(req.addressZipCode());
+        s.setAddressStreet(req.addressStreet());
+        s.setAddressNumber(req.addressNumber());
+        s.setAddressComplement(req.addressComplement());
+        s.setAddressNeighborhood(req.addressNeighborhood());
+        s.setAddressCity(req.addressCity());
+        s.setAddressState(req.addressState());
         s.setCreatedByUserId(actorId);
 
         PhysicalStore saved = repository.save(s);
@@ -83,6 +109,11 @@ public class PhysicalStoreService {
         if (req.phone() != null) s.setPhone(req.phone());
         if (req.whatsapp() != null) s.setWhatsapp(req.whatsapp());
         if (req.email() != null) s.setEmail(req.email());
+        if (req.adminPhone() != null) s.setAdminPhone(req.adminPhone());
+        if (req.cnpj() != null) s.setCnpj(req.cnpj());
+        if (req.legalName() != null) s.setLegalName(req.legalName());
+        if (req.bannerUrl() != null) s.setBannerUrl(req.bannerUrl());
+        if (req.isBranch() != null) s.setBranch(req.isBranch());
         if (Boolean.TRUE.equals(req.isMain())) {
             clearMainFlag(tenantId);
             s.setMain(true);
@@ -91,8 +122,25 @@ public class PhysicalStoreService {
         }
         if (Boolean.TRUE.equals(req.isActive())) s.setActive(true);
         else if (Boolean.FALSE.equals(req.isActive())) s.setActive(false);
-        if (req.latitude() != null && req.longitude() != null) {
-            s.setLocation(toPoint(req.latitude(), req.longitude()));
+        if (req.addressZipCode() != null) s.setAddressZipCode(req.addressZipCode());
+        if (req.addressStreet() != null) s.setAddressStreet(req.addressStreet());
+        if (req.addressNumber() != null) s.setAddressNumber(req.addressNumber());
+        if (req.addressComplement() != null) s.setAddressComplement(req.addressComplement());
+        if (req.addressNeighborhood() != null) s.setAddressNeighborhood(req.addressNeighborhood());
+        if (req.addressCity() != null) s.setAddressCity(req.addressCity());
+        if (req.addressState() != null) s.setAddressState(req.addressState());
+
+        Double lat = req.latitude();
+        Double lng = req.longitude();
+        if ((lat == null || lng == null) && req.addressZipCode() != null) {
+            CepLookupView geo = cepLookupService.lookup(req.addressZipCode());
+            if (geo != null) {
+                if (lat == null) lat = geo.latitude();
+                if (lng == null) lng = geo.longitude();
+            }
+        }
+        if (lat != null && lng != null) {
+            s.setLocation(toPoint(lat, lng));
         }
         return TenantMapper.toStoreView(repository.save(s));
     }
@@ -123,7 +171,6 @@ public class PhysicalStoreService {
 
     private org.locationtech.jts.geom.Point toPoint(Double lat, Double lng) {
         if (lat == null || lng == null) return null;
-        // PostGIS Point(X=longitude, Y=latitude) em SRID 4326
         return geometryFactory.createPoint(new Coordinate(lng, lat));
     }
 }

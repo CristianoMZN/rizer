@@ -1,5 +1,6 @@
 package br.com.rizermarketplaces.core.marketplace.product;
 
+import br.com.rizermarketplaces.core.marketplace.auth.TenantRoleGuard;
 import br.com.rizermarketplaces.core.marketplace.dto.CreateProductRequest;
 import br.com.rizermarketplaces.core.marketplace.dto.ProductView;
 import br.com.rizermarketplaces.core.marketplace.dto.UpdateProductRequest;
@@ -12,6 +13,8 @@ import br.com.rizermarketplaces.core.marketplace.model.ProductLocalization;
 import br.com.rizermarketplaces.core.marketplace.model.ProductLocationSource;
 import br.com.rizermarketplaces.core.marketplace.model.ProductStatus;
 import br.com.rizermarketplaces.core.marketplace.model.Tenant;
+import br.com.rizermarketplaces.core.marketplace.model.TenantUserRole;
+import br.com.rizermarketplaces.core.marketplace.model.User;
 import br.com.rizermarketplaces.core.marketplace.model.VehicleBrand;
 import br.com.rizermarketplaces.core.marketplace.model.VehicleModel;
 import br.com.rizermarketplaces.core.marketplace.repository.CategoryRepository;
@@ -20,6 +23,7 @@ import br.com.rizermarketplaces.core.marketplace.repository.ProductImageReposito
 import br.com.rizermarketplaces.core.marketplace.repository.ProductLocalizationRepository;
 import br.com.rizermarketplaces.core.marketplace.repository.ProductRepository;
 import br.com.rizermarketplaces.core.marketplace.repository.TenantRepository;
+import br.com.rizermarketplaces.core.marketplace.repository.UserRepository;
 import br.com.rizermarketplaces.core.marketplace.repository.VehicleBrandRepository;
 import br.com.rizermarketplaces.core.marketplace.repository.VehicleModelRepository;
 import br.com.rizermarketplaces.core.marketplace.rules.DynamicAttributeValidationService;
@@ -35,10 +39,20 @@ import java.math.RoundingMode;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.UUID;
 
 @Service
 public class ProductService {
+
+    /** Transições válidas no estado do produto. */
+    private static final Map<ProductStatus, Set<ProductStatus>> TRANSITIONS = Map.of(
+        ProductStatus.DRAFT,    Set.of(ProductStatus.ACTIVE, ProductStatus.INACTIVE, ProductStatus.ARCHIVED),
+        ProductStatus.ACTIVE,   Set.of(ProductStatus.INACTIVE, ProductStatus.ARCHIVED, ProductStatus.SOLD),
+        ProductStatus.INACTIVE, Set.of(ProductStatus.ACTIVE, ProductStatus.ARCHIVED),
+        ProductStatus.SOLD,     Set.of(ProductStatus.ARCHIVED),
+        ProductStatus.ARCHIVED, Set.of()
+    );
 
     private final ProductRepository productRepository;
     private final ProductLocalizationRepository localizationRepository;
@@ -48,7 +62,9 @@ public class ProductService {
     private final VehicleModelRepository modelRepository;
     private final PhysicalStoreRepository physicalStoreRepository;
     private final TenantRepository tenantRepository;
+    private final UserRepository userRepository;
     private final DynamicAttributeValidationService validator;
+    private final TenantRoleGuard roleGuard;
     private final GeometryFactory geometryFactory = new GeometryFactory(new PrecisionModel(), 4326);
 
     public ProductService(
@@ -60,7 +76,9 @@ public class ProductService {
         VehicleModelRepository modelRepository,
         PhysicalStoreRepository physicalStoreRepository,
         TenantRepository tenantRepository,
-        DynamicAttributeValidationService validator
+        UserRepository userRepository,
+        DynamicAttributeValidationService validator,
+        TenantRoleGuard roleGuard
     ) {
         this.productRepository = productRepository;
         this.localizationRepository = localizationRepository;
@@ -70,7 +88,9 @@ public class ProductService {
         this.modelRepository = modelRepository;
         this.physicalStoreRepository = physicalStoreRepository;
         this.tenantRepository = tenantRepository;
+        this.userRepository = userRepository;
         this.validator = validator;
+        this.roleGuard = roleGuard;
     }
 
     @Transactional(readOnly = true)
@@ -87,7 +107,6 @@ public class ProductService {
 
     @Transactional
     public ProductView create(UUID tenantId, CreateProductRequest req, UUID actorId) {
-        // Validações de integridade
         PhysicalStore store = physicalStoreRepository
             .findByIdAndTenantIdAndDeletedAtIsNull(req.physicalStoreId(), tenantId)
             .orElseThrow(() -> TenantExceptions.badRequest("Loja inválida para este tenant"));
@@ -128,6 +147,12 @@ public class ProductService {
             }
         }
 
+        boolean requestedPublish = Boolean.TRUE.equals(req.publish());
+        // SELLER não pode publicar — força rascunho mesmo se pediu publish.
+        if (requestedPublish && !canPublish(tenantId)) {
+            requestedPublish = false;
+        }
+
         Product p = new Product();
         p.setTenantId(tenantId);
         p.setPhysicalStoreId(req.physicalStoreId());
@@ -141,7 +166,19 @@ public class ProductService {
         if (req.fuel() != null) p.setFuel(req.fuel());
         if (req.transmission() != null) p.setTransmission(req.transmission());
         p.setAttributes(attrs);
-        p.setStatus(Boolean.TRUE.equals(req.publish()) ? ProductStatus.ACTIVE : ProductStatus.DRAFT);
+        p.setStatus(requestedPublish ? ProductStatus.ACTIVE : ProductStatus.DRAFT);
+        p.setSellerUserId(req.sellerUserId());
+        p.setLocationSource(ProductLocationSource.STORE);
+        if (req.latitude() != null && req.longitude() != null) {
+            p.setLatitude(req.latitude());
+            p.setLongitude(req.longitude());
+            p.setLocation(toPoint(req.latitude(), req.longitude()));
+            p.setLocationSource(ProductLocationSource.CUSTOM);
+        } else if (store.getLocation() != null) {
+            p.setLatitude(store.getLocation().getY());
+            p.setLongitude(store.getLocation().getX());
+            p.setLocation(store.getLocation());
+        }
         p.setCreatedByUserId(actorId);
         p = productRepository.save(p);
 
@@ -155,7 +192,51 @@ public class ProductService {
         loc.setPriceCents(req.price().setScale(2, RoundingMode.HALF_UP).movePointRight(2).longValueExact());
         loc.setCurrency(req.currency().toUpperCase());
         loc.setLocationSource(ProductLocationSource.STORE);
-        // Location null = herda da loja (compute on read)
+        localizationRepository.save(loc);
+
+        return toView(p);
+    }
+
+    /**
+     * Cria um rascunho mínimo. Não exige título, categoria, marca, preço.
+     * Usado pelo wizard ao clicar "Novo anúncio" — autosave por passo.
+     */
+    @Transactional
+    public ProductView createDraft(UUID tenantId, UUID physicalStoreId, UUID actorId) {
+        PhysicalStore store = physicalStoreRepository
+            .findByIdAndTenantIdAndDeletedAtIsNull(physicalStoreId, tenantId)
+            .orElseThrow(() -> TenantExceptions.badRequest("Loja inválida para este tenant"));
+
+        // Categoria placeholder — vamos usar a primeira categoria do realm CAR.
+        // Sem categoria o Product cria com realm=CAR e uma categoria default; a UI força
+        // o usuário a escolher uma categoria real antes de publicar.
+        Category defaultCategory = categoryRepository.findAll().stream()
+            .filter(c -> c.getRealm().name().equals("CAR"))
+            .findFirst()
+            .orElseThrow(() -> TenantExceptions.badRequest("Nenhuma categoria disponível para criar rascunho"));
+
+        Product p = new Product();
+        p.setTenantId(tenantId);
+        p.setPhysicalStoreId(physicalStoreId);
+        p.setCategoryId(defaultCategory.getId());
+        p.setRealm(defaultCategory.getRealm());
+        p.setStatus(ProductStatus.DRAFT);
+        p.setLocationSource(ProductLocationSource.STORE);
+        if (store.getLocation() != null) {
+            p.setLatitude(store.getLocation().getY());
+            p.setLongitude(store.getLocation().getX());
+            p.setLocation(store.getLocation());
+        }
+        p.setCreatedByUserId(actorId);
+        p = productRepository.save(p);
+
+        ProductLocalization loc = new ProductLocalization();
+        loc.setProductId(p.getId());
+        loc.setCountryCode("BR");
+        loc.setTitle("Rascunho sem título");
+        loc.setPriceCents(0L);
+        loc.setCurrency("BRL");
+        loc.setLocationSource(ProductLocationSource.STORE);
         localizationRepository.save(loc);
 
         return toView(p);
@@ -183,12 +264,16 @@ public class ProductService {
         if (req.fuel() != null) p.setFuel(req.fuel());
         if (req.transmission() != null) p.setTransmission(req.transmission());
         if (req.attributes() != null) p.setAttributes(new HashMap<>(req.attributes()));
+        if (req.sellerUserId() != null) p.setSellerUserId(req.sellerUserId());
+        if (req.latitude() != null && req.longitude() != null) {
+            p.setLatitude(req.latitude());
+            p.setLongitude(req.longitude());
+            p.setLocation(toPoint(req.latitude(), req.longitude()));
+            p.setLocationSource(ProductLocationSource.CUSTOM);
+        }
         if (req.status() != null) {
-            try {
-                p.setStatus(ProductStatus.valueOf(req.status()));
-            } catch (IllegalArgumentException e) {
-                throw TenantExceptions.badRequest("Status inválido: " + req.status());
-            }
+            assertTransitionAllowed(tenantId, p.getStatus(), req.status());
+            p.setStatus(req.status());
         }
         ProductLocalization loc = localizationRepository
             .findByProductIdAndCountryCode(p.getId(), "BR")
@@ -210,6 +295,14 @@ public class ProductService {
     }
 
     @Transactional
+    public ProductView changeStatus(UUID tenantId, UUID productId, ProductStatus newStatus) {
+        Product p = mustFind(tenantId, productId);
+        assertTransitionAllowed(tenantId, p.getStatus(), newStatus);
+        p.setStatus(newStatus);
+        return toView(productRepository.save(p));
+    }
+
+    @Transactional
     public void softDelete(UUID tenantId, UUID productId) {
         Product p = mustFind(tenantId, productId);
         p.setDeletedAt(java.time.OffsetDateTime.now());
@@ -217,9 +310,39 @@ public class ProductService {
         productRepository.save(p);
     }
 
+    private void assertTransitionAllowed(UUID tenantId, ProductStatus from, ProductStatus to) {
+        if (from == to) return;
+        Set<ProductStatus> allowed = TRANSITIONS.getOrDefault(from, Set.of());
+        if (!allowed.contains(to)) {
+            throw TenantExceptions.badRequest("Transição de status não permitida: " + from + " → " + to);
+        }
+        // RBAC por papel:
+        if (to == ProductStatus.ACTIVE) {
+            roleGuard.assertCanPublish(tenantId);
+        } else if (to == ProductStatus.SOLD) {
+            roleGuard.assertCanMarkSold(tenantId);
+        } else if (to == ProductStatus.ARCHIVED && from == ProductStatus.ACTIVE) {
+            roleGuard.assertCanMarkSold(tenantId);
+        }
+    }
+
+    private boolean canPublish(UUID tenantId) {
+        try {
+            roleGuard.assertCanPublish(tenantId);
+            return true;
+        } catch (Exception e) {
+            return false;
+        }
+    }
+
     private Product mustFind(UUID tenantId, UUID productId) {
         return productRepository.findByIdAndTenantIdAndDeletedAtIsNull(productId, tenantId)
             .orElseThrow(() -> TenantExceptions.notFound("Produto"));
+    }
+
+    private org.locationtech.jts.geom.Point toPoint(Double lat, Double lng) {
+        if (lat == null || lng == null) return null;
+        return geometryFactory.createPoint(new Coordinate(lng, lat));
     }
 
     public ProductView toView(Product p) {
@@ -232,11 +355,12 @@ public class ProductService {
             .orElse(null);
         List<ProductImage> images = imageRepository.findAllByProductIdOrderBySortOrderAscCreatedAtAsc(p.getId());
 
-        Double lat = null, lng = null;
+        Double lat = p.getLatitude();
+        Double lng = p.getLongitude();
         if (loc != null && loc.getLocation() != null) {
             lat = loc.getLocation().getY();
             lng = loc.getLocation().getX();
-        } else if (store != null && store.getLocation() != null) {
+        } else if (store != null && store.getLocation() != null && lat == null) {
             lat = store.getLocation().getY();
             lng = store.getLocation().getX();
         }
@@ -244,6 +368,11 @@ public class ProductService {
         BigDecimal price = loc != null
             ? BigDecimal.valueOf(loc.getPriceCents(), 2)
             : BigDecimal.ZERO;
+
+        User seller = null;
+        if (p.getSellerUserId() != null) {
+            seller = userRepository.findByIdAndDeletedAtIsNull(p.getSellerUserId()).orElse(null);
+        }
 
         return new ProductView(
             p.getId(), p.getTenantId(), p.getPhysicalStoreId(),
@@ -261,7 +390,11 @@ public class ProductService {
             loc != null ? loc.getDescription() : null,
             price, loc != null ? loc.getCurrency() : "BRL",
             lat, lng,
-            loc != null ? loc.getLocationSource().name() : ProductLocationSource.STORE.name(),
+            p.getLocationSource() != null ? p.getLocationSource().name() : ProductLocationSource.STORE.name(),
+            p.getSellerUserId(),
+            seller != null ? seller.getName() : null,
+            seller != null ? seller.getPhone() : null,
+            seller != null ? seller.getAvatarUrl() : null,
             images.stream().map(i -> new ProductView.ProductImageView(
                 i.getId(), i.getPublicUrl(), i.getContentType(), i.getSortOrder(), i.isCover()
             )).toList(),

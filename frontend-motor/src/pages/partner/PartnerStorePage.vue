@@ -167,9 +167,12 @@ async function load() {
         ...(store.phone ? { phone: store.phone } : {}),
         city: store.address.city, state: store.address.state,
         isMain: true,
+        isBranch: false,
+        gallery: [],
       }],
       activeProductsCount: MOCK_VEHICLES.filter((v) => v.store.id === store.id).length,
       realms: [],
+      gallery: [],
     }
     tenant.value = mockTenant
     products.value = MOCK_VEHICLES

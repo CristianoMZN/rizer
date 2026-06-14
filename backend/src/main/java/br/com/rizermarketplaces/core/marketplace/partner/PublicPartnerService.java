@@ -1,21 +1,26 @@
 package br.com.rizermarketplaces.core.marketplace.partner;
 
+import br.com.rizermarketplaces.core.marketplace.dto.GalleryImageView;
 import br.com.rizermarketplaces.core.marketplace.dto.PublicPartnerView;
 import br.com.rizermarketplaces.core.marketplace.dto.PublicProductView;
 import br.com.rizermarketplaces.core.marketplace.dto.PublicTenantView;
-import br.com.rizermarketplaces.core.marketplace.model.Address;
 import br.com.rizermarketplaces.core.marketplace.model.PhysicalStore;
+import br.com.rizermarketplaces.core.marketplace.model.PhysicalStoreGalleryImage;
 import br.com.rizermarketplaces.core.marketplace.model.Product;
 import br.com.rizermarketplaces.core.marketplace.model.ProductImage;
 import br.com.rizermarketplaces.core.marketplace.model.ProductStatus;
 import br.com.rizermarketplaces.core.marketplace.model.Tenant;
+import br.com.rizermarketplaces.core.marketplace.model.TenantGalleryImage;
 import br.com.rizermarketplaces.core.marketplace.model.TenantStatus;
-import br.com.rizermarketplaces.core.marketplace.repository.AddressRepository;
+import br.com.rizermarketplaces.core.marketplace.model.User;
+import br.com.rizermarketplaces.core.marketplace.repository.PhysicalStoreGalleryImageRepository;
 import br.com.rizermarketplaces.core.marketplace.repository.PhysicalStoreRepository;
 import br.com.rizermarketplaces.core.marketplace.repository.ProductImageRepository;
 import br.com.rizermarketplaces.core.marketplace.repository.ProductLocalizationRepository;
 import br.com.rizermarketplaces.core.marketplace.repository.ProductRepository;
+import br.com.rizermarketplaces.core.marketplace.repository.TenantGalleryImageRepository;
 import br.com.rizermarketplaces.core.marketplace.repository.TenantRepository;
+import br.com.rizermarketplaces.core.marketplace.repository.UserRepository;
 import br.com.rizermarketplaces.core.marketplace.repository.VehicleBrandRepository;
 import br.com.rizermarketplaces.core.marketplace.repository.VehicleModelRepository;
 import br.com.rizermarketplaces.core.marketplace.repository.CategoryRepository;
@@ -43,7 +48,9 @@ public class PublicPartnerService {
     private final CategoryRepository categoryRepository;
     private final VehicleBrandRepository brandRepository;
     private final VehicleModelRepository modelRepository;
-    private final AddressRepository addressRepository;
+    private final UserRepository userRepository;
+    private final TenantGalleryImageRepository tenantGalleryRepository;
+    private final PhysicalStoreGalleryImageRepository storeGalleryRepository;
 
     public PublicPartnerService(
         TenantRepository tenantRepository,
@@ -54,7 +61,9 @@ public class PublicPartnerService {
         CategoryRepository categoryRepository,
         VehicleBrandRepository brandRepository,
         VehicleModelRepository modelRepository,
-        AddressRepository addressRepository
+        UserRepository userRepository,
+        TenantGalleryImageRepository tenantGalleryRepository,
+        PhysicalStoreGalleryImageRepository storeGalleryRepository
     ) {
         this.tenantRepository = tenantRepository;
         this.physicalStoreRepository = physicalStoreRepository;
@@ -64,7 +73,9 @@ public class PublicPartnerService {
         this.categoryRepository = categoryRepository;
         this.brandRepository = brandRepository;
         this.modelRepository = modelRepository;
-        this.addressRepository = addressRepository;
+        this.userRepository = userRepository;
+        this.tenantGalleryRepository = tenantGalleryRepository;
+        this.storeGalleryRepository = storeGalleryRepository;
     }
 
     @Transactional(readOnly = true)
@@ -106,11 +117,13 @@ public class PublicPartnerService {
             t.getId(), ProductStatus.ACTIVE
         );
         Set<String> realms = new HashSet<>();
-        stores.forEach(s -> realms.add(s.getName()));
         return new PublicPartnerView(
             t.getId().toString(), t.getSlug(), t.getTradeName(), t.getDescription(),
             t.getLogoUrl(), t.getBannerUrl(), t.getWebsite(),
-            stores.stream().map(this::toStoreSummary).toList(),
+            stores.stream().map(s -> new PublicPartnerView.PublicStoreSummary(
+                s.getId().toString(), s.getName(), s.getSlug(),
+                s.getAddressCity(), s.getAddressState(), s.isMain()
+            )).toList(),
             (int) activeProducts,
             new ArrayList<>(realms)
         );
@@ -123,6 +136,9 @@ public class PublicPartnerService {
             t.getId(), ProductStatus.ACTIVE
         );
         Map<String, Object> theme = t.getTheme() != null ? t.getTheme() : new HashMap<>();
+        List<GalleryImageView> gallery = tenantGalleryRepository
+            .findAllByTenantIdOrderBySortOrderAscCreatedAtAsc(t.getId())
+            .stream().map(this::toGalleryView).toList();
         return new PublicTenantView(
             t.getId().toString(), t.getSlug(), t.getTradeName(), t.getLegalName(),
             t.getDescription(), t.getLogoUrl(), t.getBannerUrl(),
@@ -130,40 +146,34 @@ public class PublicPartnerService {
             theme,
             stores.stream().map(this::toStoreView).toList(),
             (int) activeProducts,
-            List.of()
-        );
-    }
-
-    private PublicPartnerView.PublicStoreSummary toStoreSummary(PhysicalStore s) {
-        Address a = s.getAddressId() != null ? addressRepository.findById(s.getAddressId()).orElse(null) : null;
-        return new PublicPartnerView.PublicStoreSummary(
-            s.getId().toString(), s.getName(), s.getSlug(),
-            a != null ? a.getCity() : null, a != null ? a.getState() : null, s.isMain()
+            List.of(),
+            gallery
         );
     }
 
     private PublicTenantView.PublicStoreView toStoreView(PhysicalStore s) {
-        Address a = s.getAddressId() != null ? addressRepository.findById(s.getAddressId()).orElse(null) : null;
         Double lat = null, lng = null;
         if (s.getLocation() != null) {
             lat = s.getLocation().getY();
             lng = s.getLocation().getX();
         }
+        List<GalleryImageView> gallery = storeGalleryRepository
+            .findAllByPhysicalStoreIdOrderBySortOrderAscCreatedAtAsc(s.getId())
+            .stream().map(this::toGalleryView).toList();
         return new PublicTenantView.PublicStoreView(
             s.getId().toString(), s.getName(), s.getSlug(),
             s.getPhone(), s.getWhatsapp(), s.getEmail(),
-            a != null ? a.getCity() : null, a != null ? a.getState() : null,
-            lat, lng, s.isMain()
+            s.getAddressCity(), s.getAddressState(),
+            lat, lng, s.getBannerUrl(), s.isBranch(), s.isMain(), gallery
         );
     }
 
-    private PublicProductView toPublicProduct(Product p) {
+    public PublicProductView toPublicProduct(Product p) {
         var loc = productLocalizationRepository
             .findByProductIdAndCountryCode(p.getId(), "BR")
             .orElse(null);
         var store = physicalStoreRepository.findById(p.getPhysicalStoreId()).orElse(null);
-        Address addr = store != null && store.getAddressId() != null
-            ? addressRepository.findById(store.getAddressId()).orElse(null) : null;
+        var tenant = store != null ? tenantRepository.findById(store.getTenantId()).orElse(null) : null;
         var category = categoryRepository.findById(p.getCategoryId()).orElse(null);
         var brand = p.getBrandId() != null ? brandRepository.findById(p.getBrandId()).orElse(null) : null;
         var model = p.getModelId() != null ? modelRepository.findById(p.getModelId()).orElse(null) : null;
@@ -173,6 +183,17 @@ public class PublicPartnerService {
         BigDecimal price = loc != null
             ? BigDecimal.valueOf(loc.getPriceCents(), 2)
             : BigDecimal.ZERO;
+
+        User seller = p.getSellerUserId() != null
+            ? userRepository.findByIdAndDeletedAtIsNull(p.getSellerUserId()).orElse(null)
+            : null;
+
+        Double lat = p.getLatitude();
+        Double lng = p.getLongitude();
+        if (lat == null && store != null && store.getLocation() != null) {
+            lat = store.getLocation().getY();
+            lng = store.getLocation().getX();
+        }
 
         return new PublicProductView(
             p.getId(),
@@ -189,13 +210,32 @@ public class PublicPartnerService {
             category != null ? category.getName() : null,
             store != null ? store.getId() : null,
             store != null ? store.getName() : null,
-            addr != null ? addr.getCity() : null,
-            addr != null ? addr.getState() : null,
+            store != null ? store.getAddressCity() : null,
+            store != null ? store.getAddressState() : null,
+            store != null ? store.getBannerUrl() : null,
             p.getAttributes(),
             images.stream().map(i -> new PublicProductView.PublicProductImage(
                 i.getId().toString(), i.getPublicUrl(), i.isCover()
             )).toList(),
-            p.getCreatedAt() != null ? p.getCreatedAt().toString() : null
+            p.getCreatedAt() != null ? p.getCreatedAt().toString() : null,
+            tenant != null ? tenant.getSlug() : null,
+            tenant != null ? tenant.getTradeName() : null,
+            tenant != null ? tenant.getLogoUrl() : null,
+            tenant != null ? tenant.getWhatsapp() : null,
+            tenant != null ? tenant.getPhone() : null,
+            seller != null ? seller.getId().toString() : null,
+            seller != null ? seller.getName() : null,
+            seller != null ? seller.getPhone() : null,
+            seller != null ? seller.getAvatarUrl() : null,
+            lat, lng
         );
+    }
+
+    private GalleryImageView toGalleryView(TenantGalleryImage i) {
+        return new GalleryImageView(i.getId(), i.getPublicUrl(), i.getCaption(), i.getSortOrder(), i.isCover(), i.getCreatedAt());
+    }
+
+    private GalleryImageView toGalleryView(PhysicalStoreGalleryImage i) {
+        return new GalleryImageView(i.getId(), i.getPublicUrl(), i.getCaption(), i.getSortOrder(), i.isCover(), i.getCreatedAt());
     }
 }

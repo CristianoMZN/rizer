@@ -1,5 +1,6 @@
 package br.com.rizermarketplaces.core.marketplace.dto;
 
+import br.com.rizermarketplaces.core.marketplace.model.ProductStatus;
 import jakarta.validation.constraints.Size;
 
 import java.math.BigDecimal;
@@ -11,8 +12,8 @@ public record UpdateProductRequest(
     UUID categoryId,
     Integer brandId,
     Integer modelId,
-    @Size(max = 200) String title,
-    @Size(max = 8000) String description,
+    String title,
+    String description,
     BigDecimal price,
     String currency,
     Integer yearModel,
@@ -21,5 +22,8 @@ public record UpdateProductRequest(
     String fuel,
     String transmission,
     Map<String, Object> attributes,
-    String status
+    ProductStatus status,
+    UUID sellerUserId,
+    Double latitude,
+    Double longitude
 ) {}

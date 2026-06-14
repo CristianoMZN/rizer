@@ -12,12 +12,15 @@ import br.com.rizermarketplaces.core.marketplace.repository.PhysicalStoreReposit
 import br.com.rizermarketplaces.core.marketplace.repository.TenantRepository;
 import br.com.rizermarketplaces.core.marketplace.repository.TenantUserRepository;
 import br.com.rizermarketplaces.core.marketplace.repository.UserRepository;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.OffsetDateTime;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
 @Service
@@ -27,17 +30,20 @@ public class TenantMemberService {
     private final UserRepository userRepository;
     private final TenantRepository tenantRepository;
     private final PhysicalStoreRepository physicalStoreRepository;
+    private final PasswordEncoder passwordEncoder;
 
     public TenantMemberService(
         TenantUserRepository tenantUserRepository,
         UserRepository userRepository,
         TenantRepository tenantRepository,
-        PhysicalStoreRepository physicalStoreRepository
+        PhysicalStoreRepository physicalStoreRepository,
+        PasswordEncoder passwordEncoder
     ) {
         this.tenantUserRepository = tenantUserRepository;
         this.userRepository = userRepository;
         this.tenantRepository = tenantRepository;
         this.physicalStoreRepository = physicalStoreRepository;
+        this.passwordEncoder = passwordEncoder;
     }
 
     @Transactional(readOnly = true)
@@ -54,6 +60,7 @@ public class TenantMemberService {
         validateStoreIds(tenant.getId(), req.physicalStoreIds());
 
         String email = req.email().toLowerCase().trim();
+        boolean passwordSet = false;
         User user = userRepository.findByEmail(email).orElseGet(() -> {
             User u = new User();
             u.setEmail(email);
@@ -68,6 +75,22 @@ public class TenantMemberService {
             userRepository.save(user);
         }
 
+        if (req.whatsapp() != null && !req.whatsapp().isBlank()) {
+            user.setPhone(req.whatsapp().trim());
+        }
+        if (req.avatarUrl() != null && !req.avatarUrl().isBlank()) {
+            user.setAvatarUrl(req.avatarUrl().trim());
+        }
+        if (req.password() != null && !req.password().isBlank()) {
+            user.setPasswordHash(passwordEncoder.encode(req.password()));
+            Map<String, Object> attrs = user.getAttributes() == null
+                ? new HashMap<>() : new HashMap<>(user.getAttributes());
+            attrs.put("password_must_change", true);
+            user.setAttributes(attrs);
+            passwordSet = true;
+        }
+        userRepository.save(user);
+
         TenantUser link = tenantUserRepository.findByTenantIdAndUserIdAndIsActiveTrue(tenant.getId(), user.getId())
             .orElseGet(TenantUser::new);
         link.setTenantId(tenant.getId());
@@ -81,7 +104,7 @@ public class TenantMemberService {
             req.physicalStoreIds().toArray(new UUID[0]));
         link = tenantUserRepository.save(link);
 
-        return toView(link);
+        return toView(link, passwordSet);
     }
 
     @Transactional
@@ -94,7 +117,7 @@ public class TenantMemberService {
         if (storeIds != null) {
             tu.setPhysicalStoreIds(storeIds.toArray(new UUID[0]));
         }
-        return toView(tenantUserRepository.save(tu));
+        return toView(tenantUserRepository.save(tu), false);
     }
 
     @Transactional
@@ -125,10 +148,17 @@ public class TenantMemberService {
     }
 
     private MemberView toView(TenantUser tu) {
+        return toView(tu, false);
+    }
+
+    private MemberView toView(TenantUser tu, boolean passwordSet) {
         User user = userRepository.findByIdAndDeletedAtIsNull(tu.getUserId()).orElse(null);
         Tenant tenant = tenantRepository.findById(tu.getTenantId()).orElse(null);
         List<UUID> storeIds = tu.getPhysicalStoreIds() == null ? List.of() :
             new ArrayList<>(List.of(tu.getPhysicalStoreIds()));
+        boolean mustChange = passwordSet
+            || (user != null && user.getAttributes() != null
+                && Boolean.TRUE.equals(user.getAttributes().get("password_must_change")));
         return new MemberView(
             tu.getId(), tu.getTenantId(),
             tenant != null ? tenant.getSlug() : null,
@@ -136,9 +166,12 @@ public class TenantMemberService {
             tu.getUserId(),
             user != null ? user.getName() : null,
             user != null ? user.getEmail() : null,
+            user != null ? user.getPhone() : null,
+            user != null ? user.getAvatarUrl() : null,
             tu.getRole(),
             storeIds,
             tu.isActive(),
+            mustChange,
             tu.getAcceptedAt(),
             tu.getExpireAt()
         );

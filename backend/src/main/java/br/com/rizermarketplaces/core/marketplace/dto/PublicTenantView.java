@@ -18,11 +18,13 @@ public record PublicTenantView(
     Map<String, Object> theme,
     List<PublicStoreView> stores,
     int activeProductsCount,
-    List<String> realms
+    List<String> realms,
+    List<GalleryImageView> gallery
 ) {
     public record PublicStoreView(
         String id, String name, String slug, String phone, String whatsapp,
         String email, String city, String state, Double latitude, Double longitude,
-        boolean isMain
+        String bannerUrl, boolean isBranch, boolean isMain,
+        List<GalleryImageView> gallery
     ) {}
 }

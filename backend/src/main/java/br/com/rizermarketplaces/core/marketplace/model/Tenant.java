@@ -12,6 +12,7 @@ import jakarta.persistence.PreUpdate;
 import jakarta.persistence.Table;
 import org.hibernate.annotations.JdbcTypeCode;
 import org.hibernate.type.SqlTypes;
+import org.locationtech.jts.geom.Point;
 
 import java.time.OffsetDateTime;
 import java.util.HashMap;
@@ -95,6 +96,39 @@ public class Tenant {
     @JdbcTypeCode(SqlTypes.JSON)
     @Column(nullable = false, columnDefinition = "jsonb")
     private Map<String, Object> attributes = new HashMap<>();
+
+    @Column(name = "partner_owner_name", length = 255)
+    private String partnerOwnerName;
+
+    @Column(name = "partner_owner_cpf", length = 14)
+    private String partnerOwnerCpf;
+
+    @Column(name = "admin_phone", length = 32)
+    private String adminPhone;
+
+    @Column(name = "address_zip_code", length = 16)
+    private String addressZipCode;
+
+    @Column(name = "address_street", length = 255)
+    private String addressStreet;
+
+    @Column(name = "address_number", length = 32)
+    private String addressNumber;
+
+    @Column(name = "address_complement", length = 120)
+    private String addressComplement;
+
+    @Column(name = "address_neighborhood", length = 120)
+    private String addressNeighborhood;
+
+    @Column(name = "address_city", length = 120)
+    private String addressCity;
+
+    @Column(name = "address_state", length = 80)
+    private String addressState;
+
+    @Column(name = "address_location", columnDefinition = "geography(Point, 4326)")
+    private Point addressLocation;
 
     @Column(name = "created_by_user_id")
     private UUID createdByUserId;
@@ -187,6 +221,39 @@ public class Tenant {
 
     public Map<String, Object> getAttributes() { return attributes; }
     public void setAttributes(Map<String, Object> attributes) { this.attributes = attributes; }
+
+    public String getPartnerOwnerName() { return partnerOwnerName; }
+    public void setPartnerOwnerName(String partnerOwnerName) { this.partnerOwnerName = partnerOwnerName; }
+
+    public String getPartnerOwnerCpf() { return partnerOwnerCpf; }
+    public void setPartnerOwnerCpf(String partnerOwnerCpf) { this.partnerOwnerCpf = partnerOwnerCpf; }
+
+    public String getAdminPhone() { return adminPhone; }
+    public void setAdminPhone(String adminPhone) { this.adminPhone = adminPhone; }
+
+    public String getAddressZipCode() { return addressZipCode; }
+    public void setAddressZipCode(String addressZipCode) { this.addressZipCode = addressZipCode; }
+
+    public String getAddressStreet() { return addressStreet; }
+    public void setAddressStreet(String addressStreet) { this.addressStreet = addressStreet; }
+
+    public String getAddressNumber() { return addressNumber; }
+    public void setAddressNumber(String addressNumber) { this.addressNumber = addressNumber; }
+
+    public String getAddressComplement() { return addressComplement; }
+    public void setAddressComplement(String addressComplement) { this.addressComplement = addressComplement; }
+
+    public String getAddressNeighborhood() { return addressNeighborhood; }
+    public void setAddressNeighborhood(String addressNeighborhood) { this.addressNeighborhood = addressNeighborhood; }
+
+    public String getAddressCity() { return addressCity; }
+    public void setAddressCity(String addressCity) { this.addressCity = addressCity; }
+
+    public String getAddressState() { return addressState; }
+    public void setAddressState(String addressState) { this.addressState = addressState; }
+
+    public Point getAddressLocation() { return addressLocation; }
+    public void setAddressLocation(Point addressLocation) { this.addressLocation = addressLocation; }
 
     public UUID getCreatedByUserId() { return createdByUserId; }
     public void setCreatedByUserId(UUID createdByUserId) { this.createdByUserId = createdByUserId; }

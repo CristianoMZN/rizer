@@ -28,6 +28,7 @@ const routes: RouteRecordRaw[] = [
       { path: 'seja-parceiro', component: () => import('pages/SejaParceiroPage.vue') },
       { path: 'registro', component: () => import('pages/RegistroPage.vue') },
       { path: 'entrar', component: () => import('pages/EntrarPage.vue') },
+      { path: 'perfil', name: 'perfil', component: () => import('pages/PerfilPage.vue'), meta: { requiresAuth: true } },
       { path: 'lojas/:slug', component: () => import('pages/LojaPage.vue') },
       { path: 'lojas/:slug/produtos', component: () => import('pages/LojaPage.vue') },
       { path: 'favoritos', component: () => import('pages/FavoritosPage.vue') },
@@ -70,6 +71,18 @@ const routes: RouteRecordRaw[] = [
         name: 'app-stores',
         component: () => import('pages/app/StoresPage.vue'),
         meta: { title: 'Lojas' },
+      },
+      {
+        path: 'empresa',
+        name: 'app-company',
+        component: () => import('pages/app/CompanyPage.vue'),
+        meta: { title: 'Minha Empresa' },
+      },
+      {
+        path: 'vendedores',
+        name: 'app-sellers',
+        component: () => import('pages/app/SellersPage.vue'),
+        meta: { title: 'Vendedores' },
       },
       {
         path: 'anuncios',

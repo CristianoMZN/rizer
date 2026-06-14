@@ -151,6 +151,7 @@ export interface VehicleFilters {
   subtype?: string
   brand?: string
   model?: string
+  version?: string
   yearMin?: number
   yearMax?: number
   priceMin?: number
@@ -162,6 +163,15 @@ export interface VehicleFilters {
   city?: string
   state?: string
   storeId?: string
+  condition?: 'Novo' | 'Usado' | 'Seminovo'
+  engine?: string
+  cylinders?: number
+  drivetrain?: 'Dianteira' | 'Traseira' | '4x4' | 'AWD'
+  steering?: 'Mecânica' | 'Hidráulica' | 'Elétrica' | 'Eletro-hidráulica'
+  bodyType?: string
+  color?: string
+  abs?: boolean
+  armored?: boolean
 }
 
 // ─── Optional Features Catalog ────────────────────────────────────────────────

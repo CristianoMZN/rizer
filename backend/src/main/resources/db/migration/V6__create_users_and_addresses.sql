@@ -28,7 +28,7 @@ CREATE INDEX idx_users_active ON users(is_active) WHERE deleted_at IS NULL;
 -- Endereços vinculados a usuários (ou, em fase futura, a tenants diretamente).
 CREATE TABLE addresses (
     id              UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-    country_code    CHAR(2) NOT NULL REFERENCES countries(code),
+    country_code    VARCHAR(2) NOT NULL REFERENCES countries(code),
     user_id         UUID REFERENCES users(id) ON DELETE CASCADE,
     label           VARCHAR(80),                                   -- ex.: "casa", "trabalho"
     zip_code        VARCHAR(16),

@@ -66,6 +66,21 @@
           :loading="loadingGoogle"
           @click="onGoogle"
         />
+        <q-btn
+          outline
+          full-width
+          icon="img:https://static.xx.fbcdn.net/rsrc.php/yv/r/h8Eun16b4M5.svg"
+          label="Continuar com Facebook"
+          color="primary"
+          class="q-mt-sm"
+          :loading="loadingFacebook"
+          @click="onFacebook"
+        />
+
+        <div class="q-mt-md text-center text-caption text-grey-6">
+          Não tem conta?
+          <router-link to="/registro" class="text-primary">Criar conta</router-link>
+        </div>
 
         <div v-if="!hasBackend" class="q-mt-md text-center text-caption text-grey-6">
           Backend desabilitado. Defina
@@ -101,6 +116,7 @@ const form = reactive({ email: '', password: '' })
 const showPass = ref(false)
 const loading = ref(false)
 const loadingGoogle = ref(false)
+const loadingFacebook = ref(false)
 const hasBackend = computed(() => MOCK_CONFIG.useBackend)
 
 async function onSubmit() {
@@ -138,6 +154,24 @@ async function onGoogle() {
     await auth.loginWithGoogle()
   } catch {
     loadingGoogle.value = false
+  }
+}
+
+async function onFacebook() {
+  if (!hasBackend.value) {
+    $q.notify({ message: 'Backend desabilitado.', color: 'warning' })
+    return
+  }
+  loadingFacebook.value = true
+  try {
+    await auth.loginWithFacebook()
+    const redirect = (route.query.redirect as string) || '/'
+    void router.push(redirect)
+  } catch (e: unknown) {
+    const msg = e instanceof Error ? e.message : 'Falha no login com Facebook.'
+    $q.notify({ message: msg, color: 'negative', position: 'top' })
+  } finally {
+    loadingFacebook.value = false
   }
 }
 </script>

@@ -3,7 +3,7 @@
 -- Sub-níveis = tipo (hatch, sedã, SUV...) e opcional modelo genérico.
 CREATE TABLE categories (
     id              UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-    country_code    CHAR(2) NOT NULL REFERENCES countries(code),
+    country_code    VARCHAR(2) NOT NULL REFERENCES countries(code),
     realm           VARCHAR(40) NOT NULL,            -- CAR | MOTORCYCLE | TRUCK | NAUTICAL | BUS  (espelha vehicle_brands.vehicle_type)
     path            ltree NOT NULL,                  -- ex.: 'carros.carros_passeio.hatch'
     name            VARCHAR(120) NOT NULL,

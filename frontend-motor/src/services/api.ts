@@ -67,8 +67,20 @@ export interface StoreView {
   phone?: string
   whatsapp?: string
   email?: string
+  adminPhone?: string
+  cnpj?: string
+  legalName?: string
+  bannerUrl?: string
+  isBranch: boolean
   isMain: boolean
   isActive: boolean
+  addressZipCode?: string
+  addressStreet?: string
+  addressNumber?: string
+  addressComplement?: string
+  addressNeighborhood?: string
+  addressCity?: string
+  addressState?: string
   latitude?: number
   longitude?: number
   createdAt: string
@@ -83,9 +95,12 @@ export interface MemberView {
   userId: string
   name?: string
   email?: string
+  whatsapp?: string
+  avatarUrl?: string
   role: TenantUserRole
   physicalStoreIds: string[]
   isActive: boolean
+  passwordMustChange?: boolean
   acceptedAt?: string
   expireAt?: string
 }
@@ -115,9 +130,21 @@ export interface CreateStoreRequest {
   phone?: string
   whatsapp?: string
   email?: string
-  isMain?: boolean
-  latitude?: number
-  longitude?: number
+  adminPhone?: string
+  cnpj?: string
+  legalName?: string
+  bannerUrl?: string
+  isBranch?: boolean | null
+  isMain?: boolean | null
+  addressZipCode?: string
+  addressStreet?: string
+  addressNumber?: string
+  addressComplement?: string
+  addressNeighborhood?: string
+  addressCity?: string
+  addressState?: string
+  latitude?: number | null
+  longitude?: number | null
 }
 
 export interface UpdateStoreRequest {
@@ -125,10 +152,22 @@ export interface UpdateStoreRequest {
   phone?: string
   whatsapp?: string
   email?: string
-  isMain?: boolean
-  isActive?: boolean
-  latitude?: number
-  longitude?: number
+  adminPhone?: string
+  cnpj?: string
+  legalName?: string
+  bannerUrl?: string
+  isBranch?: boolean | null
+  isMain?: boolean | null
+  isActive?: boolean | null
+  addressZipCode?: string
+  addressStreet?: string
+  addressNumber?: string
+  addressComplement?: string
+  addressNeighborhood?: string
+  addressCity?: string
+  addressState?: string
+  latitude?: number | null
+  longitude?: number | null
 }
 
 export interface InviteMemberRequest {
@@ -137,6 +176,9 @@ export interface InviteMemberRequest {
   name: string
   role: TenantUserRole
   physicalStoreIds?: string[]
+  whatsapp?: string
+  avatarUrl?: string
+  password?: string
 }
 
 // ─── Catálogo / Produtos ────────────────────────────────────────────────────
@@ -207,6 +249,10 @@ export interface ProductView {
   latitude?: number
   longitude?: number
   locationSource: 'STORE' | 'CUSTOM'
+  sellerUserId?: string
+  sellerName?: string
+  sellerWhatsapp?: string
+  sellerAvatarUrl?: string
   images: ProductImageView[]
   createdAt: string
   updatedAt: string
@@ -229,6 +275,9 @@ export interface CreateProductRequest {
   transmission?: string
   attributes?: Record<string, unknown>
   publish?: boolean
+  sellerUserId?: string
+  latitude?: number
+  longitude?: number
 }
 
 export interface UpdateProductRequest {
@@ -247,6 +296,9 @@ export interface UpdateProductRequest {
   transmission?: string
   attributes?: Record<string, unknown>
   status?: ProductStatus
+  sellerUserId?: string
+  latitude?: number
+  longitude?: number
 }
 
 export interface UploadResponse {
@@ -280,11 +332,23 @@ export const catalogApi = {
     brandId?: number
     minYear?: number
     maxYear?: number
+    fuel?: string
+    transmission?: string
+    transmissionDetail?: string
+    color?: string
+    bodyType?: string
+    drivetrain?: string
+    steering?: string
+    condition?: string
+    engine?: string
+    cylinders?: number
+    armored?: boolean
+    abs?: boolean
     limit?: number
     offset?: number
-  } = {}): Promise<ProductView[]> {
+  } = {}): Promise<PublicProductView[]> {
     const cc = params.countryCode ?? 'BR'
-    const res = await http.get<ProductView[]>(`/${cc}/public/products`, { params })
+    const res = await http.get<PublicProductView[]>(`/${cc}/public/products`, { params })
     return res.data
   },
 }
@@ -302,8 +366,16 @@ export const tenantProductApi = {
     const res = await http.post<ProductView>('/tenant/products', req)
     return res.data
   },
+  async createDraft(physicalStoreId: string): Promise<ProductView> {
+    const res = await http.post<ProductView>('/tenant/products/draft', { physicalStoreId })
+    return res.data
+  },
   async update(id: string, patch: UpdateProductRequest): Promise<ProductView> {
     const res = await http.patch<ProductView>(`/tenant/products/${id}`, patch)
+    return res.data
+  },
+  async changeStatus(id: string, status: ProductStatus): Promise<ProductView> {
+    const res = await http.patch<ProductView>(`/tenant/products/${id}/status`, { status })
     return res.data
   },
   async delete(id: string): Promise<void> {
@@ -354,6 +426,18 @@ export interface TenantSettingsView {
   customDomainError?: string
   customDomainLastCheckAt?: string
   theme: Record<string, string>
+  partnerOwnerName?: string
+  partnerOwnerCpf?: string
+  adminPhone?: string
+  addressZipCode?: string
+  addressStreet?: string
+  addressNumber?: string
+  addressComplement?: string
+  addressNeighborhood?: string
+  addressCity?: string
+  addressState?: string
+  addressLatitude?: number
+  addressLongitude?: number
 }
 
 export interface CustomDomainCheck {
@@ -377,15 +461,29 @@ export interface CustomDomainView {
 }
 
 export interface UpdateProfileRequest {
+  slug?: string
   tradeName?: string
   legalName?: string
+  cnpj?: string
+  partnerOwnerName?: string
+  partnerOwnerCpf?: string
   description?: string
   phone?: string
   whatsapp?: string
+  adminPhone?: string
   email?: string
   website?: string
   logoUrl?: string
   bannerUrl?: string
+  addressZipCode?: string
+  addressStreet?: string
+  addressNumber?: string
+  addressComplement?: string
+  addressNeighborhood?: string
+  addressCity?: string
+  addressState?: string
+  addressLatitude?: number | null
+  addressLongitude?: number | null
 }
 
 export const settingsApi = {
@@ -412,6 +510,97 @@ export const settingsApi = {
   async customDomainHistory(): Promise<CustomDomainCheck[]> {
     const res = await http.get<CustomDomainCheck[]>('/tenant/settings/custom-domain/history')
     return res.data
+  },
+}
+
+// ─── Galeria (tenant e loja) ────────────────────────────────────────────────
+
+export interface GalleryImageView {
+  id: string
+  url: string
+  caption?: string
+  sortOrder: number
+  isCover: boolean
+  createdAt: string
+}
+
+export const tenantGalleryApi = {
+  async list(): Promise<GalleryImageView[]> {
+    const res = await http.get<GalleryImageView[]>('/tenant/settings/gallery')
+    return res.data
+  },
+  async upload(file: File, caption?: string): Promise<GalleryImageView> {
+    const fd = new FormData()
+    fd.append('file', file)
+    if (caption) fd.append('caption', caption)
+    const res = await http.post<GalleryImageView>('/tenant/settings/gallery/upload', fd, {
+      headers: { 'Content-Type': 'multipart/form-data' },
+    })
+    return res.data
+  },
+  async setCover(id: string): Promise<GalleryImageView> {
+    const res = await http.patch<GalleryImageView>(`/tenant/settings/gallery/${id}/cover`)
+    return res.data
+  },
+  async reorder(ids: string[]): Promise<void> {
+    await http.patch('/tenant/settings/gallery/reorder', { ids })
+  },
+  async delete(id: string): Promise<void> {
+    await http.delete(`/tenant/settings/gallery/${id}`)
+  },
+}
+
+export const storeGalleryApi = {
+  async list(storeId: string): Promise<GalleryImageView[]> {
+    const res = await http.get<GalleryImageView[]>(`/tenant/stores/${storeId}/gallery`)
+    return res.data
+  },
+  async upload(storeId: string, file: File, caption?: string): Promise<GalleryImageView> {
+    const fd = new FormData()
+    fd.append('file', file)
+    if (caption) fd.append('caption', caption)
+    const res = await http.post<GalleryImageView>(`/tenant/stores/${storeId}/gallery/upload`, fd, {
+      headers: { 'Content-Type': 'multipart/form-data' },
+    })
+    return res.data
+  },
+  async setCover(storeId: string, id: string): Promise<GalleryImageView> {
+    const res = await http.patch<GalleryImageView>(`/tenant/stores/${storeId}/gallery/${id}/cover`)
+    return res.data
+  },
+  async reorder(storeId: string, ids: string[]): Promise<void> {
+    await http.patch(`/tenant/stores/${storeId}/gallery/reorder`, { ids })
+  },
+  async delete(storeId: string, id: string): Promise<void> {
+    await http.delete(`/tenant/stores/${storeId}/gallery/${id}`)
+  },
+}
+
+// ─── Utilitários (VIACEP / CepAberto) ──────────────────────────────────────
+
+export interface CepLookupView {
+  cep: string
+  street?: string
+  complement?: string
+  neighborhood?: string
+  city?: string
+  state?: string
+  ibge?: string
+  ddd?: string
+  latitude?: number
+  longitude?: number
+}
+
+export const utilApi = {
+  async cepLookup(cep: string): Promise<CepLookupView | null> {
+    try {
+      const res = await http.get<CepLookupView>(`/tenant/util/cep/${cep}`)
+      return res.data
+    } catch (e: unknown) {
+      const status = (e as { response?: { status?: number } })?.response?.status
+      if (status === 204) return null
+      throw e
+    }
   },
 }
 
@@ -741,6 +930,7 @@ export interface PublicTenantView {
   stores: PublicTenantStoreView[]
   activeProductsCount: number
   realms: string[]
+  gallery: GalleryImageView[]
 }
 
 export interface PublicTenantStoreView {
@@ -754,7 +944,10 @@ export interface PublicTenantStoreView {
   state?: string
   latitude?: number
   longitude?: number
+  bannerUrl?: string
+  isBranch: boolean
   isMain: boolean
+  gallery: GalleryImageView[]
 }
 
 export interface PublicProductView {
@@ -771,14 +964,27 @@ export interface PublicProductView {
   transmission?: string
   brandName?: string
   modelName?: string
+  categoryId?: string
   categoryName?: string
   physicalStoreId?: string
   physicalStoreName?: string
   physicalStoreCity?: string
   physicalStoreState?: string
+  physicalStoreBannerUrl?: string
   attributes: Record<string, unknown>
   images: PublicProductImageView[]
   createdAt?: string
+  tenantSlug?: string
+  tenantTradeName?: string
+  tenantLogoUrl?: string
+  tenantWhatsapp?: string
+  tenantPhone?: string
+  sellerUserId?: string
+  sellerName?: string
+  sellerWhatsapp?: string
+  sellerAvatarUrl?: string
+  latitude?: number
+  longitude?: number
 }
 
 export interface PublicProductImageView {
@@ -862,6 +1068,126 @@ export const tenantApi = {
   },
   async removeMember(id: string): Promise<void> {
     await http.delete(`/tenant/members/${id}`)
+  },
+}
+
+// ─── Me (consumidor final) ──────────────────────────────────────────────────
+
+export interface MediaUploadResponse {
+  url: string
+  key: string
+  bucket: string
+  contentType?: string
+  size: number
+}
+
+export const mediaApi = {
+  async uploadImage(file: File, context = 'user-avatar'): Promise<MediaUploadResponse> {
+    const fd = new FormData()
+    fd.append('file', file)
+    const res = await http.post<MediaUploadResponse>('/media/upload/image', fd, {
+      params: { context },
+      headers: { 'Content-Type': 'multipart/form-data' },
+    })
+    return res.data
+  },
+}
+
+export interface ConsumerProfile {
+  id: string
+  email: string
+  name: string
+  phone?: string
+  cpf?: string
+  birthDate?: string
+  avatarUrl?: string
+  systemRole: string
+  profileCompleted: boolean
+  createdAt: string
+  updatedAt: string
+}
+
+export interface AddressView {
+  id: string
+  label?: string
+  zipCode?: string
+  street: string
+  number?: string
+  complement?: string
+  neighborhood?: string
+  city: string
+  state: string
+  countryCode: string
+  country?: string
+  isPrimary: boolean
+  createdAt: string
+  updatedAt: string
+}
+
+export interface AddressInput {
+  label?: string
+  zipCode?: string
+  street: string
+  number?: string
+  complement?: string
+  neighborhood?: string
+  city: string
+  state: string
+  countryCode: string
+  country?: string
+  isPrimary?: boolean
+}
+
+export interface FavoriteView {
+  id: string
+  productId: string
+  createdAt: string
+  product: PublicProductView | null
+}
+
+export const meApi = {
+  async getProfile(): Promise<ConsumerProfile> {
+    const res = await http.get<ConsumerProfile>('/me/profile')
+    return res.data
+  },
+  async updateProfile(patch: Partial<{
+    name: string; phone: string; cpf: string; birthDate: string; avatarUrl: string
+  }>): Promise<ConsumerProfile> {
+    const res = await http.patch<ConsumerProfile>('/me/profile', patch)
+    return res.data
+  },
+  async listAddresses(): Promise<AddressView[]> {
+    const res = await http.get<AddressView[]>('/me/addresses')
+    return res.data
+  },
+  async createAddress(input: AddressInput): Promise<AddressView> {
+    const res = await http.post<AddressView>('/me/addresses', input)
+    return res.data
+  },
+  async updateAddress(id: string, patch: Partial<AddressInput>): Promise<AddressView> {
+    const res = await http.patch<AddressView>(`/me/addresses/${id}`, patch)
+    return res.data
+  },
+  async deleteAddress(id: string): Promise<void> {
+    await http.delete(`/me/addresses/${id}`)
+  },
+  async setPrimaryAddress(id: string): Promise<AddressView> {
+    const res = await http.post<AddressView>(`/me/addresses/${id}/primary`)
+    return res.data
+  },
+  async listFavorites(): Promise<FavoriteView[]> {
+    const res = await http.get<FavoriteView[]>('/me/favorites')
+    return res.data
+  },
+  async listFavoriteIds(): Promise<string[]> {
+    const res = await http.get<{ ids: string[] }>('/me/favorites/ids')
+    return res.data.ids ?? []
+  },
+  async addFavorite(productId: string): Promise<void> {
+    await http.post(`/me/favorites/${productId}`)
+  },
+  async removeFavorite(productId: string): Promise<void> {
+    await http.delete(`/me/favorites/${productId}`)
   },
 }
 

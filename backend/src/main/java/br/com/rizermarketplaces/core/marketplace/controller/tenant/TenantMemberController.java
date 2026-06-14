@@ -1,6 +1,7 @@
 package br.com.rizermarketplaces.core.marketplace.controller.tenant;
 
 import br.com.rizermarketplaces.core.marketplace.auth.CurrentUser;
+import br.com.rizermarketplaces.core.marketplace.auth.TenantRoleGuard;
 import br.com.rizermarketplaces.core.marketplace.context.TenantContextHolder;
 import br.com.rizermarketplaces.core.marketplace.dto.InviteMemberRequest;
 import br.com.rizermarketplaces.core.marketplace.dto.MemberView;
@@ -31,9 +32,11 @@ import java.util.UUID;
 public class TenantMemberController {
 
     private final TenantMemberService service;
+    private final TenantRoleGuard roleGuard;
 
-    public TenantMemberController(TenantMemberService service) {
+    public TenantMemberController(TenantMemberService service, TenantRoleGuard roleGuard) {
         this.service = service;
+        this.roleGuard = roleGuard;
     }
 
     @GetMapping
@@ -44,8 +47,12 @@ public class TenantMemberController {
     @PostMapping
     public ResponseEntity<MemberView> invite(@Valid @RequestBody InviteMemberRequest req) {
         UUID tenantId = requireTenant();
+        roleGuard.assertCanInviteMembers(tenantId);
         if (req.tenantId() == null) {
-            req = new InviteMemberRequest(tenantId, req.email(), req.name(), req.role(), req.physicalStoreIds());
+            req = new InviteMemberRequest(
+                tenantId, req.email(), req.name(), req.role(), req.physicalStoreIds(),
+                req.whatsapp(), req.avatarUrl(), req.password()
+            );
         } else if (!req.tenantId().equals(tenantId)) {
             throw TenantExceptions.forbidden("Não é possível convidar membro para outro tenant");
         }
@@ -58,13 +65,17 @@ public class TenantMemberController {
         @PathVariable UUID id,
         @RequestBody UpdateMemberRequest body
     ) {
+        UUID tenantId = requireTenant();
+        roleGuard.requireAtLeast(tenantId, TenantUserRole.MANAGER);
         TenantUserRole role = body.role() != null ? body.role() : null;
-        return service.updateRole(requireTenant(), id, role == null ? TenantUserRole.SELLER : role, body.physicalStoreIds());
+        return service.updateRole(tenantId, id, role == null ? TenantUserRole.SELLER : role, body.physicalStoreIds());
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> remove(@PathVariable UUID id) {
-        service.remove(requireTenant(), id);
+        UUID tenantId = requireTenant();
+        roleGuard.assertCanInviteMembers(tenantId);
+        service.remove(tenantId, id);
         return ResponseEntity.noContent().build();
     }
 

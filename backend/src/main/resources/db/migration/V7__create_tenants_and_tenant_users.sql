@@ -2,7 +2,7 @@
 -- Cada tenant vive dentro de um country (region context).
 CREATE TABLE tenants (
     id                          UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-    country_code                CHAR(2) NOT NULL REFERENCES countries(code),
+    country_code                VARCHAR(2) NOT NULL REFERENCES countries(code),
     slug                        VARCHAR(80) NOT NULL,                       -- usado no subdomínio slug.motorise.com.br
     cnpj                        VARCHAR(20),
     legal_name                  VARCHAR(255),                               -- razão social

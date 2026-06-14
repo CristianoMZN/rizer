@@ -74,29 +74,49 @@
             <p class="footer-brand">{{ tenantStoreName }}</p>
             <p class="text-grey-5 text-caption q-mb-none">{{ tenantFooterTagline }}</p>
           </div>
+
+          <!-- Institucional -->
+          <div class="col-6 col-sm-2">
+            <p class="footer-label">Institucional</p>
+            <div class="column q-gutter-xs">
+              <router-link to="/legal/termos-de-uso" class="footer-link">Termos de Uso</router-link>
+              <router-link to="/legal/politica-de-privacidade" class="footer-link">Privacidade e LGPD</router-link>
+            </div>
+          </div>
+
+          <!-- Vender -->
+          <div class="col-6 col-sm-2">
+            <p class="footer-label">Vender</p>
+            <div class="column q-gutter-xs">
+              <router-link to="/seja-parceiro" class="footer-link">Anuncie seu carro</router-link>
+              <router-link to="/seja-parceiro#planos" class="footer-link">Planos e preços</router-link>
+            </div>
+          </div>
+
+          <!-- Comprar -->
+          <div class="col-6 col-sm-2">
+            <p class="footer-label">Comprar</p>
+            <div class="column q-gutter-xs">
+              <router-link to="/registro" class="footer-link">Registre-se</router-link>
+              <router-link to="/favoritos" class="footer-link">Meus favoritos</router-link>
+            </div>
+          </div>
+
+          <!-- Navegação rápida -->
           <div
-            v-if="isMenuVisible('vehicles') || isMenuVisible('partners') || isMenuVisible('partner-cta')"
-            class="col"
+            v-if="isMenuVisible('vehicles') || isMenuVisible('partners')"
+            class="col-6 col-sm-2"
           >
             <p class="footer-label">Navegação</p>
             <div class="column q-gutter-xs">
               <router-link v-if="isMenuVisible('vehicles')" to="/produtos" class="footer-link">Veículos</router-link>
               <router-link v-if="isMenuVisible('partners')" to="/lojas-parceiras" class="footer-link">Lojas parceiras</router-link>
-              <router-link v-if="isMenuVisible('partner-cta')" to="/seja-parceiro" class="footer-link">Seja Parceiro</router-link>
-            </div>
-          </div>
-          <div class="col">
-            <p class="footer-label">Legal</p>
-            <div class="column q-gutter-xs">
-              <router-link to="/legal/termos-de-uso" class="footer-link">Termos de Uso</router-link>
-              <router-link to="/legal/politica-de-privacidade" class="footer-link">Privacidade (LGPD)</router-link>
-              <router-link to="/legal/politica-de-cookies" class="footer-link">Cookies</router-link>
             </div>
           </div>
         </div>
         <q-separator class="q-my-md footer-sep" />
         <p class="text-center text-grey-6 text-caption q-mb-none">
-          © {{ new Date().getFullYear() }} {{ tenantStoreName }}. Todos os direitos reservados.
+          Motorise é uma marca de Elson Cristiano Mozena LTDA · 65.794.511/0001-78 · © {{ new Date().getFullYear() }} · Todos os direitos reservados.
         </p>
       </footer>
     </q-page-container>

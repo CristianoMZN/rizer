@@ -61,6 +61,17 @@
           <p class="text-body1 text-grey-8" style="white-space: pre-wrap;">{{ tenant.description }}</p>
         </section>
 
+        <!-- Galeria -->
+        <section v-if="tenant.gallery && tenant.gallery.length > 0" class="q-mb-xl">
+          <h2 class="text-h6 q-mb-md">Galeria</h2>
+          <div class="row q-gutter-sm">
+            <div v-for="img in tenant.gallery" :key="img.id" class="position-relative">
+              <q-img :src="img.url" :ratio="4/3" style="width: 200px" />
+              <q-badge v-if="img.isCover" color="primary" class="absolute" style="top: 4px; left: 4px;">Capa</q-badge>
+            </div>
+          </div>
+        </section>
+
         <!-- Lojas físicas -->
         <section class="q-mb-xl">
           <h2 class="text-h6 q-mb-md">Lojas físicas</h2>
@@ -70,7 +81,12 @@
               :key="store.id"
               class="col-12 col-sm-6 col-md-4"
             >
-              <q-card flat bordered class="full-height">
+                  <q-card flat bordered class="full-height">
+                <q-img
+                  v-if="store.bannerUrl"
+                  :src="store.bannerUrl"
+                  :ratio="16/9"
+                />
                 <q-card-section>
                   <div class="row items-center">
                     <q-icon
@@ -116,6 +132,15 @@
                     :to="{ name: 'parceiro-loja', params: { slug: tenant.slug, storeSlug: store.slug } }"
                   />
                 </q-card-actions>
+                <div v-if="store.gallery && store.gallery.length > 0" class="q-pa-md row q-gutter-xs">
+                  <q-img
+                    v-for="g in store.gallery.slice(0, 4)"
+                    :key="g.id"
+                    :src="g.url"
+                    :ratio="1"
+                    style="width: 56px"
+                  />
+                </div>
               </q-card>
             </div>
           </div>
@@ -335,9 +360,12 @@ async function load() {
         ...(store.phone ? { phone: store.phone } : {}),
         city: store.address.city, state: store.address.state,
         isMain: true,
+        isBranch: false,
+        gallery: [],
       }],
       activeProductsCount: MOCK_VEHICLES.filter((v) => v.store.id === store.id).length,
       realms: [],
+      gallery: [],
     }
     tenant.value = mockTenant
     applyTheme(mockTenant)
@@ -386,6 +414,9 @@ onBeforeUnmount(resetTheme)
 </script>
 
 <style scoped lang="scss">
+.position-relative { position: relative; }
+.absolute { position: absolute; }
+
 .partner-hero {
   min-height: 280px;
   color: white;

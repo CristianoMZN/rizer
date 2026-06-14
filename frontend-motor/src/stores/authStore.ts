@@ -20,6 +20,7 @@ export interface TenantMembership {
   role: 'OWNER' | 'MANAGER' | 'SELLER'
   isOwner: boolean
   isManagerOrOwner: boolean
+  physicalStoreIds?: string[]
 }
 
 export interface AuthUser {
@@ -101,6 +102,57 @@ export function useAuthStore() {
     await Promise.resolve()
   }
 
+  async function loginWithFacebook(): Promise<void> {
+    if (!MOCK_CONFIG.useBackend) {
+      throw new Error('Backend desabilitado (MOCK_CONFIG.useBackend = false)')
+    }
+    if (typeof window === 'undefined') {
+      throw new Error('Indisponível no servidor')
+    }
+    interface FBSDK {
+      login: (
+        cb: (response: { authResponse?: { accessToken?: string } }) => void,
+        params?: { scope?: string }
+      ) => void
+    }
+    const fb = (window as unknown as { FB?: FBSDK }).FB
+    if (!fb) {
+      throw new Error('Login com Facebook indisponível: configure VITE_FACEBOOK_APP_ID ou aguarde o SDK carregar.')
+    }
+    await new Promise<void>((resolve, reject) => {
+      fb.login((response) => {
+        const accessToken = response?.authResponse?.accessToken
+        if (!accessToken) {
+          reject(new Error('Login com Facebook cancelado ou sem permissão.'))
+          return
+        }
+        http.post<LoginResult>('/auth/facebook', { accessToken })
+          .then((res) => { applyLogin(res.data); resolve() })
+          .catch(reject)
+      }, { scope: 'email,public_profile' })
+    })
+  }
+
+  async function register(payload: {
+    name: string
+    email: string
+    phone: string
+    password: string
+    passwordConfirmation: string
+    cpf?: string
+    birthDate?: string
+    avatarUrl?: string
+    termsVersion: string
+    privacyVersion: string
+  }): Promise<AuthUser> {
+    if (!MOCK_CONFIG.useBackend) {
+      throw new Error('Backend desabilitado (MOCK_CONFIG.useBackend = false)')
+    }
+    const res = await http.post<LoginResult>('/auth/register', payload)
+    applyLogin(res.data)
+    return res.data.user
+  }
+
   async function refreshMe(): Promise<AuthUser | null> {
     if (!MOCK_CONFIG.useBackend) {
       initialized.value = true
@@ -152,6 +204,8 @@ export function useAuthStore() {
     currentMembership,
     login,
     loginWithGoogle,
+    loginWithFacebook,
+    register,
     refreshMe,
     logout,
     switchTenant,

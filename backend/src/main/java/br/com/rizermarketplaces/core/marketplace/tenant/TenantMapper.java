@@ -22,7 +22,12 @@ public final class TenantMapper {
         return new StoreView(
             s.getId(), s.getTenantId(), s.getName(), s.getSlug(),
             s.getPhone(), s.getWhatsapp(), s.getEmail(),
-            s.isMain(), s.isActive(), lat, lng,
+            s.getAdminPhone(), s.getCnpj(), s.getLegalName(), s.getBannerUrl(),
+            s.isBranch(), s.isMain(), s.isActive(),
+            s.getAddressZipCode(), s.getAddressStreet(), s.getAddressNumber(),
+            s.getAddressComplement(), s.getAddressNeighborhood(),
+            s.getAddressCity(), s.getAddressState(),
+            lat, lng,
             s.getCreatedAt(), s.getUpdatedAt()
         );
     }

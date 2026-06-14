@@ -2,12 +2,11 @@ package br.com.rizermarketplaces.core.marketplace.controller.publicapi;
 
 import br.com.rizermarketplaces.core.marketplace.catalog.CatalogService;
 import br.com.rizermarketplaces.core.marketplace.dto.CategoryView;
-import br.com.rizermarketplaces.core.marketplace.dto.ProductView;
+import br.com.rizermarketplaces.core.marketplace.dto.PublicProductView;
 import br.com.rizermarketplaces.core.marketplace.dto.VehicleBrandView;
 import br.com.rizermarketplaces.core.marketplace.dto.VehicleModelView;
 import br.com.rizermarketplaces.core.marketplace.model.VehicleRealm;
-import br.com.rizermarketplaces.core.marketplace.product.ProductService;
-import br.com.rizermarketplaces.core.marketplace.repository.CategoryRepository;
+import br.com.rizermarketplaces.core.marketplace.partner.PublicPartnerService;
 import br.com.rizermarketplaces.core.marketplace.repository.ProductRepository;
 import br.com.rizermarketplaces.core.marketplace.tenant.TenantExceptions;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -26,19 +25,16 @@ import java.util.UUID;
 public class PublicCatalogController {
 
     private final CatalogService catalogService;
-    private final ProductService productService;
-    private final CategoryRepository categoryRepository;
+    private final PublicPartnerService partnerService;
     private final ProductRepository productRepository;
 
     public PublicCatalogController(
         CatalogService catalogService,
-        ProductService productService,
-        CategoryRepository categoryRepository,
+        PublicPartnerService partnerService,
         ProductRepository productRepository
     ) {
         this.catalogService = catalogService;
-        this.productService = productService;
-        this.categoryRepository = categoryRepository;
+        this.partnerService = partnerService;
         this.productRepository = productRepository;
     }
 
@@ -69,7 +65,7 @@ public class PublicCatalogController {
     }
 
     @GetMapping("/products")
-    public List<ProductView> searchProducts(
+    public List<PublicProductView> searchProducts(
         @PathVariable String countryCode,
         @RequestParam(required = false) UUID tenantId,
         @RequestParam(required = false) String realm,
@@ -77,6 +73,18 @@ public class PublicCatalogController {
         @RequestParam(required = false) Integer brandId,
         @RequestParam(required = false) Integer minYear,
         @RequestParam(required = false) Integer maxYear,
+        @RequestParam(required = false) String fuel,
+        @RequestParam(required = false) String transmission,
+        @RequestParam(required = false) String transmissionDetail,
+        @RequestParam(required = false) String color,
+        @RequestParam(required = false) String bodyType,
+        @RequestParam(required = false) String drivetrain,
+        @RequestParam(required = false) String steering,
+        @RequestParam(required = false) String condition,
+        @RequestParam(required = false) String engine,
+        @RequestParam(required = false) Integer cylinders,
+        @RequestParam(required = false) Boolean armored,
+        @RequestParam(required = false) Boolean abs,
         @RequestParam(defaultValue = "30") int limit,
         @RequestParam(defaultValue = "0") int offset
     ) {
@@ -87,9 +95,21 @@ public class PublicCatalogController {
             brandId,
             minYear == null ? null : minYear.shortValue(),
             maxYear == null ? null : maxYear.shortValue(),
+            fuel,
+            transmission,
+            transmissionDetail,
+            color,
+            bodyType,
+            drivetrain,
+            steering,
+            condition,
+            engine,
+            cylinders,
+            armored,
+            abs,
             Math.min(limit, 100),
             Math.max(offset, 0)
         );
-        return products.stream().map(productService::toView).toList();
+        return products.stream().map(partnerService::toPublicProduct).toList();
     }
 }

@@ -1,5 +1,7 @@
 import { defineBoot } from '#q-app/wrappers';
 import { useAuthStore } from 'src/stores/authStore';
+import { useFavorites } from 'src/composables/useFavorites';
+import { useMe } from 'src/composables/useMe';
 
 /**
  * Carrega o usuário autenticado (se houver) na inicialização do app.
@@ -7,5 +9,13 @@ import { useAuthStore } from 'src/stores/authStore';
  */
 export default defineBoot(() => {
   const auth = useAuthStore()
-  void auth.refreshMe()
+  const favorites = useFavorites()
+  const me = useMe()
+
+  void auth.refreshMe().then((user) => {
+    if (user) {
+      void favorites.loadIds()
+      void me.load().catch(() => { /* perfil/endereços opcionais */ })
+    }
+  })
 })

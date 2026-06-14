@@ -13,6 +13,7 @@ import jakarta.persistence.Table;
 import org.hibernate.annotations.JdbcTypeCode;
 import org.hibernate.type.SqlTypes;
 
+import java.time.LocalDate;
 import java.time.OffsetDateTime;
 import java.util.HashMap;
 import java.util.Map;
@@ -60,6 +61,15 @@ public class User {
 
     @Column(name = "last_login_at")
     private OffsetDateTime lastLoginAt;
+
+    @Column(name = "cpf", length = 14)
+    private String cpf;
+
+    @Column(name = "birth_date")
+    private LocalDate birthDate;
+
+    @Column(name = "profile_completed", nullable = false)
+    private boolean profileCompleted = false;
 
     @Column(name = "created_at", nullable = false, updatable = false)
     private OffsetDateTime createdAt;
@@ -116,6 +126,15 @@ public class User {
 
     public OffsetDateTime getLastLoginAt() { return lastLoginAt; }
     public void setLastLoginAt(OffsetDateTime lastLoginAt) { this.lastLoginAt = lastLoginAt; }
+
+    public String getCpf() { return cpf; }
+    public void setCpf(String cpf) { this.cpf = cpf; }
+
+    public LocalDate getBirthDate() { return birthDate; }
+    public void setBirthDate(LocalDate birthDate) { this.birthDate = birthDate; }
+
+    public boolean isProfileCompleted() { return profileCompleted; }
+    public void setProfileCompleted(boolean profileCompleted) { this.profileCompleted = profileCompleted; }
 
     public OffsetDateTime getCreatedAt() { return createdAt; }
     public OffsetDateTime getUpdatedAt() { return updatedAt; }

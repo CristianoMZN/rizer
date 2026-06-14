@@ -52,6 +52,34 @@
       </div>
     </section>
 
+    <!-- Categories -->
+    <section class="container q-pa-lg">
+      <h2 class="section-title q-mb-md">Categorias</h2>
+      <div class="categories-grid">
+        <button
+          v-for="cat in categories"
+          :key="cat.label"
+          class="category-card"
+          @click="searchByType(cat.label)"
+        >
+          <q-icon :name="cat.icon" size="42px" color="primary" />
+          <p class="cat-name">{{ cat.label }}</p>
+        </button>
+      </div>
+    </section>
+
+    <!-- Below FIPE (placeholder enquanto a view ainda não existe) -->
+    <section class="below-fipe-section q-py-xl">
+      <div class="container text-center">
+        <q-icon name="trending_down" size="64px" color="positive" />
+        <h2 class="section-title q-mt-md">Abaixo da FIPE</h2>
+        <p class="text-grey-6 q-mb-lg">
+          Veículos com preço abaixo da tabela FIPE. Em breve você verá as melhores oportunidades aqui.
+        </p>
+        <q-btn outline color="primary" label="Ver veículos" to="/produtos" />
+      </div>
+    </section>
+
     <!-- Stats banner -->
     <section class="stats-banner q-py-xl">
       <div class="container">
@@ -97,6 +125,17 @@ const vehicleTypes = [
   { label: 'Pickups', icon: 'airport_shuttle' },
 ]
 
+const categories = [
+  { label: 'Carros', icon: 'directions_car' },
+  { label: 'Motos', icon: 'two_wheeler' },
+  { label: 'SUVs', icon: 'commute' },
+  { label: 'Pickups', icon: 'airport_shuttle' },
+  { label: 'Caminhões', icon: 'local_shipping' },
+  { label: 'Ônibus', icon: 'directions_bus' },
+  { label: 'Náuticos', icon: 'sailing' },
+  { label: 'Vans/Furgões', icon: 'airport_shuttle' },
+]
+
 const stats = [
   { value: '4.200+', label: 'Veículos anunciados' },
   { value: '380+', label: 'Lojas parceiras' },
@@ -121,8 +160,17 @@ function onSearchAdvanced(payload: { query: string; filters: Pick<VehicleFilters
 }
 
 function searchByType(type: string) {
-  const typeMap: Record<string, string> = { Carros: 'Carro', Motos: 'Moto', SUVs: 'Carro', Pickups: 'Carro' }
-  void router.push({ path: '/produtos', query: { type: typeMap[type] } })
+  const typeMap: Record<string, string> = {
+    Carros: 'Carro',
+    Motos: 'Moto',
+    SUVs: 'Carro',
+    Pickups: 'Carro',
+    Caminhões: 'Caminhão',
+    Ônibus: 'Ônibus',
+    Náuticos: 'Náutico',
+    'Vans/Furgões': 'Van/Furgão',
+  }
+  void router.push({ path: '/produtos', query: { type: typeMap[type] || 'Carro' } })
 }
 
 function goToVehicle(v: Vehicle) {
@@ -181,6 +229,45 @@ function toggleWishlist(id: string) {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
   gap: 20px;
+}
+
+.categories-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+  gap: 12px;
+}
+
+.category-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  background: white;
+  border: 1px solid rgba(0, 0, 0, 0.06);
+  border-radius: 14px;
+  padding: 18px 12px;
+  cursor: pointer;
+  transition: transform 0.15s ease, box-shadow 0.15s ease, border-color 0.15s ease;
+  text-align: center;
+  font: inherit;
+  color: inherit;
+
+  &:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.06);
+    border-color: var(--q-primary);
+  }
+}
+
+.cat-name {
+  font-size: 13px;
+  font-weight: 700;
+  margin: 4px 0 0;
+}
+
+.below-fipe-section {
+  background: linear-gradient(180deg, #ffffff 0%, #f6f8ff 100%);
 }
 
 .stats-banner {

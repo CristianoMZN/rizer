@@ -10,7 +10,7 @@ CREATE TABLE plans (
     has_meta_dpa            BOOLEAN NOT NULL DEFAULT FALSE,
     has_google_shopping     BOOLEAN NOT NULL DEFAULT FALSE,
     price_cents             BIGINT NOT NULL,
-    currency                CHAR(3) NOT NULL DEFAULT 'BRL',
+    currency                VARCHAR(3) NOT NULL DEFAULT 'BRL',
     trial_days              INTEGER NOT NULL DEFAULT 0,
     stripe_price_id         VARCHAR(120),                              -- NULL até configurar no Stripe
     is_active               BOOLEAN NOT NULL DEFAULT TRUE,
@@ -54,7 +54,7 @@ CREATE TABLE subscriptions (
     tenant_id                UUID NOT NULL UNIQUE REFERENCES tenants(id) ON DELETE CASCADE,
     plan_code                VARCHAR(40) NOT NULL REFERENCES plans(code),
     status                   subscription_status NOT NULL,
-    currency                 CHAR(3) NOT NULL DEFAULT 'BRL',
+    currency                 VARCHAR(3) NOT NULL DEFAULT 'BRL',
     current_period_start     TIMESTAMPTZ NOT NULL,
     current_period_end       TIMESTAMPTZ NOT NULL,
     trial_start              TIMESTAMPTZ,

@@ -4,14 +4,22 @@ import br.com.rizermarketplaces.core.marketplace.auth.AuthService;
 import br.com.rizermarketplaces.core.marketplace.auth.CurrentUser;
 import br.com.rizermarketplaces.core.marketplace.auth.AuthenticatedUser;
 import br.com.rizermarketplaces.core.marketplace.dto.LoginDTO;
+import br.com.rizermarketplaces.core.marketplace.dto.RegisterConsumerRequest;
+import br.com.rizermarketplaces.core.marketplace.lgpd.ConsentService;
+import br.com.rizermarketplaces.core.marketplace.model.ConsentPurpose;
+import br.com.rizermarketplaces.core.marketplace.model.SystemRole;
 import br.com.rizermarketplaces.core.marketplace.model.User;
 import br.com.rizermarketplaces.core.marketplace.repository.UserRepository;
+import br.com.rizermarketplaces.core.marketplace.tenant.TenantExceptions;
+import br.com.rizermarketplaces.core.marketplace.tools.CpfValidator;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.CookieValue;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -20,6 +28,9 @@ import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.server.ResponseStatusException;
+
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 import java.util.Map;
 import java.util.UUID;
@@ -34,10 +45,22 @@ public class AuthController {
 
     private final AuthService authService;
     private final UserRepository userRepository;
+    private final PasswordEncoder passwordEncoder;
+    private final ConsentService consentService;
+    private final ObjectMapper objectMapper;
 
-    public AuthController(AuthService authService, UserRepository userRepository) {
+    public AuthController(
+        AuthService authService,
+        UserRepository userRepository,
+        PasswordEncoder passwordEncoder,
+        ConsentService consentService,
+        ObjectMapper objectMapper
+    ) {
         this.authService = authService;
         this.userRepository = userRepository;
+        this.passwordEncoder = passwordEncoder;
+        this.consentService = consentService;
+        this.objectMapper = objectMapper;
     }
 
     @PostMapping("/login")
@@ -71,6 +94,96 @@ public class AuthController {
             return ResponseEntity.ok(result);
         } catch (BadCredentialsException e) {
             throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, e.getMessage());
+        }
+    }
+
+    @PostMapping("/register")
+    @Operation(summary = "Registro público de consumidor final")
+    public ResponseEntity<AuthService.LoginResult> register(
+        @RequestBody RegisterConsumerRequest body,
+        HttpServletRequest request,
+        HttpServletResponse response
+    ) {
+        if (!body.getPassword().equals(body.getPasswordConfirmation())) {
+            throw TenantExceptions.badRequest("Confirmação de senha não confere");
+        }
+        String email = body.getEmail().trim().toLowerCase();
+        userRepository.findByEmail(email).ifPresent(u -> {
+            throw TenantExceptions.conflict("E-mail já cadastrado");
+        });
+        String cpfNormalized = null;
+        if (body.getCpf() != null && !body.getCpf().isBlank()) {
+            if (!CpfValidator.isValid(body.getCpf())) {
+                throw TenantExceptions.badRequest("CPF inválido");
+            }
+            cpfNormalized = CpfValidator.format(body.getCpf());
+            userRepository.findByCpfAndDeletedAtIsNull(cpfNormalized).ifPresent(u -> {
+                throw TenantExceptions.conflict("CPF já cadastrado");
+            });
+        }
+
+        User u = new User();
+        u.setEmail(email);
+        u.setName(body.getName().trim());
+        u.setPhone(body.getPhone().trim());
+        u.setCpf(cpfNormalized);
+        u.setBirthDate(body.getBirthDate());
+        u.setAvatarUrl(body.getAvatarUrl());
+        u.setProvider("local");
+        u.setPasswordHash(passwordEncoder.encode(body.getPassword()));
+        u.setSystemRole(SystemRole.user);
+        u.setProfileCompleted(cpfNormalized != null);
+        u = userRepository.save(u);
+
+        consentService.record(u.getId(), null, ConsentPurpose.terms_of_use, true, body.getTermsVersion(), request);
+        consentService.record(u.getId(), null, ConsentPurpose.privacy_policy, true, body.getPrivacyVersion(), request);
+
+        AuthService.LoginResult result = authService.buildLoginResult(u, java.util.List.of(), null);
+        writeAuthCookies(response, result.accessToken(), result.refreshToken());
+        return ResponseEntity.status(HttpStatus.CREATED).body(result);
+    }
+
+    @PostMapping("/facebook")
+    @Operation(summary = "Login com Facebook (accessToken do FB SDK)")
+    public ResponseEntity<AuthService.LoginResult> loginWithFacebook(
+        @RequestBody Map<String, String> body,
+        HttpServletResponse response
+    ) {
+        String accessToken = body.get("accessToken");
+        if (accessToken == null || accessToken.isBlank()) {
+            throw TenantExceptions.badRequest("accessToken é obrigatório");
+        }
+        try {
+            String url = "https://graph.facebook.com/me?fields=id,name,email,picture.type(large)&access_token="
+                + accessToken;
+            java.net.HttpURLConnection conn = (java.net.HttpURLConnection) java.net.URI.create(url).toURL().openConnection();
+            conn.setRequestMethod("GET");
+            conn.setConnectTimeout(5000);
+            conn.setReadTimeout(5000);
+            int status = conn.getResponseCode();
+            if (status != 200) {
+                throw new BadCredentialsException("Token Facebook inválido");
+            }
+            JsonNode payload = objectMapper.readTree(conn.getInputStream());
+            String fbId = payload.path("id").asText(null);
+            String email = payload.path("email").asText(null);
+            String name = payload.path("name").asText(null);
+            String picture = payload.path("picture").path("data").path("url").asText(null);
+            if (fbId == null || email == null) {
+                throw new BadCredentialsException("Resposta do Facebook sem id/email");
+            }
+            if (email == null || email.isBlank()) {
+                throw TenantExceptions.badRequest("Conta Facebook sem e-mail. Conecte um e-mail à sua conta.");
+            }
+            AuthService.LoginResult result = authService.loginOrCreateFromOAuth(
+                email, name != null ? name : email, "facebook", fbId, picture
+            );
+            writeAuthCookies(response, result.accessToken(), result.refreshToken());
+            return ResponseEntity.ok(result);
+        } catch (BadCredentialsException e) {
+            throw TenantExceptions.badRequest(e.getMessage());
+        } catch (Exception e) {
+            throw TenantExceptions.badRequest("Falha ao validar token do Facebook: " + e.getMessage());
         }
     }
 

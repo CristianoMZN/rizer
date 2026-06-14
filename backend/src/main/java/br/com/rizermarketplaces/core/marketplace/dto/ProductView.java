@@ -32,6 +32,10 @@ public record ProductView(
     Double latitude,
     Double longitude,
     String locationSource,
+    UUID sellerUserId,
+    String sellerName,
+    String sellerWhatsapp,
+    String sellerAvatarUrl,
     List<ProductImageView> images,
     OffsetDateTime createdAt,
     OffsetDateTime updatedAt

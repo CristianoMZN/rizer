@@ -1,12 +1,12 @@
 -- Contexto regional (país) usado para resolver moeda, locale e regras locais.
 -- Substitui o conceito ambíguo de "store" do esquema.tabelas.md original.
 CREATE TABLE countries (
-    code                     CHAR(2) PRIMARY KEY,            -- ISO 3166-1 alfa-2 (ex.: BR, US)
+    code                     VARCHAR(2) PRIMARY KEY,            -- ISO 3166-1 alfa-2 (ex.: BR, US)
     name                     VARCHAR(120) NOT NULL,          -- Nome em inglês
     local_name               VARCHAR(120) NOT NULL,          -- Nome local (ex.: Brasil)
-    iso_alpha_3              CHAR(3) NOT NULL,               -- ISO 3166-1 alfa-3 (ex.: BRA)
-    numeric_code             CHAR(3) NOT NULL,               -- ISO 3166-1 numeric (ex.: 076)
-    currency_code_iso        CHAR(3) NOT NULL,               -- ISO 4217 (ex.: BRL)
+    iso_alpha_3              VARCHAR(3) NOT NULL,               -- ISO 3166-1 alfa-3 (ex.: BRA)
+    numeric_code             VARCHAR(3) NOT NULL,               -- ISO 3166-1 numeric (ex.: 076)
+    currency_code_iso        VARCHAR(3) NOT NULL,               -- ISO 4217 (ex.: BRL)
     currency_name            VARCHAR(80) NOT NULL,
     currency_symbol          VARCHAR(8) NOT NULL,
     currency_symbol_position VARCHAR(8) NOT NULL DEFAULT 'start',  -- start | end

@@ -64,18 +64,18 @@
             {{ userInitial }}
           </q-avatar>
           <q-menu>
-            <q-list style="min-width: 160px">
+            <q-list style="min-width: 200px">
               <q-item clickable v-close-popup to="/perfil">
+                <q-item-section avatar><q-icon name="person" /></q-item-section>
                 <q-item-section>Meu Perfil</q-item-section>
               </q-item>
               <q-item clickable v-close-popup to="/favoritos">
+                <q-item-section avatar><q-icon name="favorite" /></q-item-section>
                 <q-item-section>Favoritos</q-item-section>
-              </q-item>
-              <q-item clickable v-close-popup to="/mensagens">
-                <q-item-section>Mensagens</q-item-section>
               </q-item>
               <q-separator />
               <q-item clickable v-close-popup @click="logout">
+                <q-item-section avatar><q-icon name="logout" /></q-item-section>
                 <q-item-section>Sair</q-item-section>
               </q-item>
             </q-list>
@@ -95,9 +95,13 @@
 <script setup lang="ts">
 import { computed } from 'vue'
 import { useRouter } from 'vue-router'
+import { useQuasar } from 'quasar'
 import SmartSearch from 'components/form/SmartSearch.vue'
 import NotificationBell from 'components/business/NotificationBell.vue'
 import { useTenant } from 'src/composables/useTenant'
+import { useAuthStore } from 'src/stores/authStore'
+import { useFavorites } from 'src/composables/useFavorites'
+import { useMe } from 'src/composables/useMe'
 import type { VehicleFilters } from 'src/data/types'
 
 interface Props {
@@ -117,6 +121,10 @@ const props = withDefaults(defineProps<Props>(), {
 defineEmits<{ 'toggle-drawer': [] }>()
 
 const router = useRouter()
+const $q = useQuasar()
+const auth = useAuthStore()
+const favorites = useFavorites()
+const me = useMe()
 const { storeName: tenantStoreName, logoUrl: tenantLogoUrl, isMenuVisible } = useTenant()
 
 const userInitial = computed(() =>
@@ -134,8 +142,15 @@ function onSearchAdvanced(payload: { query: string; filters: Pick<VehicleFilters
   void router.push({ path: '/produtos', query: queryParams })
 }
 
-function logout() {
-  void router.push('/')
+async function logout() {
+  try {
+    await auth.logout()
+  } finally {
+    favorites.reset()
+    me.reset()
+    $q.notify({ message: 'Você saiu da conta.', color: 'info', position: 'top' })
+    void router.push('/')
+  }
 }
 </script>
 

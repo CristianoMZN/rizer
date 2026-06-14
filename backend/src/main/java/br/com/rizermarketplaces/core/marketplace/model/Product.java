@@ -12,6 +12,7 @@ import jakarta.persistence.PreUpdate;
 import jakarta.persistence.Table;
 import org.hibernate.annotations.JdbcTypeCode;
 import org.hibernate.type.SqlTypes;
+import org.locationtech.jts.geom.Point;
 
 import java.time.OffsetDateTime;
 import java.util.HashMap;
@@ -74,6 +75,22 @@ public class Product {
     @Column(name = "instagram_media_id", length = 80)
     private String instagramMediaId;
 
+    @Column
+    private Double latitude;
+
+    @Column
+    private Double longitude;
+
+    @Column(columnDefinition = "geography(Point, 4326)")
+    private Point location;
+
+    @Enumerated(EnumType.STRING)
+    @Column(name = "location_source", nullable = false, length = 20)
+    private ProductLocationSource locationSource = ProductLocationSource.STORE;
+
+    @Column(name = "seller_user_id")
+    private UUID sellerUserId;
+
     @Column(name = "created_by_user_id")
     private UUID createdByUserId;
 
@@ -129,6 +146,22 @@ public class Product {
     public void setInstagramMediaId(String instagramMediaId) { this.instagramMediaId = instagramMediaId; }
     public UUID getCreatedByUserId() { return createdByUserId; }
     public void setCreatedByUserId(UUID createdByUserId) { this.createdByUserId = createdByUserId; }
+
+    public Double getLatitude() { return latitude; }
+    public void setLatitude(Double latitude) { this.latitude = latitude; }
+
+    public Double getLongitude() { return longitude; }
+    public void setLongitude(Double longitude) { this.longitude = longitude; }
+
+    public Point getLocation() { return location; }
+    public void setLocation(Point location) { this.location = location; }
+
+    public ProductLocationSource getLocationSource() { return locationSource; }
+    public void setLocationSource(ProductLocationSource locationSource) { this.locationSource = locationSource; }
+
+    public UUID getSellerUserId() { return sellerUserId; }
+    public void setSellerUserId(UUID sellerUserId) { this.sellerUserId = sellerUserId; }
+
     public OffsetDateTime getCreatedAt() { return createdAt; }
     public OffsetDateTime getUpdatedAt() { return updatedAt; }
     public OffsetDateTime getDeletedAt() { return deletedAt; }

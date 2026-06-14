@@ -2,7 +2,7 @@
 -- o campo `products.attributes` por (country_code, categoria).
 CREATE TABLE attribute_schemas (
     id                  UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-    country_code        CHAR(2) NOT NULL REFERENCES countries(code),
+    country_code        VARCHAR(2) NOT NULL REFERENCES countries(code),
     realm               VARCHAR(40),                                -- null = aplica a todos os reinos
     category_path       ltree NOT NULL,                             -- 'carros.*' cobre todos os sub-carros
     entity_type         VARCHAR(40) NOT NULL,                       -- 'product' | 'physical_store' | 'tenant'

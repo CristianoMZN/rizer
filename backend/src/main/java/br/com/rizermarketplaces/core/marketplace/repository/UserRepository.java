@@ -15,5 +15,7 @@ public interface UserRepository extends JpaRepository<User, UUID> {
 
     Optional<User> findByIdAndDeletedAtIsNull(UUID id);
 
+    Optional<User> findByCpfAndDeletedAtIsNull(String cpf);
+
     List<User> findBySystemRoleAndDeletedAtIsNullOrderByNameAsc(br.com.rizermarketplaces.core.marketplace.model.SystemRole role);
 }

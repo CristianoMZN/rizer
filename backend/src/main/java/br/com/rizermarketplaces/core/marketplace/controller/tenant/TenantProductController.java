@@ -3,6 +3,8 @@ package br.com.rizermarketplaces.core.marketplace.controller.tenant;
 import br.com.rizermarketplaces.core.marketplace.auth.CurrentUser;
 import br.com.rizermarketplaces.core.marketplace.context.TenantContextHolder;
 import br.com.rizermarketplaces.core.marketplace.dto.AttachImageRequest;
+import br.com.rizermarketplaces.core.marketplace.dto.ChangeStatusRequest;
+import br.com.rizermarketplaces.core.marketplace.dto.CreateDraftRequest;
 import br.com.rizermarketplaces.core.marketplace.dto.CreateProductRequest;
 import br.com.rizermarketplaces.core.marketplace.dto.ProductView;
 import br.com.rizermarketplaces.core.marketplace.dto.UpdateProductRequest;
@@ -64,9 +66,22 @@ public class TenantProductController {
         return ResponseEntity.status(HttpStatus.CREATED).body(view);
     }
 
+    @PostMapping("/draft")
+    public ResponseEntity<ProductView> createDraft(@Valid @RequestBody CreateDraftRequest req) {
+        UUID tenantId = requireTenant();
+        UUID actor = CurrentUser.require().getId();
+        ProductView view = productService.createDraft(tenantId, req.physicalStoreId(), actor);
+        return ResponseEntity.status(HttpStatus.CREATED).body(view);
+    }
+
     @PatchMapping("/{id}")
     public ProductView update(@PathVariable UUID id, @RequestBody UpdateProductRequest req) {
         return productService.update(requireTenant(), id, req);
+    }
+
+    @PatchMapping("/{id}/status")
+    public ProductView changeStatus(@PathVariable UUID id, @Valid @RequestBody ChangeStatusRequest req) {
+        return productService.changeStatus(requireTenant(), id, req.status());
     }
 
     @DeleteMapping("/{id}")

@@ -26,5 +26,8 @@ public record CreateProductRequest(
     String fuel,
     String transmission,
     Map<String, Object> attributes,           // validados pelo schema
-    Boolean publish                           // true = ACTIVE; false/null = DRAFT
+    Boolean publish,                          // true = ACTIVE; false/null = DRAFT
+    UUID sellerUserId,                        // vendedor responsável (opcional)
+    Double latitude,                          // geolocalização custom (opcional)
+    Double longitude
 ) {}

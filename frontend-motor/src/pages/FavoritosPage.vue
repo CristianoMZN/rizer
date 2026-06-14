@@ -1,55 +1,76 @@
 <template>
   <q-page class="favoritos-page container q-pa-md">
-    <h1 class="page-title">Meus Favoritos</h1>
+    <div class="row items-center justify-between q-mb-md">
+      <h1 class="page-title q-mb-none">Meus Favoritos</h1>
+      <p class="text-grey-6 q-mb-none">{{ favorites.length }} veículo(s)</p>
+    </div>
 
-    <LoadingSpinner v-if="loading" full-page />
+    <div v-if="!auth.isAuthenticated.value" class="empty-state flex flex-center column q-py-xl text-grey-5">
+      <q-icon name="favorite_border" size="80px" color="grey-3" />
+      <p class="text-h6">Faça login para ver seus favoritos</p>
+      <q-btn unelevated color="primary" to="/entrar" label="Entrar" />
+    </div>
 
-    <div v-else-if="!wishlisted.length" class="flex flex-center column q-py-xl text-grey-5">
+    <LoadingSpinner v-else-if="loading && !favorites.length" full-page />
+
+    <div v-else-if="!favorites.length" class="empty-state flex flex-center column q-py-xl text-grey-5">
       <q-icon name="favorite_border" size="80px" color="grey-3" />
       <p class="text-h6">Nenhum favorito ainda</p>
-      <q-btn unelevated color="primary" to="/produtos">Explorar veículos</q-btn>
+      <p class="text-caption">Toque no coração em qualquer anúncio para salvar aqui.</p>
+      <q-btn unelevated color="primary" to="/produtos" label="Explorar veículos" />
     </div>
 
     <div v-else class="vehicles-grid">
-      <WishlistCard
-        v-for="vehicle in wishlisted"
-        :key="vehicle.id"
-        :vehicle="vehicle"
-        @remove="removeFromWishlist"
+      <FavoriteVehicleCard
+        v-for="fav in favorites"
+        :key="fav.id"
+        :favorite="fav"
+        @remove="onRemove"
+        @open="(id) => $router.push(`/produto/${id}`)"
       />
     </div>
   </q-page>
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted } from 'vue'
-import type { Vehicle } from 'src/data/types'
-import { api } from 'src/services/apiMock'
-import { MOCK_USER } from 'src/data/mock'
+import { onMounted } from 'vue'
+import { useQuasar } from 'quasar'
+import { useAuthStore } from 'src/stores/authStore'
+import { useFavorites } from 'src/composables/useFavorites'
+import { MOCK_CONFIG } from 'src/services/api'
 import LoadingSpinner from 'components/layout/LoadingSpinner.vue'
-import WishlistCard from 'components/business/WishlistCard.vue'
+import FavoriteVehicleCard from 'components/vehicle/FavoriteVehicleCard.vue'
 
-const loading = ref(true)
-const wishlisted = ref<Vehicle[]>([])
+const $q = useQuasar()
+const auth = useAuthStore()
+const { favorites, loading, loadFavorites, loadIds, toggle } = useFavorites()
 
 onMounted(async () => {
-  const ids = MOCK_USER.wishlist
-  const all = await api.getVehicles()
-  wishlisted.value = all.filter((v) => ids.includes(v.id))
-  loading.value = false
+  if (!auth.isAuthenticated.value) return
+  if (MOCK_CONFIG.useBackend) {
+    await loadFavorites()
+  } else {
+    await loadIds()
+  }
 })
 
-function removeFromWishlist(id: string) {
-  wishlisted.value = wishlisted.value.filter((v) => v.id !== id)
+async function onRemove(productId: string) {
+  try {
+    await toggle(productId)
+    $q.notify({ message: 'Removido dos favoritos.', color: 'info', position: 'bottom' })
+  } catch {
+    $q.notify({ message: 'Falha ao remover.', color: 'negative' })
+  }
 }
 </script>
 
 <style scoped lang="scss">
 .container { max-width: 1280px; margin: 0 auto; }
-.page-title { font-size: 2rem; font-weight: 800; margin-bottom: 24px; }
+.page-title { font-size: 1.8rem; font-weight: 800; }
 .vehicles-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
   gap: 16px;
 }
+.empty-state { text-align: center; }
 </style>

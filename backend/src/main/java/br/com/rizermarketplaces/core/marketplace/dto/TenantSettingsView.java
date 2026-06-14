@@ -33,16 +33,38 @@ public record TenantSettingsView(
     CustomDomainStatus customDomainStatus,
     String customDomainError,
     OffsetDateTime customDomainLastCheckAt,
-    Map<String, Object> theme
+    Map<String, Object> theme,
+    String partnerOwnerName,
+    String partnerOwnerCpf,
+    String adminPhone,
+    String addressZipCode,
+    String addressStreet,
+    String addressNumber,
+    String addressComplement,
+    String addressNeighborhood,
+    String addressCity,
+    String addressState,
+    Double addressLatitude,
+    Double addressLongitude
 ) {
     public static TenantSettingsView of(Tenant t) {
+        Double lat = null, lng = null;
+        if (t.getAddressLocation() != null) {
+            lat = t.getAddressLocation().getY();
+            lng = t.getAddressLocation().getX();
+        }
         return new TenantSettingsView(
             t.getId(), t.getSlug(), t.getCountryCode(), t.getTradeName(),
             t.getLegalName(), t.getDescription(), t.getPhone(), t.getWhatsapp(),
             t.getEmail(), t.getWebsite(), t.getLogoUrl(), t.getBannerUrl(), t.getCnpj(),
             t.getStatus(), t.isPublic(), t.isPartnerPageEnabled(), t.isHadTrial(),
             t.getCustomDomain(), t.getCustomDomainStatus(), t.getCustomDomainError(),
-            t.getCustomDomainLastCheckAt(), t.getTheme()
+            t.getCustomDomainLastCheckAt(), t.getTheme(),
+            t.getPartnerOwnerName(), t.getPartnerOwnerCpf(), t.getAdminPhone(),
+            t.getAddressZipCode(), t.getAddressStreet(), t.getAddressNumber(),
+            t.getAddressComplement(), t.getAddressNeighborhood(),
+            t.getAddressCity(), t.getAddressState(),
+            lat, lng
         );
     }
 }

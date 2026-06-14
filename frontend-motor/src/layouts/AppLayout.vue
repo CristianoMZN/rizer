@@ -14,9 +14,9 @@
             <q-item-section avatar><q-icon name="dashboard" /></q-item-section>
             <q-item-section>Dashboard</q-item-section>
           </q-item>
-          <q-item clickable v-ripple :to="{ name: 'app-stores' }">
-            <q-item-section avatar><q-icon name="store" /></q-item-section>
-            <q-item-section>Lojas</q-item-section>
+          <q-item clickable v-ripple :to="{ name: 'app-company' }">
+            <q-item-section avatar><q-icon name="business" /></q-item-section>
+            <q-item-section>Minha Empresa</q-item-section>
           </q-item>
           <q-item clickable v-ripple :to="{ name: 'app-products' }">
             <q-item-section avatar><q-icon name="campaign" /></q-item-section>
@@ -25,6 +25,10 @@
           <q-item clickable v-ripple :to="{ name: 'app-leads' }">
             <q-item-section avatar><q-icon name="people" /></q-item-section>
             <q-item-section>Leads</q-item-section>
+          </q-item>
+          <q-item clickable v-ripple :to="{ name: 'app-sellers' }">
+            <q-item-section avatar><q-icon name="badge" /></q-item-section>
+            <q-item-section>Vendedores</q-item-section>
           </q-item>
           <q-item clickable v-ripple :to="{ name: 'app-members' }">
             <q-item-section avatar><q-icon name="group" /></q-item-section>
@@ -37,10 +41,6 @@
           <q-item clickable v-ripple :to="{ name: 'app-integrations' }">
             <q-item-section avatar><q-icon name="share" /></q-item-section>
             <q-item-section>Integrações</q-item-section>
-          </q-item>
-          <q-item clickable v-ripple :to="{ name: 'app-settings' }">
-            <q-item-section avatar><q-icon name="settings" /></q-item-section>
-            <q-item-section>Configurações</q-item-section>
           </q-item>
         </q-list>
       </q-scroll-area>

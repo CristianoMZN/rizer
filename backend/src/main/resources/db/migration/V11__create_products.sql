@@ -29,16 +29,16 @@ CREATE INDEX idx_products_category ON products(category_id);
 CREATE INDEX idx_products_brand_model ON products(brand_id, model_id);
 
 -- Localizações: título, descrição, preço e geolocalização.
--- Multi-currency-ready (CHAR(3) currency).
+-- Multi-currency-ready (VARCHAR(3) currency).
 -- A geolocalização pode herdar da loja (location_source = 'STORE') ou ser customizada ('CUSTOM').
 CREATE TABLE product_localizations (
     id                  UUID PRIMARY KEY DEFAULT gen_random_uuid(),
     product_id          UUID NOT NULL REFERENCES products(id) ON DELETE CASCADE,
-    country_code        CHAR(2) NOT NULL REFERENCES countries(code),
+    country_code        VARCHAR(2) NOT NULL REFERENCES countries(code),
     title               VARCHAR(200) NOT NULL,
     description         TEXT,
     price_cents         BIGINT NOT NULL,
-    currency            CHAR(3) NOT NULL DEFAULT 'BRL',
+    currency            VARCHAR(3) NOT NULL DEFAULT 'BRL',
     location            geography(Point, 4326),                   -- null quando location_source = STORE
     location_source     VARCHAR(20) NOT NULL DEFAULT 'STORE',     -- STORE | CUSTOM
     created_at          TIMESTAMPTZ NOT NULL DEFAULT NOW(),

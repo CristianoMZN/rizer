@@ -1,0 +1,4 @@
+CREATE TABLE IF NOT EXISTS subsubcategories (
+    id   BIGINT PRIMARY KEY,
+    slug VARCHAR(120) NOT NULL
+);

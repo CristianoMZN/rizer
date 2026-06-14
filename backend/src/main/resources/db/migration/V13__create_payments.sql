@@ -23,7 +23,7 @@ CREATE TABLE payments (
     method                   payment_method NOT NULL,
     status                   payment_status NOT NULL,
     amount_cents             BIGINT NOT NULL,
-    currency                 CHAR(3) NOT NULL DEFAULT 'BRL',
+    currency                 VARCHAR(3) NOT NULL DEFAULT 'BRL',
     period_start             TIMESTAMPTZ,
     period_end               TIMESTAMPTZ,
     description              TEXT,

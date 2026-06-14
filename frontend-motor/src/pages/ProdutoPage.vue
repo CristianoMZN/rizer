@@ -13,7 +13,7 @@
       <q-breadcrumbs class="q-mb-md" active-color="primary">
         <q-breadcrumbs-el label="Início" to="/" />
         <q-breadcrumbs-el label="Veículos" to="/produtos" />
-        <q-breadcrumbs-el :label="vehicle.title" />
+        <q-breadcrumbs-el :label="vehicle.title || 'Veículo'" />
       </q-breadcrumbs>
 
       <div class="row q-gutter-lg">
@@ -30,100 +30,125 @@
             class="main-carousel rounded-borders q-mb-lg"
           >
             <q-carousel-slide
-              v-for="(img, idx) in vehicle.images"
-              :key="idx"
+              v-for="(img, idx) in images"
+              :key="img.id"
               :name="idx"
-              :img-src="img"
+              :img-src="img.url"
+            />
+            <q-carousel-slide
+              v-if="!images.length"
+              name="empty"
+              :img-src="placeholderImg"
             />
           </q-carousel>
 
-          <!-- Specs grid -->
-          <q-card flat bordered class="rounded-borders q-mb-lg">
-            <q-card-section>
-              <p class="spec-title">Especificações</p>
-              <div class="specs-grid">
-                <div v-for="spec in specs" :key="spec.label" class="spec-item">
-                  <q-icon :name="spec.icon" color="primary" />
-                  <div>
-                    <p class="spec-label">{{ spec.label }}</p>
-                    <p class="spec-value">{{ spec.value }}</p>
-                  </div>
-                </div>
-              </div>
-            </q-card-section>
-          </q-card>
-
-          <!-- Optional features -->
-          <q-card flat bordered class="rounded-borders q-mb-lg" v-if="vehicle.features.length">
-            <q-card-section>
-              <p class="spec-title">Opcionais</p>
-              <div class="row q-gutter-xs">
-                <q-chip
-                  v-for="f in vehicle.features"
-                  :key="f"
-                  icon="check"
-                  color="primary"
-                  text-color="white"
-                  size="sm"
-                >{{ f }}</q-chip>
-              </div>
-            </q-card-section>
-          </q-card>
-
-          <!-- Price chart -->
-          <PriceChart
-            v-if="vehicle.fipePrice"
-            :price="vehicle.price"
-            :fipe-price="vehicle.fipePrice"
-            class="q-mb-lg"
-          />
-
-          <!-- Verification -->
-          <q-card flat bordered class="rounded-borders q-mb-lg">
-            <q-card-section>
-              <VehicleVerification :verification="vehicle.verification" />
-            </q-card-section>
-          </q-card>
-
-          <!-- Financing -->
-          <FinancingSimulator
-            v-if="vehicle.financing.length"
-            :vehicle-price="vehicle.price"
-            :options="vehicle.financing"
-            class="q-mb-lg"
-          />
-
-          <!-- Comparison -->
-          <div class="q-mb-lg">
-            <q-btn
-              outline
-              color="primary"
-              icon="compare"
-              label="Adicionar à Comparação"
-              @click="addToCompare"
-            />
+          <!-- Title + price on mobile -->
+          <div class="lt-md q-mb-md">
+            <p class="vehicle-title">{{ vehicle.title || 'Veículo' }}</p>
+            <p class="vehicle-price text-primary">{{ formatPrice(vehicle.price) }}</p>
+            <p class="text-caption text-grey-5">
+              {{ vehicle.yearModel || '—' }} ·
+              <span v-if="vehicle.mileageKm">{{ vehicle.mileageKm.toLocaleString('pt-BR') }} km · </span>
+              {{ vehicle.fuel || '—' }}
+            </p>
           </div>
+
+          <!-- Description -->
+          <q-card v-if="vehicle.description" flat bordered class="rounded-borders q-mb-lg">
+            <q-card-section>
+              <p class="spec-title">Descrição do vendedor</p>
+              <p class="text-body2" style="white-space: pre-wrap">{{ vehicle.description }}</p>
+            </q-card-section>
+          </q-card>
+
+          <!-- Specs: ficha técnica completa -->
+          <q-card flat bordered class="rounded-borders q-mb-lg">
+            <q-card-section>
+              <p class="spec-title">Características</p>
+              <AttributeRow
+                v-for="row in attributeRows"
+                :key="row.key"
+                :label="row.label"
+                :value="row.value"
+                :enum-labels="row.enumLabels ?? {}"
+              />
+              <p v-if="!attributeRows.length" class="text-grey-6 text-caption q-mt-sm q-mb-none">
+                O vendedor ainda não preencheu a ficha técnica.
+              </p>
+            </q-card-section>
+          </q-card>
+
+          <!-- Localização -->
+          <q-card flat bordered class="rounded-borders q-mb-lg">
+            <q-card-section>
+              <p class="spec-title">Localização</p>
+              <p class="row items-center q-gutter-xs">
+                <q-icon name="location_on" color="primary" />
+                <span class="text-body2">
+                  {{ vehicle.physicalStoreName || 'Loja parceira' }} ·
+                  {{ vehicle.physicalStoreCity || '—' }}/{{ vehicle.physicalStoreState || '—' }}
+                </span>
+              </p>
+            </q-card-section>
+          </q-card>
         </div>
 
         <!-- Right: price + contact -->
         <div class="col-12 col-md-4">
           <q-card flat bordered class="rounded-borders q-mb-md sticky-panel">
             <q-card-section>
-              <div class="row items-start justify-between">
+              <div class="row items-start justify-between gt-sm">
                 <div>
-                  <p class="vehicle-title">{{ vehicle.title }}</p>
+                  <p class="vehicle-title">{{ vehicle.title || 'Veículo' }}</p>
                   <p class="vehicle-price text-primary">{{ formatPrice(vehicle.price) }}</p>
                   <p class="text-caption text-grey-5">
-                    {{ vehicle.year }} · {{ vehicle.mileage.toLocaleString('pt-BR') }} km · {{ vehicle.fuel }}
+                    {{ vehicle.yearModel || '—' }} ·
+                    <span v-if="vehicle.mileageKm">{{ vehicle.mileageKm.toLocaleString('pt-BR') }} km · </span>
+                    {{ vehicle.fuel || '—' }}
                   </p>
                 </div>
                 <q-btn
                   flat
                   round
-                  :icon="wishlisted ? 'favorite' : 'favorite_border'"
-                  :color="wishlisted ? 'red' : 'grey-5'"
-                  @click="wishlisted = !wishlisted"
-                />
+                  :icon="isFav ? 'favorite' : 'favorite_border'"
+                  :color="isFav ? 'red' : 'grey-5'"
+                  :loading="togglingFav"
+                  @click="toggleFav"
+                >
+                  <q-tooltip>{{ isFav ? 'Remover dos favoritos' : 'Favoritar' }}</q-tooltip>
+                </q-btn>
+              </div>
+
+              <q-separator class="q-my-md" />
+
+              <!-- Tenant + Seller CTA -->
+              <div v-if="vehicle.tenantTradeName || vehicle.sellerName" class="q-mb-md">
+                <div class="row items-center q-gutter-sm">
+                  <q-avatar v-if="vehicle.tenantLogoUrl" size="32px" square>
+                    <img :src="vehicle.tenantLogoUrl" :alt="vehicle.tenantTradeName">
+                  </q-avatar>
+                  <q-avatar v-else size="32px" color="primary" text-color="white" square>
+                    {{ (vehicle.tenantTradeName || '?').charAt(0).toUpperCase() }}
+                  </q-avatar>
+                  <div>
+                    <div class="text-caption text-weight-medium">
+                      <router-link v-if="vehicle.tenantSlug" :to="`/parceiros/${vehicle.tenantSlug}`" class="text-primary">
+                        {{ vehicle.tenantTradeName }}
+                      </router-link>
+                      <span v-else>{{ vehicle.tenantTradeName }}</span>
+                      <span v-if="vehicle.physicalStoreName"> | {{ vehicle.physicalStoreName }}</span>
+                    </div>
+                    <div v-if="vehicle.sellerName" class="row items-center q-gutter-xs text-caption text-grey-6">
+                      <q-avatar v-if="vehicle.sellerAvatarUrl" size="20px">
+                        <img :src="vehicle.sellerAvatarUrl" :alt="vehicle.sellerName">
+                      </q-avatar>
+                      <q-avatar v-else size="20px" color="grey-3" text-color="grey-7">
+                        {{ vehicle.sellerName.charAt(0).toUpperCase() }}
+                      </q-avatar>
+                      <span>{{ vehicle.sellerName }}</span>
+                    </div>
+                  </div>
+                </div>
               </div>
 
               <q-separator class="q-my-md" />
@@ -155,65 +180,214 @@
               />
             </q-card-section>
           </q-card>
-
-          <!-- Store card -->
-          <StoreProfile :store="vehicle.store" />
         </div>
       </div>
+
+      <!-- Veículos parecidos -->
+      <section v-if="similar.length" class="q-mt-xl">
+        <h2 class="section-title q-mb-md">Veículos parecidos</h2>
+        <div class="row q-gutter-md">
+          <div v-for="v in similar" :key="v.id" class="col-12 col-sm-6 col-md-3">
+            <SimilarVehicleCard :product="v" />
+          </div>
+        </div>
+      </section>
     </div>
   </q-page>
 </template>
 
 <script setup lang="ts">
-import { ref, computed, onMounted } from 'vue'
+import { ref, computed, onMounted, watch } from 'vue'
 import { useRoute } from 'vue-router'
 import { useQuasar } from 'quasar'
+import { useFavorites } from 'src/composables/useFavorites'
+import { useAuthStore } from 'src/stores/authStore'
+import { partnerApi, catalogApi, MOCK_CONFIG, type PublicProductView, type PublicProductImageView } from 'src/services/api'
+import { api as mockApi } from 'src/services/apiMock'
 import type { Vehicle } from 'src/data/types'
-import { api } from 'src/services/apiMock'
 import LoadingSpinner from 'components/layout/LoadingSpinner.vue'
-import VehicleVerification from 'components/vehicle/VehicleVerification.vue'
-import FinancingSimulator from 'components/vehicle/FinancingSimulator.vue'
-import PriceChart from 'components/vehicle/PriceChart.vue'
-import StoreProfile from 'components/business/StoreProfile.vue'
+import AttributeRow from 'components/vehicle/AttributeRow.vue'
+import SimilarVehicleCard from 'components/vehicle/SimilarVehicleCard.vue'
+import {
+  ATTRIBUTE_LABELS,
+  CONDITION_LABELS,
+  DRIVETRAIN_LABELS,
+  STEERING_LABELS,
+  TRANSMISSION_DETAIL_LABELS,
+  ARMOR_LEVEL_LABELS,
+  BODY_TYPE_LABELS,
+  CYLINDER_LAYOUT_LABELS,
+  FUEL_SUPPLY_LABELS,
+} from 'src/i18n/vehicle'
 
 const route = useRoute()
 const $q = useQuasar()
+const auth = useAuthStore()
+const favs = useFavorites()
 
-const vehicle = ref<Vehicle | null>(null)
+const vehicle = ref<PublicProductView | null>(null)
+const similar = ref<PublicProductView[]>([])
 const loading = ref(true)
-const wishlisted = ref(false)
 const activeSlide = ref(0)
 const sendingLead = ref(false)
+const togglingFav = ref(false)
 const lead = ref({ name: '', phone: '', email: '', message: '' })
 
-onMounted(async () => {
-  vehicle.value = (await api.getVehicleById(route.params.id as string)) ?? null
-  loading.value = false
-})
+const isFav = computed(() => (vehicle.value ? favs.isFavorite(vehicle.value.id) : false))
+const placeholderImg = 'https://placehold.co/800x500/1a1a2e/ffffff?text=Motorise'
 
-const specs = computed(() => {
+const images = computed<PublicProductImageView[]>(() => vehicle.value?.images ?? [])
+
+const attributeRows = computed<{ key: string; label: string; value: unknown; enumLabels?: Record<string, string>; unit?: string }[]>(() => {
   if (!vehicle.value) return []
-  return [
-    { label: 'Ano', value: vehicle.value.year, icon: 'calendar_today' },
-    { label: 'Quilometragem', value: `${vehicle.value.mileage.toLocaleString('pt-BR')} km`, icon: 'speed' },
-    { label: 'Combustível', value: vehicle.value.fuel, icon: 'local_gas_station' },
-    { label: 'Câmbio', value: vehicle.value.transmission, icon: 'settings' },
-    { label: 'Cor', value: vehicle.value.color ?? '—', icon: 'palette' },
-    { label: 'Portas', value: vehicle.value.doors ?? '—', icon: 'door_back' },
-    { label: 'Motor', value: vehicle.value.engine ?? '—', icon: 'engineering' },
-    { label: 'Localização', value: `${vehicle.value.location.city}/${vehicle.value.location.state}`, icon: 'location_on' },
-  ]
+  const attrs = vehicle.value.attributes ?? {}
+  const rows: { key: string; label: string; value: unknown; enumLabels?: Record<string, string>; unit?: string }[] = []
+
+  // Ordena pelas chaves em ATTRIBUTE_LABELS (ordem do brief) e adiciona
+  // quaisquer chaves extras ao final em ordem alfabética.
+  const orderedKeys = Object.keys(ATTRIBUTE_LABELS).filter((k) => k in attrs)
+  const knownSet = new Set(orderedKeys)
+  const extraKeys = Object.keys(attrs).filter((k) => !knownSet.has(k)).sort()
+
+  for (const k of [...orderedKeys, ...extraKeys]) {
+    const v = attrs[k]
+    if (v === null || v === undefined || v === '') continue
+    const enumMap = enumLabelsFor(k)
+    if (enumMap) {
+      rows.push({ key: k, label: ATTRIBUTE_LABELS[k] ?? prettifyKey(k), value: v, enumLabels: enumMap })
+    } else {
+      rows.push({ key: k, label: ATTRIBUTE_LABELS[k] ?? prettifyKey(k), value: v })
+    }
+  }
+  return rows
 })
 
-const whatsappLink = computed(() => {
-  if (!vehicle.value) return '#'
-  const phone = vehicle.value.store.phone.replace(/\D/g, '')
-  const text = encodeURIComponent(`Olá! Tenho interesse no ${vehicle.value.title} anunciado no Motorise.`)
-  return `https://wa.me/55${phone}?text=${text}`
+function enumLabelsFor(k: string): Record<string, string> | null {
+  switch (k) {
+    case 'condition': return CONDITION_LABELS
+    case 'drivetrain': return DRIVETRAIN_LABELS
+    case 'steering': return STEERING_LABELS
+    case 'transmission_detail': return TRANSMISSION_DETAIL_LABELS
+    case 'armored_level': return ARMOR_LEVEL_LABELS
+    case 'body_type': return BODY_TYPE_LABELS
+    case 'cylinder_layout': return CYLINDER_LAYOUT_LABELS
+    case 'fuel_supply': return FUEL_SUPPLY_LABELS
+    default: return null
+  }
+}
+
+function prettifyKey(k: string): string {
+  return k.replace(/_/g, ' ').replace(/^./, (c) => c.toUpperCase())
+}
+
+onMounted(async () => {
+  await load()
 })
+
+watch(() => route.params.id, () => load())
+
+async function load() {
+  loading.value = true
+  const id = route.params.id as string
+  if (MOCK_CONFIG.useBackend) {
+    try {
+      // Tenta buscar pelos produtos do parceiro que também listam tudo
+      const partners = await partnerApi.listPartners('BR').catch(() => [])
+      let found: PublicProductView | null = null
+      for (const p of partners) {
+        const prods = await partnerApi.listProducts(p.slug, 'BR', 100).catch(() => [])
+        const match = prods.find((x) => x.id === id)
+        if (match) { found = match; break }
+      }
+      if (!found) {
+        // fallback: search via catalog sem filtro
+        const prods = await catalogApi.searchProducts({ limit: 200 })
+        found = prods.find((x) => x.id === id) ?? null
+      }
+      vehicle.value = found
+      if (found?.categoryName && found.categoryId) {
+        const more = await catalogApi.searchProducts({ categoryId: found.categoryId, limit: 8 }).catch(() => [])
+        similar.value = more.filter((x) => x.id !== found.id).slice(0, 4)
+      }
+    } catch {
+      vehicle.value = null
+    }
+  } else {
+    const v = await mockApi.getVehicleById(id)
+    if (v) {
+      vehicle.value = toPublic(v)
+    }
+    similar.value = []
+  }
+  loading.value = false
+  if (vehicle.value) {
+    if (auth.isAuthenticated.value) await favs.loadIds()
+  }
+}
+
+function toPublic(v: Vehicle): PublicProductView {
+  const realmRaw = v.type?.toUpperCase?.()
+  const realm = (['CAR', 'MOTORCYCLE', 'TRUCK', 'NAUTICAL', 'BUS'] as const).find((r) => r === realmRaw) ?? 'CAR'
+  return {
+    id: v.id,
+    title: v.title,
+    ...(v.description ? { description: v.description } : {}),
+    price: v.price,
+    currency: 'BRL',
+    realm,
+    yearModel: v.year,
+    yearBuild: v.year,
+    mileageKm: v.mileage,
+    ...(v.fuel ? { fuel: v.fuel } : {}),
+    ...(v.transmission ? { transmission: v.transmission } : {}),
+    ...(v.brand ? { brandName: v.brand } : {}),
+    ...(v.model ? { modelName: v.model } : {}),
+    ...(v.subtype ? { categoryName: v.subtype } : {}),
+    ...(v.store?.id ? { physicalStoreId: v.store.id } : {}),
+    ...(v.store?.name ? { physicalStoreName: v.store.name } : {}),
+    ...(v.store?.address?.city ? { physicalStoreCity: v.store.address.city } : {}),
+    ...(v.store?.address?.state ? { physicalStoreState: v.store.address.state } : {}),
+    attributes: {
+      color: v.color,
+      doors: v.doors,
+      engine: v.engine,
+      abs_brakes: (v.features ?? []).includes('ABS'),
+      previous_owners: 0,
+    },
+    images: (v.images ?? []).map((url: string, i: number) => ({
+      id: `${v.id}-${i}`,
+      url,
+      isCover: i === 0,
+    })),
+    createdAt: v.createdAt,
+  }
+}
 
 function formatPrice(val: number) {
   return val.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL', maximumFractionDigits: 0 })
+}
+
+const whatsappLink = computed(() => {
+  if (!vehicle.value) return '#'
+  const phone = (vehicle.value.physicalStoreName ?? '').replace(/\D/g, '')
+  const text = encodeURIComponent(`Olá! Tenho interesse no ${vehicle.value.title || 'veículo'} anunciado no Motorise.`)
+  return `https://wa.me/55${phone}?text=${text}`
+})
+
+async function toggleFav() {
+  if (!vehicle.value) return
+  if (!auth.isAuthenticated.value) {
+    $q.notify({ message: 'Faça login para favoritar.', color: 'warning' })
+    return
+  }
+  togglingFav.value = true
+  try {
+    await favs.toggle(vehicle.value.id)
+  } catch {
+    $q.notify({ message: 'Falha ao atualizar favorito.', color: 'negative' })
+  } finally {
+    togglingFav.value = false
+  }
 }
 
 async function sendLead() {
@@ -222,21 +396,22 @@ async function sendLead() {
     return
   }
   sendingLead.value = true
-  await api.createLead({
-    vehicleId: vehicle.value.id,
-    buyerName: lead.value.name,
-    buyerEmail: lead.value.email,
-    buyerPhone: lead.value.phone,
-    message: lead.value.message,
-    storeId: vehicle.value.store.id,
-  })
-  sendingLead.value = false
-  $q.notify({ message: 'Mensagem enviada! A loja entrará em contato.', color: 'positive', position: 'top' })
-  lead.value = { name: '', phone: '', email: '', message: '' }
-}
-
-function addToCompare() {
-  $q.notify({ message: 'Veículo adicionado à comparação.', color: 'info', position: 'bottom' })
+  try {
+    await mockApi.createLead({
+      vehicleId: vehicle.value.id,
+      buyerName: lead.value.name,
+      buyerEmail: lead.value.email,
+      buyerPhone: lead.value.phone,
+      message: lead.value.message,
+      storeId: vehicle.value.physicalStoreId ?? '',
+    })
+    $q.notify({ message: 'Mensagem enviada! A loja entrará em contato.', color: 'positive', position: 'top' })
+    lead.value = { name: '', phone: '', email: '', message: '' }
+  } catch {
+    $q.notify({ message: 'Falha ao enviar mensagem.', color: 'negative' })
+  } finally {
+    sendingLead.value = false
+  }
 }
 </script>
 
@@ -250,23 +425,8 @@ function addToCompare() {
 
 .vehicle-title { font-size: 18px; font-weight: 700; margin: 0 0 4px; }
 .vehicle-price { font-size: 28px; font-weight: 900; margin: 0; }
-
-.spec-title { font-size: 16px; font-weight: 700; margin-bottom: 12px; }
-
-.specs-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
-  gap: 12px;
-}
-
-.spec-item {
-  display: flex;
-  align-items: flex-start;
-  gap: 10px;
-}
-
-.spec-label { font-size: 11px; color: #9e9e9e; margin: 0; }
-.spec-value { font-size: 14px; font-weight: 600; margin: 2px 0 0; }
+.spec-title { font-size: 16px; font-weight: 700; margin: 0 0 12px; }
+.section-title { font-size: 1.5rem; font-weight: 800; margin: 0; }
 
 .sticky-panel {
   position: sticky;

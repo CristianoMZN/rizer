@@ -59,6 +59,42 @@ public class PhysicalStore {
     @Column(columnDefinition = "geography(Point, 4326)")
     private Point location;
 
+    @Column(length = 20)
+    private String cnpj;
+
+    @Column(name = "legal_name", length = 255)
+    private String legalName;
+
+    @Column(name = "admin_phone", length = 32)
+    private String adminPhone;
+
+    @Column(name = "banner_url", length = 512)
+    private String bannerUrl;
+
+    @Column(name = "is_branch", nullable = false)
+    private boolean isBranch = false;
+
+    @Column(name = "address_zip_code", length = 16)
+    private String addressZipCode;
+
+    @Column(name = "address_street", length = 255)
+    private String addressStreet;
+
+    @Column(name = "address_number", length = 32)
+    private String addressNumber;
+
+    @Column(name = "address_complement", length = 120)
+    private String addressComplement;
+
+    @Column(name = "address_neighborhood", length = 120)
+    private String addressNeighborhood;
+
+    @Column(name = "address_city", length = 120)
+    private String addressCity;
+
+    @Column(name = "address_state", length = 80)
+    private String addressState;
+
     @Column(name = "created_by_user_id")
     private UUID createdByUserId;
 
@@ -106,6 +142,43 @@ public class PhysicalStore {
     public void setActive(boolean active) { isActive = active; }
     public Point getLocation() { return location; }
     public void setLocation(Point location) { this.location = location; }
+
+    public String getCnpj() { return cnpj; }
+    public void setCnpj(String cnpj) { this.cnpj = cnpj; }
+
+    public String getLegalName() { return legalName; }
+    public void setLegalName(String legalName) { this.legalName = legalName; }
+
+    public String getAdminPhone() { return adminPhone; }
+    public void setAdminPhone(String adminPhone) { this.adminPhone = adminPhone; }
+
+    public String getBannerUrl() { return bannerUrl; }
+    public void setBannerUrl(String bannerUrl) { this.bannerUrl = bannerUrl; }
+
+    public boolean isBranch() { return isBranch; }
+    public void setBranch(boolean branch) { isBranch = branch; }
+
+    public String getAddressZipCode() { return addressZipCode; }
+    public void setAddressZipCode(String addressZipCode) { this.addressZipCode = addressZipCode; }
+
+    public String getAddressStreet() { return addressStreet; }
+    public void setAddressStreet(String addressStreet) { this.addressStreet = addressStreet; }
+
+    public String getAddressNumber() { return addressNumber; }
+    public void setAddressNumber(String addressNumber) { this.addressNumber = addressNumber; }
+
+    public String getAddressComplement() { return addressComplement; }
+    public void setAddressComplement(String addressComplement) { this.addressComplement = addressComplement; }
+
+    public String getAddressNeighborhood() { return addressNeighborhood; }
+    public void setAddressNeighborhood(String addressNeighborhood) { this.addressNeighborhood = addressNeighborhood; }
+
+    public String getAddressCity() { return addressCity; }
+    public void setAddressCity(String addressCity) { this.addressCity = addressCity; }
+
+    public String getAddressState() { return addressState; }
+    public void setAddressState(String addressState) { this.addressState = addressState; }
+
     public UUID getCreatedByUserId() { return createdByUserId; }
     public void setCreatedByUserId(UUID createdByUserId) { this.createdByUserId = createdByUserId; }
     public OffsetDateTime getCreatedAt() { return createdAt; }
