@@ -7,7 +7,7 @@
 **Stack:** Spring Boot 4 + Java 25 (backend) · Vue 3 + Quasar 2 SSR/PWA (frontend) · PostgreSQL/PostGIS · Redis · Magalu S3 · Stripe · Meta Graph API · Google Shopping · Cloudflare DNS.
 
 **Status (jun/2026):** MVP completo — 9 fases concluídas (ver `docs/PLAN-saas-b2b.md`).
-17 migrations, ~50 entidades JPA, 21 controllers REST, 7 services de domínio, 8 jobs agendados, 5 filtros, 23 testes JUnit passando.
+25 migrations, ~50 entidades JPA, 21 controllers REST, 7 services de domínio, 8 jobs agendados, 5 filtros, 83 testes JUnit passando.
 
 ---
 
@@ -106,7 +106,7 @@ Roda em `http://localhost:8080`. As 17 migrations do Flyway aplicam automaticame
 ### 3.3 Comandos úteis
 ```bash
 ./mvnw spring-boot:run                          # sobe o app
-./mvnw test                                     # roda os 23 testes JUnit
+./mvnw test                                     # roda os 83 testes JUnit
 ./mvnw -DskipTests compile                      # só compila
 
 # Flyway direto
@@ -183,7 +183,7 @@ br.com.rizermarketplaces.core.marketplace
 ```
 
 ### 3.7 Testes
-23 testes JUnit passando:
+83 testes JUnit passando:
 - `CnpjValidatorTest` (5) — algoritmo oficial Receita Federal
 - `SlugGeneratorTest` (5) — normalização de acentos, colapso de hífens, truncamento
 - `PhoneNormalizerTest` (3) — onlyDigits
@@ -434,7 +434,7 @@ Atualmente o `GoogleShoppingFeedService` gera feed XML estático. Para usar Cont
 - **`/health`, `/health/live`, `/health/ready`** (sem auth).
 - **Logback JSON** rolling file (`./logs/app.json`) com `LogstashEncoder` — pronto para ELK/Datadog/Loki. Rotação 50MB, 14 dias, cap 1GB.
 - **`ApiErrorAdvice`** (`@RestControllerAdvice`) converte exceções em `ProblemDetail` padronizado. `ValidationException` retorna 400 com `fields` por campo.
-- **23 testes JUnit** passando (`./mvnw test`).
+- **83 testes JUnit** passando (`./mvnw test`).
 
 ---
 
@@ -570,7 +570,7 @@ Para ativar em produção:
 ```bash
 cd backend
 ./mvnw spring-boot:run              # sobe o app
-./mvnw test                          # roda 23 testes JUnit
+./mvnw test                          # roda 83 testes JUnit
 ./mvnw -DskipTests compile           # só compila
 ./mvnw spring-boot:build-image       # build OCI image
 ```
@@ -673,7 +673,7 @@ Detalhes completos em **`docs/PLAN-saas-b2b.md`**.
 | 6 | Integrações: V14 (tenant_integrations com tokens AES-GCM), InstagramService (OAuth+post), MetaCatalogService, GoogleShoppingFeedService (XML), IntegrationSyncJob |
 | 7 | Custom domain: V15 (custom_domain_checks), DnsLookupService, CustomDomainService, CloudflareService stub, /tenant/settings com q-tabs |
 | 8 | LGPD: V16 (consents+data_export_requests), ConsentBanner, /me/data-export, /me/account, DataRetentionJob, política de privacidade |
-| 9 | Polish: V17 (audit_log), AuditService, ApiErrorAdvice, CorrelationIdFilter, RateLimitFilter, HealthController, logback JSON, 23 testes JUnit |
+| 9 | Polish: V17 (audit_log), AuditService, ApiErrorAdvice, CorrelationIdFilter, RateLimitFilter, HealthController, logback JSON, 83 testes JUnit |
 
 ---
 

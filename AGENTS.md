@@ -4,7 +4,7 @@
 > Empresas parceiras (garagistas, concessionárias, redes) assinam um dos planos (Básico R$99, PRO R$249, Platinum R$599), cadastram suas lojas, publicam anúncios e ganham um site dedicado em `slug.motorise.com.br` ou em domínio próprio.
 >
 > **Status (jun/2026):** MVP completo. 9 fases concluídas (ver `docs/PLAN-saas-b2b.md`).
-> 17 migrations, ~50 entidades JPA, 21 controllers REST, 7 services de domínio, 8 jobs agendados, 5 filtros (JWT, CORS, Country, Tenant, RateLimit, CorrelationId), 23 testes JUnit passando.
+> 25 migrations, ~50 entidades JPA, 21 controllers REST, 7 services de domínio, 8 jobs agendados, 5 filtros (JWT, CORS, Country, Tenant, RateLimit, CorrelationId), 83 testes JUnit passando.
 >
 > **Stack:** Spring Boot 4 + Java 25 + Postgres/PostGIS + Redis + Magalu S3 (Spring SDK) + jjwt 0.12.6 (HS256) + AES-GCM + Stripe (TODO prod) + Meta Graph API + Google Shopping + Cloudflare (TODO prod) · Vue 3 + Quasar 2 + Axios + TypeScript strict.
 
@@ -56,7 +56,7 @@ rizer-marketplaces/
 │   │   ├── application.yaml
 │   │   ├── logback-spring.xml
 │   │   └── db/migration/      # V1-V22 Flyway
-│   ├── src/test/java/         # 23 testes JUnit
+│   ├── src/test/java/         # 83 testes JUnit
 │   └── .env.example
 ├── frontend-motor/            # Vue 3 + Quasar 2 (SPA/SSR/PWA)
 │   ├── src/
@@ -211,14 +211,19 @@ br.com.rizermarketplaces.core.marketplace
 cd backend
 cp .env.example .env       # preencher
 ./mvnw spring-boot:run      # sobe
-./mvnw test                 # roda 23 testes JUnit
+./mvnw test                 # roda 83 testes JUnit
 ```
 
-### Testes (23 JUnit, todos passando)
+### Testes (83 JUnit, todos passando)
 - `CnpjValidatorTest` (5) — algoritmo oficial Receita Federal (DV1 em `charAt(12)`, DV2 em `charAt(13)`, pesos da esquerda para a direita).
 - `SlugGeneratorTest` (5) — normaliza acentos, colapsa hífens, trunca em 80, trata nulos.
 - `PhoneNormalizerTest` (3) — `onlyDigits` remove tudo não-dígito.
 - `SubscriptionStateMachineTest` (10) — `canCreateStore`/`canPublishAds` por status, `isInGracePeriod`, `assertFeatureEnabled` por feature.
+- `AwsS3ConfigTest` (10) — `normalizeEndpoint()` com/esquema, nulo, vazio, IP, porta.
+- `S3StorageServiceTest` (13) — upload público/privado, buildKey, buildPublicUrl, deleteFile, uploadBytes.
+- `MediaControllerTest` (7) — WebMvcTest: upload image/document, delete, presign, tratamento de erros.
+- `ProductImageServiceTest` (7) — upload com contexto correto, cover, delete com S3 fallback.
+- `TenantGalleryServiceTest` (4) — upload com cover, delete com S3, setCover.
 
 ### Jobs agendados (`@Scheduled` em `@EnableScheduling`)
 
@@ -312,14 +317,14 @@ npx vue-tsc --noEmit        # typecheck (0 erros)
 ✅ **9 fases concluídas** — MVP completo. Detalhes em `docs/PLAN-saas-b2b.md`.
 
 **Métricas finais:**
-- 22 migrations Flyway (V1-V22)
+- 25 migrations Flyway (V1-V25)
 - ~50 entidades JPA
 - 21 controllers REST (em 4 grupos: raiz, admin, tenant, publicapi)
 - 7 services de domínio + 6 services de aplicação
 - 8 jobs/schedulers
 - 5 filtros HTTP (JWT, Country, Tenant, CorrelationId, RateLimit)
 - 5 DTOs principais + 8 services de DTO
-- 23 testes JUnit passando
+- 83 testes JUnit passando
 - ~40 pages no frontend, 4 layouts, 1 store (authStore), 3 composables, 1 service (api.ts)
 - Typecheck + lint limpos em ambos os projetos
 - **Mocks removidos** — frontend depende exclusivamente da API real
