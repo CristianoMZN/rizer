@@ -55,7 +55,7 @@ rizer-marketplaces/
 │   ├── src/main/resources/
 │   │   ├── application.yaml
 │   │   ├── logback-spring.xml
-│   │   └── db/migration/      # V1-V17 Flyway
+│   │   └── db/migration/      # V1-V22 Flyway
 │   ├── src/test/java/         # 23 testes JUnit
 │   └── .env.example
 ├── frontend-motor/            # Vue 3 + Quasar 2 (SPA/SSR/PWA)
@@ -63,7 +63,7 @@ rizer-marketplaces/
 │   │   ├── boot/             # i18n, axios, auth, animate, appReady, tenant
 │   │   ├── composables/      # useAuthStore (em stores), useTenant, useConsent, useLoading
 │   │   ├── stores/           # useAuthStore
-│   │   ├── services/         # api.ts (real), apiMock.ts (legado)
+│   │   ├── services/         # api.ts (real, sem mocks)
 │   │   ├── layouts/          # MainLayout, AppLayout, AdminLayout
 │   │   ├── pages/            # public, app, admin, partner, legal
 │   │   ├── router/           # routes.ts, guards.ts
@@ -123,7 +123,7 @@ br.com.rizermarketplaces.core.marketplace
 └── service/        S3StorageService
 ```
 
-### Migrations (V1-V17, todas aplicadas)
+### Migrations (V1-V22, todas aplicadas)
 
 | Migration | Conteúdo |
 |-----------|----------|
@@ -144,6 +144,11 @@ br.com.rizermarketplaces.core.marketplace
 | V15 | `custom_domain_checks` (log de auditoria das verificações CNAME) |
 | V16 | `consents` (LGPD) + `data_export_requests` (JSON + S3 presigned 7d) |
 | V17 | `audit_log` (ação, recurso, severidade, payload, correlation_id) |
+| V18 | `leads` (captura de leads via formulário público) |
+| V19 | `lead_sources` (origem do lead: site, instagram, facebook) |
+| V20 | `catalog_visibility` (controle de visibilidade de produtos por tenant) |
+| V21 | `product_bookmarks` (favoritos do usuário) |
+| V22 | `partner_widgets` (widgets customizáveis para parceiros) |
 
 ### Endpoints (por área)
 
@@ -307,7 +312,7 @@ npx vue-tsc --noEmit        # typecheck (0 erros)
 ✅ **9 fases concluídas** — MVP completo. Detalhes em `docs/PLAN-saas-b2b.md`.
 
 **Métricas finais:**
-- 17 migrations Flyway (V1-V17)
+- 22 migrations Flyway (V1-V22)
 - ~50 entidades JPA
 - 21 controllers REST (em 4 grupos: raiz, admin, tenant, publicapi)
 - 7 services de domínio + 6 services de aplicação
