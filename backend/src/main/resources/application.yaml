@@ -3,6 +3,10 @@ spring:
     import: optional:file:.env[.properties]
   application:
     name: core-marketplace
+  servlet:
+    multipart:
+      max-file-size: 10MB
+      max-request-size: 20MB
   datasource:
     url: ${SPRING_DATASOURCE_URL}
     driver-class-name: org.postgresql.Driver
@@ -40,6 +44,10 @@ springdoc:
     path: /openapi
   swagger-ui:
     enabled: false
+
+aws:
+  access-key-id: ${AWS_ACCESS_KEY_ID:}
+  secret-access-key: ${AWS_SECRET_ACCESS_KEY:}
 
 app:
   jwt:

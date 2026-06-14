@@ -1,5 +1,6 @@
 package br.com.rizermarketplaces.core.marketplace.dto;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.Size;
 
@@ -16,6 +17,7 @@ public class UpdateMyProfileRequest {
     @Size(max = 14)
     private String cpf;
 
+    @JsonFormat(pattern = "yyyy-MM-dd")
     private LocalDate birthDate;
 
     @Size(max = 512)

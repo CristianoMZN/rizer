@@ -3,12 +3,15 @@ package br.com.rizermarketplaces.core.marketplace.product;
 import br.com.rizermarketplaces.core.marketplace.dto.AttachImageRequest;
 import br.com.rizermarketplaces.core.marketplace.dto.ProductView;
 import br.com.rizermarketplaces.core.marketplace.dto.UploadResponse;
-import br.com.rizermarketplaces.core.marketplace.model.Product;
 import br.com.rizermarketplaces.core.marketplace.model.ProductImage;
 import br.com.rizermarketplaces.core.marketplace.repository.ProductImageRepository;
 import br.com.rizermarketplaces.core.marketplace.repository.ProductRepository;
 import br.com.rizermarketplaces.core.marketplace.service.S3StorageService;
 import br.com.rizermarketplaces.core.marketplace.tenant.TenantExceptions;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -20,37 +23,40 @@ import java.util.UUID;
 @Service
 public class ProductImageService {
 
+    private static final Logger log = LoggerFactory.getLogger(ProductImageService.class);
+
     private final ProductImageRepository imageRepository;
     private final ProductRepository productRepository;
-    private final ProductService productService;
     private final S3StorageService s3StorageService;
+    private ProductImageService self;
 
     public ProductImageService(
         ProductImageRepository imageRepository,
         ProductRepository productRepository,
-        ProductService productService,
         S3StorageService s3StorageService
     ) {
         this.imageRepository = imageRepository;
         this.productRepository = productRepository;
-        this.productService = productService;
         this.s3StorageService = s3StorageService;
     }
 
-    @Transactional
+    @Autowired
+    @Lazy
+    public void setSelf(ProductImageService self) {
+        this.self = self;
+    }
+
     public UploadResponse upload(
         UUID tenantId, UUID productId, MultipartFile file, Boolean isCover
     ) throws IOException {
-        Product p = productRepository.findByIdAndTenantIdAndDeletedAtIsNull(productId, tenantId)
-            .orElseThrow(() -> TenantExceptions.notFound("Produto"));
         var uploaded = s3StorageService.uploadPublicImage(file, "tenants/" + tenantId + "/products/" + productId);
         AttachImageRequest req = new AttachImageRequest(
-            p.getId(), uploaded.key(), uploaded.bucket(), uploaded.url(),
+            productId, uploaded.key(), uploaded.bucket(), uploaded.url(),
             uploaded.contentType(), null, null,
             (int) imageRepository.countByProductId(productId),
             isCover
         );
-        ProductView.ProductImageView view = attach(tenantId, req);
+        ProductView.ProductImageView view = self.attach(tenantId, req);
         return new UploadResponse(view, uploaded.url(), uploaded.key());
     }
 
@@ -82,8 +88,20 @@ public class ProductImageService {
         );
     }
 
-    @Transactional
     public void delete(UUID tenantId, UUID productId, UUID imageId) {
+        ProductImage img = loadImageS3Ref(tenantId, productId, imageId);
+        String s3Key = img.getS3Key();
+        String s3Bucket = img.getS3Bucket();
+        try {
+            s3StorageService.deleteFile(s3Key, s3Bucket);
+        } catch (Exception e) {
+            log.warn("[s3] falha ao remover {} do bucket {} (registro DB será mantido): {}", s3Key, s3Bucket, e.getMessage());
+        }
+        self.deleteImageRecord(imageId, productId, tenantId);
+    }
+
+    @Transactional(readOnly = true)
+    public ProductImage loadImageS3Ref(UUID tenantId, UUID productId, UUID imageId) {
         productRepository.findByIdAndTenantIdAndDeletedAtIsNull(productId, tenantId)
             .orElseThrow(() -> TenantExceptions.notFound("Produto"));
         ProductImage img = imageRepository.findById(imageId)
@@ -91,7 +109,18 @@ public class ProductImageService {
         if (!img.getProductId().equals(productId)) {
             throw TenantExceptions.notFound("Imagem");
         }
-        s3StorageService.deleteFile(img.getS3Key(), img.getS3Bucket());
+        return img;
+    }
+
+    @Transactional
+    public void deleteImageRecord(UUID imageId, UUID productId, UUID tenantId) {
+        productRepository.findByIdAndTenantIdAndDeletedAtIsNull(productId, tenantId)
+            .orElseThrow(() -> TenantExceptions.notFound("Produto"));
+        ProductImage img = imageRepository.findById(imageId)
+            .orElseThrow(() -> TenantExceptions.notFound("Imagem"));
+        if (!img.getProductId().equals(productId)) {
+            throw TenantExceptions.notFound("Imagem");
+        }
         imageRepository.delete(img);
     }
 

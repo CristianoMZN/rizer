@@ -14,6 +14,7 @@ import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+import org.springframework.web.multipart.MaxUploadSizeExceededException;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.util.LinkedHashMap;
@@ -66,6 +67,12 @@ public class ApiErrorAdvice {
         return problem(ex.getStatusCode(), code, ex.getReason() != null ? ex.getReason() : ex.getMessage());
     }
 
+    @ExceptionHandler(MaxUploadSizeExceededException.class)
+    public ResponseEntity<ProblemDetail> handleMaxUploadSize(MaxUploadSizeExceededException ex) {
+        return problem(HttpStatus.PAYLOAD_TOO_LARGE, "file_too_large",
+            "Arquivo excede o limite máximo de upload");
+    }
+
     @ExceptionHandler(IllegalArgumentException.class)
     public ResponseEntity<ProblemDetail> handleIAE(IllegalArgumentException ex) {
         return problem(HttpStatus.BAD_REQUEST, "bad_request", ex.getMessage());
@@ -73,9 +80,15 @@ public class ApiErrorAdvice {
 
     @ExceptionHandler(Exception.class)
     public ResponseEntity<ProblemDetail> handleAll(Exception ex, HttpServletRequest request) {
-        log.error("[api-error] uncaught em {} {}: {}", request.getMethod(), request.getRequestURI(), ex.getMessage(), ex);
-        auditService.record("api.error", "endpoint", request.getRequestURI(),
-            AuditSeverity.ERROR, Map.of("message", String.valueOf(ex.getMessage())));
+        String method = request.getMethod();
+        String uri = request.getRequestURI();
+        log.error("[api-error] uncaught em {} {}: {}", method, uri, ex.getMessage(), ex);
+        try {
+            auditService.record("api.error", "endpoint", uri,
+                AuditSeverity.ERROR, Map.of("message", String.valueOf(ex.getMessage())));
+        } catch (Exception auditEx) {
+            log.warn("[api-error] falha ao gravar auditoria: {}", auditEx.getMessage());
+        }
         return problem(HttpStatus.INTERNAL_SERVER_ERROR, "internal_error", "Erro interno do servidor");
     }
 

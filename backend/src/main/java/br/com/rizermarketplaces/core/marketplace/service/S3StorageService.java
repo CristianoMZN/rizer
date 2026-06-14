@@ -2,6 +2,8 @@ package br.com.rizermarketplaces.core.marketplace.service;
 
 import br.com.rizermarketplaces.core.marketplace.dto.MediaPresignResponse;
 import br.com.rizermarketplaces.core.marketplace.dto.MediaUploadResponse;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -19,6 +21,8 @@ import java.util.UUID;
 
 @Service
 public class S3StorageService {
+
+    private static final Logger log = LoggerFactory.getLogger(S3StorageService.class);
 
     private final S3Client s3Client;
     private final S3Presigner s3Presigner;
@@ -53,14 +57,19 @@ public class S3StorageService {
     public MediaUploadResponse uploadPublicImage(MultipartFile file, String context) throws IOException {
         String key = buildKey(publicPrefix, context, file.getOriginalFilename());
 
-        s3Client.putObject(
-            PutObjectRequest.builder()
-                .bucket(publicBucket)
-                .key(key)
-                .contentType(file.getContentType())
-                .build(),
-            RequestBody.fromInputStream(file.getInputStream(), file.getSize())
-        );
+        try {
+            s3Client.putObject(
+                PutObjectRequest.builder()
+                    .bucket(publicBucket)
+                    .key(key)
+                    .contentType(file.getContentType())
+                    .build(),
+                RequestBody.fromInputStream(file.getInputStream(), file.getSize())
+            );
+        } catch (Exception e) {
+            log.error("[s3] upload público falhou bucket={} key={} size={}: {}", publicBucket, key, file.getSize(), e.getMessage(), e);
+            throw e;
+        }
 
         String url = buildPublicUrl(key);
 
@@ -80,14 +89,19 @@ public class S3StorageService {
     public MediaUploadResponse uploadPrivateDocument(MultipartFile file, String context) throws IOException {
         String key = buildKey(privatePrefix, context, file.getOriginalFilename());
 
-        s3Client.putObject(
-            PutObjectRequest.builder()
-                .bucket(privateBucket)
-                .key(key)
-                .contentType(file.getContentType())
-                .build(),
-            RequestBody.fromInputStream(file.getInputStream(), file.getSize())
-        );
+        try {
+            s3Client.putObject(
+                PutObjectRequest.builder()
+                    .bucket(privateBucket)
+                    .key(key)
+                    .contentType(file.getContentType())
+                    .build(),
+                RequestBody.fromInputStream(file.getInputStream(), file.getSize())
+            );
+        } catch (Exception e) {
+            log.error("[s3] upload privado falhou bucket={} key={} size={}: {}", privateBucket, key, file.getSize(), e.getMessage(), e);
+            throw e;
+        }
 
         String presignedUrl = generatePresignedUrl(privateBucket, key);
 
@@ -114,12 +128,17 @@ public class S3StorageService {
      * Remove arquivo de qualquer bucket.
      */
     public void deleteFile(String key, String bucket) {
-        s3Client.deleteObject(
-            DeleteObjectRequest.builder()
-                .bucket(bucket)
-                .key(key)
-                .build()
-        );
+        try {
+            s3Client.deleteObject(
+                DeleteObjectRequest.builder()
+                    .bucket(bucket)
+                    .key(key)
+                    .build()
+            );
+        } catch (Exception e) {
+            log.warn("[s3] remoção falhou bucket={} key={}: {}", bucket, key, e.getMessage());
+            throw e;
+        }
     }
 
     /**
@@ -127,17 +146,22 @@ public class S3StorageService {
      */
     public void uploadBytes(byte[] bytes, String key, String contentType, String prefix) {
         String finalKey = prefix + "/" + key;
-        s3Client.putObject(
-            PutObjectRequest.builder()
-                .bucket(privateBucket)
-                .key(finalKey)
-                .contentType(contentType)
-                .build(),
-            software.amazon.awssdk.core.sync.RequestBody.fromBytes(bytes)
-        );
+        try {
+            s3Client.putObject(
+                PutObjectRequest.builder()
+                    .bucket(privateBucket)
+                    .key(finalKey)
+                    .contentType(contentType)
+                    .build(),
+                software.amazon.awssdk.core.sync.RequestBody.fromBytes(bytes)
+            );
+        } catch (Exception e) {
+            log.error("[s3] upload de bytes falhou bucket={} key={}: {}", privateBucket, finalKey, e.getMessage(), e);
+            throw e;
+        }
     }
 
-    private String generatePresignedUrl(String bucket, String key) {
+    String generatePresignedUrl(String bucket, String key) {
         var presignRequest = GetObjectPresignRequest.builder()
             .signatureDuration(Duration.ofMinutes(presignedDurationMinutes))
             .getObjectRequest(b -> b.bucket(bucket).key(key))
@@ -154,10 +178,10 @@ public class S3StorageService {
     }
 
     private String buildPublicUrl(String key) {
-        String endpoint = (s3Endpoint != null && !s3Endpoint.isBlank())
-            ? s3Endpoint
+        String base = (s3Endpoint != null && !s3Endpoint.isBlank())
+            ? s3Endpoint + "/" + publicBucket
             : "https://" + publicBucket + ".s3.amazonaws.com";
-        return endpoint + "/" + key;
+        return base + "/" + key;
     }
 
     private String extractExtension(String filename) {

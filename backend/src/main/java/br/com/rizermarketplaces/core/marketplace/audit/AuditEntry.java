@@ -47,7 +47,7 @@ public class AuditEntry {
     @Column(columnDefinition = "jsonb")
     private Map<String, Object> payload;
 
-    @Column(columnDefinition = "inet")
+    @Column(length = 45)
     private String ip;
 
     @Column(name = "user_agent", columnDefinition = "text")

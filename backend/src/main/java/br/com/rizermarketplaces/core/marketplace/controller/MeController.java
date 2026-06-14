@@ -55,7 +55,7 @@ public class MeController {
     }
 
     @PatchMapping("/profile")
-    public ConsumerProfileView updateProfile(@RequestBody UpdateMyProfileRequest body) {
+    public ConsumerProfileView updateProfile(@RequestBody @Valid UpdateMyProfileRequest body) {
         return meService.updateProfile(CurrentUser.require().getId(), body);
     }
 

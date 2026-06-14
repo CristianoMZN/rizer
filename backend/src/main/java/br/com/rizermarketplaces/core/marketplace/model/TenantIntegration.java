@@ -30,7 +30,8 @@ public class TenantIntegration {
     private UUID tenantId;
 
     @Enumerated(EnumType.STRING)
-    @Column(nullable = false, length = 30)
+    @JdbcTypeCode(SqlTypes.NAMED_ENUM)
+    @Column(nullable = false)
     private IntegrationProvider provider;
 
     @Column(name = "external_account_id", length = 120)
@@ -52,7 +53,8 @@ public class TenantIntegration {
     private String scopes;
 
     @Enumerated(EnumType.STRING)
-    @Column(nullable = false, length = 20)
+    @JdbcTypeCode(SqlTypes.NAMED_ENUM)
+    @Column(nullable = false)
     private IntegrationStatus status = IntegrationStatus.CONNECTED;
 
     @Column(name = "last_sync_at")

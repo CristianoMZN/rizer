@@ -21,6 +21,7 @@ import br.com.rizermarketplaces.core.marketplace.tenant.TenantExceptions;
 import br.com.rizermarketplaces.core.marketplace.tenant.TenantMapper;
 import br.com.rizermarketplaces.core.marketplace.tools.CnpjValidator;
 import br.com.rizermarketplaces.core.marketplace.tools.SlugGenerator;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -93,10 +94,14 @@ public class AdminTenantService {
         tenant.setHadTrial(req.startWithTrial());
         tenant.setCreatedByUserId(currentUserId);
         tenant.setTheme(defaultTheme());
-        tenant = tenantRepository.save(tenant);
+        try {
+            tenant = tenantRepository.save(tenant);
+        } catch (DataIntegrityViolationException e) {
+            throw TenantExceptions.conflict("Já existe um tenant com este slug neste país");
+        }
 
-        // Cria ou anexa o 1º owner
-        User owner = userRepository.findByEmail(req.ownerEmail().toLowerCase().trim())
+        // Cria ou anexa o 1º owner (apenas usuarios ativos, nao soft-deleted)
+        User owner = userRepository.findByEmailAndDeletedAtIsNull(req.ownerEmail().toLowerCase().trim())
             .orElseGet(() -> {
                 User u = new User();
                 u.setEmail(req.ownerEmail().toLowerCase().trim());

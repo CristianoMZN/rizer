@@ -8,6 +8,8 @@ import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -17,10 +19,16 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.server.ResponseStatusException;
+import org.springframework.http.HttpStatus;
+import software.amazon.awssdk.core.exception.SdkClientException;
+import java.io.IOException;
 @RestController
 @RequestMapping("/media")
 @Tag(name = "Media", description = "Upload e gerenciamento de arquivos (imagens públicas e documentos privados)")
 public class MediaController {
+
+    private static final Logger log = LoggerFactory.getLogger(MediaController.class);
 
     private final S3StorageService storageService;
 
@@ -42,9 +50,17 @@ public class MediaController {
         @Parameter(description = "Arquivo de imagem") @RequestParam("file") MultipartFile file,
         @Parameter(description = "Contexto do upload (ex: announce-gallery, store-logo)")
         @RequestParam(value = "context", defaultValue = "announce-gallery") String context
-    ) throws Exception {
-        MediaUploadResponse response = storageService.uploadPublicImage(file, context);
-        return ResponseEntity.ok(response);
+    ) {
+        try {
+            MediaUploadResponse response = storageService.uploadPublicImage(file, context);
+            return ResponseEntity.ok(response);
+        } catch (IOException e) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Erro ao ler arquivo: " + e.getMessage());
+        } catch (SdkClientException e) {
+            log.error("S3 upload falhou (imagem): {}", e.getMessage(), e);
+            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR,
+                "Serviço de armazenamento não disponível. Verifique configuração do S3.");
+        }
     }
 
     @PostMapping(value = "/upload/document", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
@@ -61,9 +77,17 @@ public class MediaController {
         @Parameter(description = "Arquivo de documento") @RequestParam("file") MultipartFile file,
         @Parameter(description = "Contexto do upload (ex: contract, invoice)")
         @RequestParam(value = "context", defaultValue = "document") String context
-    ) throws Exception {
-        MediaUploadResponse response = storageService.uploadPrivateDocument(file, context);
-        return ResponseEntity.ok(response);
+    ) {
+        try {
+            MediaUploadResponse response = storageService.uploadPrivateDocument(file, context);
+            return ResponseEntity.ok(response);
+        } catch (IOException e) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Erro ao ler arquivo: " + e.getMessage());
+        } catch (SdkClientException e) {
+            log.error("S3 upload falhou (documento): {}", e.getMessage(), e);
+            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR,
+                "Serviço de armazenamento não disponível. Verifique configuração do S3.");
+        }
     }
 
     @GetMapping("/presign")

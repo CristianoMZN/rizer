@@ -76,7 +76,7 @@ public class RateLimitFilter extends OncePerRequestFilter {
             || path.startsWith("/swagger-ui")
             || path.equals("/")
             || path.startsWith("/health")
-            || path.startsWith("/BR/public/tenants")  // feeds públicos
+            || path.contains("/public/tenants")  // páginas públicas de parceiros
             || path.contains("/feed.xml")
             || path.contains("/feed-meta.csv");
     }
