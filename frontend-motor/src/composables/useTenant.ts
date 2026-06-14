@@ -1,5 +1,6 @@
 import { ref, computed } from 'vue'
-import { resolveTenant, type TenantConfig, type MenuItemKey } from 'src/data/tenants'
+import { resolveTenant, registerTenant, type TenantConfig, type MenuItemKey, type TenantTheme } from 'src/data/tenants'
+import type { PublicTenantView } from 'src/services/api'
 
 // ─── Singleton reativo ────────────────────────────────────────────────────────
 
@@ -21,6 +22,33 @@ export function getTenantScope(): { mode: 'marketplace' } | { mode: 'store'; sto
     return { mode: 'store', storeSlug: t.storeSlug }
   }
   return { mode: 'marketplace' }
+}
+
+// ─── Register from backend ────────────────────────────────────────────────────
+
+/**
+ * Mapeia PublicTenantView (vindo do backend) para TenantConfig
+ * e registra no registro estático para resolução subsequente.
+ */
+export function registerFromBackend(data: PublicTenantView): TenantConfig {
+  const theme: TenantTheme = {
+    primary: data.theme?.primary ?? '#667eea',
+    secondary: data.theme?.secondary ?? '#11998e',
+    accent: data.theme?.accent ?? '#764ba2',
+    dark: data.theme?.dark ?? '#1a1a2e',
+    darkPage: data.theme?.darkPage ?? '#0f0f1a',
+  }
+  const config: TenantConfig = {
+    slug: data.slug,
+    mode: 'store',
+    storeSlug: data.slug,
+    storeName: data.tradeName,
+    ...(data.logoUrl ? { logoUrl: data.logoUrl } : {}),
+    theme,
+    footerTagline: `${data.tradeName} — Qualidade em veículos.`,
+  }
+  registerTenant(config)
+  return config
 }
 
 // ─── Composable ───────────────────────────────────────────────────────────────

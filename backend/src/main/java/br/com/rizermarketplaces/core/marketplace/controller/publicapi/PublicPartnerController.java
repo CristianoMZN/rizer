@@ -10,6 +10,8 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.ResponseStatus;
+import org.springframework.http.HttpStatus;
 
 import java.util.List;
 
@@ -27,6 +29,12 @@ public class PublicPartnerController {
     @GetMapping("/partner")
     public List<PublicPartnerView> listPartners(@PathVariable String countryCode) {
         return service.listPartners(countryCode.toUpperCase());
+    }
+
+    @GetMapping("/by-host")
+    @ResponseStatus(HttpStatus.OK)
+    public PublicTenantView getByHost(@RequestParam String host) {
+        return service.getTenantByHost(host);
     }
 
     @GetMapping("/{slug}")

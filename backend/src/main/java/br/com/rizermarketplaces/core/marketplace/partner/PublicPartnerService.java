@@ -34,6 +34,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.Set;
 import java.util.UUID;
 
@@ -91,6 +92,26 @@ public class PublicPartnerService {
     public PublicTenantView getTenant(String slug) {
         Tenant t = tenantRepository.findBySlugAndDeletedAtIsNull(slug)
             .orElseThrow(() -> TenantExceptions.notFound("Parceiro"));
+        if (t.getStatus() != TenantStatus.active || !t.isPublic() || !t.isPartnerPageEnabled()) {
+            throw TenantExceptions.notFound("Parceiro");
+        }
+        return toTenantView(t);
+    }
+
+    @Transactional(readOnly = true)
+    public PublicTenantView getTenantByHost(String host) {
+        if (host == null || host.isBlank()) {
+            throw TenantExceptions.badRequest("Host não informado");
+        }
+        String normalized = host.split(":")[0].toLowerCase().trim();
+        Optional<Tenant> found = tenantRepository.findByCustomDomainIgnoreCaseAndDeletedAtIsNull(normalized);
+        if (found.isEmpty() && normalized.startsWith("www.")) {
+            found = tenantRepository.findByCustomDomainIgnoreCaseAndDeletedAtIsNull(normalized.substring(4));
+        }
+        if (found.isEmpty()) {
+            throw TenantExceptions.notFound("Parceiro");
+        }
+        Tenant t = found.get();
         if (t.getStatus() != TenantStatus.active || !t.isPublic() || !t.isPartnerPageEnabled()) {
             throw TenantExceptions.notFound("Parceiro");
         }
