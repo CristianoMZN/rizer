@@ -13,7 +13,7 @@ import br.com.rizermarketplaces.core.marketplace.repository.ProductRepository;
 import br.com.rizermarketplaces.core.marketplace.repository.TenantIntegrationRepository;
 import br.com.rizermarketplaces.core.marketplace.tenant.TenantExceptions;
 import br.com.rizermarketplaces.core.marketplace.tools.StringUtils;
-import com.fasterxml.jackson.databind.JsonNode;
+import tools.jackson.databind.JsonNode;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;

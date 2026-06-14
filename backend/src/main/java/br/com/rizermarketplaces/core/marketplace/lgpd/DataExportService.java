@@ -11,7 +11,7 @@ import br.com.rizermarketplaces.core.marketplace.repository.ProductRepository;
 import br.com.rizermarketplaces.core.marketplace.repository.TenantUserRepository;
 import br.com.rizermarketplaces.core.marketplace.repository.UserRepository;
 import br.com.rizermarketplaces.core.marketplace.service.S3StorageService;
-import com.fasterxml.jackson.databind.ObjectMapper;
+import tools.jackson.databind.ObjectMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.scheduling.annotation.Async;

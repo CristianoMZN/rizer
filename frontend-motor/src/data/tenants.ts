@@ -138,7 +138,7 @@ export const TENANT_REGISTRY: Record<string, TenantConfig> = {
  * Domínio base da plataforma. Usado para identificar subdomínios no formato
  * slug.motorise.com.br. Configurável via variável de ambiente VITE_BASE_DOMAIN.
  */
-const BASE_DOMAIN = (import.meta.env?.VITE_BASE_DOMAIN as string | undefined) ?? 'motorise.com.br'
+const BASE_DOMAIN = (import.meta.env.VITE_BASE_DOMAIN as string | undefined) ?? 'motorise.com.br'
 
 /**
  * Mapa reverso: customDomain → TenantConfig.

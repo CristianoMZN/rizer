@@ -18,7 +18,7 @@ const FB_APP_ID = (import.meta.env as Record<string, string | undefined> | undef
  * VITE_FACEBOOK_APP_ID estiver definida. Se não estiver, o botão
  * "Continuar com Facebook" exibe uma mensagem amigável.
  */
-export default defineBoot(({ router }) => {
+export default defineBoot(() => {
   if (!FB_APP_ID) {
     // SDK não configurado: app funciona sem o login Facebook
     return
@@ -49,5 +49,4 @@ export default defineBoot(({ router }) => {
   }
   document.head.appendChild(script)
 
-  void router
 })

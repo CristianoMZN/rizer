@@ -2,7 +2,7 @@ import { defineBoot } from '#q-app/wrappers'
 import { useTenant, registerFromBackend } from 'src/composables/useTenant'
 import { resolveTenant } from 'src/data/tenants'
 
-const BASE_DOMAIN = (import.meta.env?.VITE_BASE_DOMAIN as string | undefined) ?? 'motorise.com.br'
+const BASE_DOMAIN = (import.meta.env.VITE_BASE_DOMAIN as string | undefined) ?? 'motorise.com.br'
 
 /**
  * Boot do sistema de multi-tenant.
