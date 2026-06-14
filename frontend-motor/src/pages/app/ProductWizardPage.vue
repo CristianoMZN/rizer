@@ -242,7 +242,7 @@ import {
   catalogApi, tenantApi, tenantProductApi, settingsApi,
   type VehicleRealm, type CategoryView, type VehicleBrandView, type VehicleModelView,
   type StoreView, type ProductImageView, type ProductView,
-  type CreateProductRequest, type UpdateProductRequest,
+  type UpdateProductRequest,
 } from 'src/services/api'
 import { useAuthStore } from 'src/stores/authStore'
 import { useTenantRole } from 'src/composables/useTenantRole'
@@ -475,7 +475,7 @@ async function onFilesSelected(files: File[]) {
   pendingFiles.value = []
 }
 
-async function removeImage(i: number) {
+function removeImage(i: number) {
   const img = form.images[i]
   if (!img) return
   if (productId.value) {
@@ -526,7 +526,7 @@ async function loadExisting() {
     form.mileageKm = p.mileageKm ?? null
     form.fuel = p.fuel ?? 'Flex'
     form.transmission = p.transmission ?? 'Manual'
-    form.realm = (p.realm as VehicleRealm) || 'CAR'
+    form.realm = p.realm ?? 'CAR'
     form.sellerUserId = p.sellerUserId ?? null
     form.images = [...p.images]
     if (p.attributes) {
@@ -555,7 +555,7 @@ onMounted(async () => {
       settingsApi.get().catch(() => null),
     ])
     stores.value = ss
-    members.value = mm as typeof members.value
+    members.value = mm
     if (settings) {
       // SELLER auto-preenchido
       if (role.isSeller.value && auth.user.value) {

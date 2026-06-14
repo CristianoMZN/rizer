@@ -152,7 +152,6 @@ function confirmDelete(img: GalleryImageView) {
   })
 }
 
-void uploading // unused but referenced in template context
 onMounted(() => {
   if (auth.currentTenantId.value) void load()
 })

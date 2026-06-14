@@ -247,7 +247,7 @@ function openInvite() {
   formError.value = null
   Object.assign(form, {
     name: '', email: '', whatsapp: '', password: '',
-    role: 'SELLER' as TenantUserRole,
+    role: 'SELLER',
     physicalStoreIds: [] as string[],
     avatarUrl: '',
   })
