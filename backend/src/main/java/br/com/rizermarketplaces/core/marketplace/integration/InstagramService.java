@@ -12,6 +12,7 @@ import br.com.rizermarketplaces.core.marketplace.repository.ProductLocalizationR
 import br.com.rizermarketplaces.core.marketplace.repository.ProductRepository;
 import br.com.rizermarketplaces.core.marketplace.repository.TenantIntegrationRepository;
 import br.com.rizermarketplaces.core.marketplace.tenant.TenantExceptions;
+import br.com.rizermarketplaces.core.marketplace.tools.StringUtils;
 import com.fasterxml.jackson.databind.JsonNode;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -209,7 +210,7 @@ public class InstagramService {
         StringBuilder sb = new StringBuilder();
         if (loc != null && loc.getTitle() != null) sb.append(loc.getTitle());
         sb.append('\n');
-        if (loc != null && loc.getDescription() != null) sb.append(truncate(loc.getDescription(), 400)).append("\n\n");
+            if (loc != null && loc.getDescription() != null) sb.append(StringUtils.truncate(loc.getDescription(), 400)).append("\n\n");
         if (loc != null) sb.append("💰 ").append(formatPrice(loc.getPriceCents())).append('\n');
         if (p.getYearModel() != null) sb.append("📅 ").append(p.getYearModel()).append('\n');
         if (p.getMileageKm() != null) sb.append("🛣️  ").append(p.getMileageKm().toString()).append(" km\n");
@@ -220,11 +221,6 @@ public class InstagramService {
 
     private String formatPrice(long cents) {
         return String.format("R$ %,.2f", cents / 100.0);
-    }
-
-    private String truncate(String s, int max) {
-        if (s == null) return "";
-        return s.length() <= max ? s : s.substring(0, max - 1) + "…";
     }
 
     private static String base64Url(String s) {

@@ -38,13 +38,13 @@ public class TenantStoreController {
 
     @GetMapping
     public List<StoreView> list() {
-        UUID tenantId = requireTenant();
+        UUID tenantId = TenantContextHolder.requireId();
         return service.list(tenantId);
     }
 
     @PostMapping
     public ResponseEntity<StoreView> create(@Valid @RequestBody CreateStoreRequest req) {
-        UUID tenantId = requireTenant();
+        UUID tenantId = TenantContextHolder.requireId();
         UUID actorId = CurrentUser.require().getId();
         if (req.tenantId() != null && !req.tenantId().equals(tenantId)) {
             throw TenantExceptions.forbidden("Não é possível criar loja em outro tenant");
@@ -55,20 +55,13 @@ public class TenantStoreController {
 
     @PatchMapping("/{id}")
     public StoreView update(@PathVariable UUID id, @RequestBody UpdateStoreRequest req) {
-        return service.update(requireTenant(), id, req);
+        return service.update(TenantContextHolder.requireId(), id, req);
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> delete(@PathVariable UUID id) {
-        service.softDelete(requireTenant(), id);
+        service.softDelete(TenantContextHolder.requireId(), id);
         return ResponseEntity.noContent().build();
     }
 
-    private UUID requireTenant() {
-        UUID id = TenantContextHolder.getId();
-        if (id == null) {
-            throw TenantExceptions.forbidden("Selecione um tenant antes de continuar");
-        }
-        return id;
-    }
 }

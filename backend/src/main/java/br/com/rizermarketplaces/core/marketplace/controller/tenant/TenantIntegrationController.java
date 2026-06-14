@@ -8,7 +8,6 @@ import br.com.rizermarketplaces.core.marketplace.integration.InstagramService;
 import br.com.rizermarketplaces.core.marketplace.model.IntegrationProvider;
 import br.com.rizermarketplaces.core.marketplace.model.TenantIntegration;
 import br.com.rizermarketplaces.core.marketplace.repository.TenantIntegrationRepository;
-import br.com.rizermarketplaces.core.marketplace.tenant.TenantExceptions;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -42,25 +41,24 @@ public class TenantIntegrationController {
 
     @GetMapping
     public List<IntegrationView> list() {
-        return integrationRepository.findAllByTenantIdOrderByProviderAsc(requireTenant())
+        return integrationRepository.findAllByTenantIdOrderByProviderAsc(TenantContextHolder.requireId())
             .stream().map(instagramService::toView).toList();
     }
 
     @GetMapping("/{provider}/authorize")
     public AuthorizeResponse authorize(@PathVariable("provider") String providerStr) {
         IntegrationProvider provider = parseProvider(providerStr);
+        UUID tenantId = TenantContextHolder.requireId();
         if (provider == IntegrationProvider.INSTAGRAM) {
-            return new AuthorizeResponse(instagramService.buildAuthorizeUrl(requireTenant()), null);
+            return new AuthorizeResponse(instagramService.buildAuthorizeUrl(tenantId), null);
         }
         if (provider == IntegrationProvider.META_BUSINESS) {
-            // Por enquanto, fluxo igual ao Instagram; em prod, scopes diferentes
-            return new AuthorizeResponse(instagramService.buildAuthorizeUrl(requireTenant()), null);
+            return new AuthorizeResponse(instagramService.buildAuthorizeUrl(tenantId), null);
         }
         if (provider == IntegrationProvider.GOOGLE_MERCHANT) {
-            // TODO(fase-6-google): implementar OAuth Google Content API
-            throw TenantExceptions.badRequest("Google Merchant: fluxo ainda não implementado nesta fase. Use o feed XML público.");
+            throw new IllegalArgumentException("Google Merchant: fluxo ainda não implementado nesta fase. Use o feed XML público.");
         }
-        throw TenantExceptions.badRequest("Provider inválido: " + providerStr);
+        throw new IllegalArgumentException("Provider inválido: " + providerStr);
     }
 
     @PostMapping("/{provider}/callback")
@@ -69,39 +67,34 @@ public class TenantIntegrationController {
         @RequestBody OAuthCallbackRequest body
     ) throws Exception {
         IntegrationProvider provider = parseProvider(providerStr);
-        UUID tenantId = requireTenant();
+        UUID tenantId = TenantContextHolder.requireId();
         if (provider == IntegrationProvider.INSTAGRAM || provider == IntegrationProvider.META_BUSINESS) {
             return ResponseEntity.ok(instagramService.completeOAuth(tenantId, body));
         }
-        throw TenantExceptions.badRequest("Provider não suporta callback: " + provider);
+        throw new IllegalArgumentException("Provider não suporta callback: " + provider);
     }
 
     @DeleteMapping("/{provider}")
     public ResponseEntity<Void> disconnect(@PathVariable("provider") String providerStr) {
         IntegrationProvider provider = parseProvider(providerStr);
         if (provider == IntegrationProvider.INSTAGRAM || provider == IntegrationProvider.META_BUSINESS) {
-            instagramService.disconnect(requireTenant());
+            instagramService.disconnect(TenantContextHolder.requireId());
             return ResponseEntity.noContent().build();
         }
-        throw TenantExceptions.badRequest("Provider não suporta disconnect: " + provider);
+        throw new IllegalArgumentException("Provider não suporta disconnect: " + provider);
     }
 
     @PostMapping("/instagram/publish/{productId}")
     public java.util.Map<String, Object> publishToInstagram(@PathVariable UUID productId) {
-        String mediaId = instagramService.publishProduct(requireTenant(), productId);
+        String mediaId = instagramService.publishProduct(TenantContextHolder.requireId(), productId);
         return java.util.Map.of("mediaId", mediaId);
     }
 
     private IntegrationProvider parseProvider(String s) {
         try { return IntegrationProvider.valueOf(s.toUpperCase()); }
         catch (IllegalArgumentException e) {
-            throw TenantExceptions.badRequest("Provider inválido: " + s);
+            throw new IllegalArgumentException("Provider inválido: " + s);
         }
     }
 
-    private UUID requireTenant() {
-        UUID id = TenantContextHolder.getId();
-        if (id == null) throw TenantExceptions.forbidden("Selecione um tenant antes de continuar");
-        return id;
-    }
 }

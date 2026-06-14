@@ -3,7 +3,6 @@ package br.com.rizermarketplaces.core.marketplace.tools;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class CpfValidatorTest {
@@ -42,11 +41,4 @@ class CpfValidatorTest {
         assertEquals("000.000.000-00", CpfValidator.format("00000000000"));
     }
 
-    @Test
-    void normalizaCpf() {
-        assertEquals("52998224725", CpfValidator.normalize("529.982.247-25"));
-        assertEquals("52998224725", CpfValidator.normalize("52998224725"));
-        assertNull(CpfValidator.normalize(""));
-        assertNull(CpfValidator.normalize(null));
-    }
 }

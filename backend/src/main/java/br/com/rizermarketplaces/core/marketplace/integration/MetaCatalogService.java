@@ -13,6 +13,7 @@ import br.com.rizermarketplaces.core.marketplace.repository.ProductLocalizationR
 import br.com.rizermarketplaces.core.marketplace.repository.ProductRepository;
 import br.com.rizermarketplaces.core.marketplace.repository.TenantIntegrationRepository;
 import br.com.rizermarketplaces.core.marketplace.tenant.TenantExceptions;
+import br.com.rizermarketplaces.core.marketplace.tools.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -110,7 +111,7 @@ public class MetaCatalogService {
 
         Map<String, Object> payload = new HashMap<>();
         payload.put("name", loc != null ? loc.getTitle() : "Veículo " + p.getId());
-        payload.put("description", loc != null ? truncate(loc.getDescription(), 5000) : "");
+        payload.put("description", loc != null ? StringUtils.truncate(loc.getDescription(), 5000) : "");
         payload.put("brand", ""); // preenchido pelo frontend se houver
         if (loc != null) {
             payload.put("price", String.valueOf(loc.getPriceCents()));
@@ -133,8 +134,4 @@ public class MetaCatalogService {
         return payload;
     }
 
-    private String truncate(String s, int max) {
-        if (s == null) return "";
-        return s.length() <= max ? s : s.substring(0, max - 1) + "…";
-    }
 }

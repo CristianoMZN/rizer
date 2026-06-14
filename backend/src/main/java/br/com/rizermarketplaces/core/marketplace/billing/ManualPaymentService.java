@@ -85,9 +85,7 @@ public class ManualPaymentService {
         payment.setTenantId(tenant.getId());
         payment.setSubscriptionId(sub.getId());
         payment.setMethod(req.method());
-        payment.setStatus(req.amount().signum() == 0
-            ? br.com.rizermarketplaces.core.marketplace.model.PaymentStatus.succeeded
-            : br.com.rizermarketplaces.core.marketplace.model.PaymentStatus.succeeded);
+        payment.setStatus(br.com.rizermarketplaces.core.marketplace.model.PaymentStatus.succeeded);
         payment.setAmountCents(amountCents);
         payment.setCurrency(currency);
         payment.setPeriodStart(req.periodStart() != null ? req.periodStart() : req.paidAt());

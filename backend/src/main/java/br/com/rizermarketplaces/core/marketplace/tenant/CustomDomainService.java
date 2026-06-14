@@ -1,9 +1,11 @@
 package br.com.rizermarketplaces.core.marketplace.tenant;
 
+import br.com.rizermarketplaces.core.marketplace.billing.PlanService;
 import br.com.rizermarketplaces.core.marketplace.billing.SubscriptionService;
 import br.com.rizermarketplaces.core.marketplace.billing.SubscriptionStateMachine;
 import br.com.rizermarketplaces.core.marketplace.model.CustomDomainCheck;
 import br.com.rizermarketplaces.core.marketplace.model.CustomDomainStatus;
+import br.com.rizermarketplaces.core.marketplace.model.Plan;
 import br.com.rizermarketplaces.core.marketplace.model.Subscription;
 import br.com.rizermarketplaces.core.marketplace.model.Tenant;
 import br.com.rizermarketplaces.core.marketplace.repository.CustomDomainCheckRepository;
@@ -38,6 +40,7 @@ public class CustomDomainService {
     private final TenantRepository tenantRepository;
     private final CustomDomainCheckRepository checkRepository;
     private final DnsLookupService dnsLookupService;
+    private final PlanService planService;
     private final SubscriptionService subscriptionService;
     private final SubscriptionStateMachine stateMachine;
 
@@ -48,12 +51,14 @@ public class CustomDomainService {
         TenantRepository tenantRepository,
         CustomDomainCheckRepository checkRepository,
         DnsLookupService dnsLookupService,
+        PlanService planService,
         SubscriptionService subscriptionService,
         SubscriptionStateMachine stateMachine
     ) {
         this.tenantRepository = tenantRepository;
         this.checkRepository = checkRepository;
         this.dnsLookupService = dnsLookupService;
+        this.planService = planService;
         this.subscriptionService = subscriptionService;
         this.stateMachine = stateMachine;
     }
@@ -148,18 +153,8 @@ public class CustomDomainService {
     private void requireCustomDomainFeature(Tenant tenant) {
         Subscription sub = subscriptionService.getEntity(tenant.getId())
             .orElseThrow(() -> TenantExceptions.paymentRequired("Sem assinatura ativa"));
-        if (!stateMachine.isActiveLike(sub)) {
-            throw TenantExceptions.paymentRequired("Assinatura inativa — regularize para usar domínio customizado.");
-        }
-        // Feature flag do plano (has_custom_domain). PRO+ têm.
-        var planOpt = subscriptionService.getEntity(tenant.getId());
-        if (planOpt.isEmpty()) {
-            throw TenantExceptions.paymentRequired("Sem assinatura ativa");
-        }
-        String planCode = planOpt.get().getPlanCode();
-        if (!"PRO".equals(planCode) && !"PLATINUM".equals(planCode)) {
-            throw TenantExceptions.paymentRequired("Domínio customizado requer plano PRO ou Platinum. Plano atual: " + planCode);
-        }
+        Plan plan = planService.get(sub.getPlanCode());
+        stateMachine.assertFeatureEnabled(sub, plan, SubscriptionStateMachine.Feature.CUSTOM_DOMAIN);
     }
 
     private String normalize(String domain) {

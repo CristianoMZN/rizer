@@ -4,7 +4,6 @@ import br.com.rizermarketplaces.core.marketplace.billing.SubscriptionService;
 import br.com.rizermarketplaces.core.marketplace.billing.TrialService;
 import br.com.rizermarketplaces.core.marketplace.context.TenantContextHolder;
 import br.com.rizermarketplaces.core.marketplace.dto.BillingDtos.SubscriptionView;
-import br.com.rizermarketplaces.core.marketplace.tenant.TenantExceptions;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -30,8 +29,7 @@ public class TenantTrialController {
 
     @PostMapping("/{planCode}")
     public SubscriptionView start(@PathVariable String planCode) {
-        UUID tenantId = TenantContextHolder.getId();
-        if (tenantId == null) throw TenantExceptions.forbidden("Selecione um tenant antes de continuar");
+        UUID tenantId = TenantContextHolder.requireId();
         trialService.startTrial(tenantId, planCode);
         return subscriptionService.getView(tenantId);
     }

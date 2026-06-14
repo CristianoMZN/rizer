@@ -41,12 +41,12 @@ public class TenantMemberController {
 
     @GetMapping
     public List<MemberView> list() {
-        return service.list(requireTenant());
+        return service.list(TenantContextHolder.requireId());
     }
 
     @PostMapping
     public ResponseEntity<MemberView> invite(@Valid @RequestBody InviteMemberRequest req) {
-        UUID tenantId = requireTenant();
+        UUID tenantId = TenantContextHolder.requireId();
         roleGuard.assertCanInviteMembers(tenantId);
         if (req.tenantId() == null) {
             req = new InviteMemberRequest(
@@ -65,7 +65,7 @@ public class TenantMemberController {
         @PathVariable UUID id,
         @RequestBody UpdateMemberRequest body
     ) {
-        UUID tenantId = requireTenant();
+        UUID tenantId = TenantContextHolder.requireId();
         roleGuard.requireAtLeast(tenantId, TenantUserRole.MANAGER);
         TenantUserRole role = body.role() != null ? body.role() : null;
         return service.updateRole(tenantId, id, role == null ? TenantUserRole.SELLER : role, body.physicalStoreIds());
@@ -73,16 +73,10 @@ public class TenantMemberController {
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> remove(@PathVariable UUID id) {
-        UUID tenantId = requireTenant();
+        UUID tenantId = TenantContextHolder.requireId();
         roleGuard.assertCanInviteMembers(tenantId);
         service.remove(tenantId, id);
         return ResponseEntity.noContent().build();
-    }
-
-    private UUID requireTenant() {
-        UUID id = TenantContextHolder.getId();
-        if (id == null) throw TenantExceptions.forbidden("Selecione um tenant antes de continuar");
-        return id;
     }
 
     public record UpdateMemberRequest(TenantUserRole role, List<UUID> physicalStoreIds) {}

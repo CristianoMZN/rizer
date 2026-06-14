@@ -82,8 +82,9 @@ public class DataExportService {
         return req;
     }
 
-    public DataExportRequestRepository requestRepository() {
-        return requestRepository;
+    @Transactional(readOnly = true)
+    public List<DataExportRequest> listRequests(UUID userId) {
+        return requestRepository.findAllByUserIdOrderByRequestedAtDesc(userId);
     }
 
     @Async

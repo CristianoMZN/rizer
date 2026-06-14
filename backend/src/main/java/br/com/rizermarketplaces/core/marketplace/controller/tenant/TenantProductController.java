@@ -11,7 +11,6 @@ import br.com.rizermarketplaces.core.marketplace.dto.UpdateProductRequest;
 import br.com.rizermarketplaces.core.marketplace.dto.UploadResponse;
 import br.com.rizermarketplaces.core.marketplace.product.ProductImageService;
 import br.com.rizermarketplaces.core.marketplace.product.ProductService;
-import br.com.rizermarketplaces.core.marketplace.tenant.TenantExceptions;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
@@ -50,17 +49,17 @@ public class TenantProductController {
 
     @GetMapping
     public List<ProductView> list() {
-        return productService.listByTenant(requireTenant());
+        return productService.listByTenant(TenantContextHolder.requireId());
     }
 
     @GetMapping("/{id}")
     public ProductView get(@PathVariable UUID id) {
-        return productService.get(requireTenant(), id);
+        return productService.get(TenantContextHolder.requireId(), id);
     }
 
     @PostMapping
     public ResponseEntity<ProductView> create(@Valid @RequestBody CreateProductRequest req) {
-        UUID tenantId = requireTenant();
+        UUID tenantId = TenantContextHolder.requireId();
         UUID actor = CurrentUser.require().getId();
         ProductView view = productService.create(tenantId, req, actor);
         return ResponseEntity.status(HttpStatus.CREATED).body(view);
@@ -68,7 +67,7 @@ public class TenantProductController {
 
     @PostMapping("/draft")
     public ResponseEntity<ProductView> createDraft(@Valid @RequestBody CreateDraftRequest req) {
-        UUID tenantId = requireTenant();
+        UUID tenantId = TenantContextHolder.requireId();
         UUID actor = CurrentUser.require().getId();
         ProductView view = productService.createDraft(tenantId, req.physicalStoreId(), actor);
         return ResponseEntity.status(HttpStatus.CREATED).body(view);
@@ -76,17 +75,17 @@ public class TenantProductController {
 
     @PatchMapping("/{id}")
     public ProductView update(@PathVariable UUID id, @RequestBody UpdateProductRequest req) {
-        return productService.update(requireTenant(), id, req);
+        return productService.update(TenantContextHolder.requireId(), id, req);
     }
 
     @PatchMapping("/{id}/status")
     public ProductView changeStatus(@PathVariable UUID id, @Valid @RequestBody ChangeStatusRequest req) {
-        return productService.changeStatus(requireTenant(), id, req.status());
+        return productService.changeStatus(TenantContextHolder.requireId(), id, req.status());
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> delete(@PathVariable UUID id) {
-        productService.softDelete(requireTenant(), id);
+        productService.softDelete(TenantContextHolder.requireId(), id);
         return ResponseEntity.noContent().build();
     }
 
@@ -98,7 +97,7 @@ public class TenantProductController {
         @RequestPart("file") MultipartFile file,
         @RequestParam(value = "isCover", required = false) Boolean isCover
     ) throws IOException {
-        return imageService.upload(requireTenant(), id, file, isCover);
+        return imageService.upload(TenantContextHolder.requireId(), id, file, isCover);
     }
 
     @PostMapping("/{id}/images")
@@ -106,23 +105,18 @@ public class TenantProductController {
         @PathVariable UUID id,
         @Valid @RequestBody AttachImageRequest req
     ) {
-        return imageService.attach(requireTenant(), req);
+        return imageService.attach(TenantContextHolder.requireId(), req);
     }
 
     @GetMapping("/{id}/images")
     public List<ProductView.ProductImageView> listImages(@PathVariable UUID id) {
-        return imageService.list(requireTenant(), id);
+        return imageService.list(TenantContextHolder.requireId(), id);
     }
 
     @DeleteMapping("/{id}/images/{imageId}")
     public ResponseEntity<Void> deleteImage(@PathVariable UUID id, @PathVariable UUID imageId) {
-        imageService.delete(requireTenant(), id, imageId);
+        imageService.delete(TenantContextHolder.requireId(), id, imageId);
         return ResponseEntity.noContent().build();
     }
 
-    private UUID requireTenant() {
-        UUID id = TenantContextHolder.getId();
-        if (id == null) throw TenantExceptions.forbidden("Selecione um tenant antes de continuar");
-        return id;
-    }
 }

@@ -1,8 +1,8 @@
 package br.com.rizermarketplaces.core.marketplace.audit;
 
 import br.com.rizermarketplaces.core.marketplace.auth.AuthenticatedUser;
-import br.com.rizermarketplaces.core.marketplace.context.CountryContextHolder;
 import br.com.rizermarketplaces.core.marketplace.context.TenantContextHolder;
+import br.com.rizermarketplaces.core.marketplace.tools.RequestUtils;
 import jakarta.servlet.http.HttpServletRequest;
 import org.slf4j.MDC;
 import org.springframework.stereotype.Service;
@@ -54,38 +54,12 @@ public class AuditService {
             e.setCorrelationId(MDC.get("correlationId"));
             HttpServletRequest request = currentRequest();
             if (request != null) {
-                String fwd = request.getHeader("X-Forwarded-For");
-                if (fwd != null && !fwd.isBlank()) {
-                    int comma = fwd.indexOf(',');
-                    e.setIp(comma >= 0 ? fwd.substring(0, comma).trim() : fwd.trim());
-                } else {
-                    e.setIp(request.getRemoteAddr());
-                }
+                e.setIp(RequestUtils.extractIp(request));
                 e.setUserAgent(request.getHeader("User-Agent"));
             }
             repository.save(e);
         } catch (Exception ex) {
             // Auditoria nunca deve quebrar a request principal
-            org.slf4j.LoggerFactory.getLogger(AuditService.class)
-                .warn("[audit] falha ao gravar ação {}: {}", action, ex.getMessage());
-        }
-    }
-
-    public void recordFromActor(AuthenticatedUser actor, UUID tenantId, String action,
-                                String resourceType, String resourceId, Map<String, Object> payload) {
-        try {
-            AuditEntry e = new AuditEntry();
-            if (actor != null) e.setActorUserId(actor.getId());
-            e.setTenantId(tenantId);
-            e.setAction(action);
-            e.setResourceType(resourceType);
-            e.setResourceId(resourceId);
-            e.setSeverity(AuditSeverity.INFO);
-            e.setPayload(payload == null ? new HashMap<>() : payload);
-            e.setCorrelationId(MDC.get("correlationId"));
-            e.setIp(CountryContextHolder.get() != null ? CountryContextHolder.get() : null);
-            repository.save(e);
-        } catch (Exception ex) {
             org.slf4j.LoggerFactory.getLogger(AuditService.class)
                 .warn("[audit] falha ao gravar ação {}: {}", action, ex.getMessage());
         }

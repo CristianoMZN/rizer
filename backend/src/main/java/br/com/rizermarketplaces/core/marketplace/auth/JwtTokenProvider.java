@@ -97,7 +97,4 @@ public class JwtTokenProvider {
         return accessTtlMinutes * 60L;
     }
 
-    public long getRefreshTtlSeconds() {
-        return refreshTtlDays * 86400L;
-    }
 }

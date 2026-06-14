@@ -1,6 +1,5 @@
 package br.com.rizermarketplaces.core.marketplace.auth;
 
-import br.com.rizermarketplaces.core.marketplace.context.TenantContextHolder;
 import br.com.rizermarketplaces.core.marketplace.model.SystemRole;
 import br.com.rizermarketplaces.core.marketplace.model.TenantUser;
 import br.com.rizermarketplaces.core.marketplace.model.TenantUserRole;
@@ -149,10 +148,6 @@ public class AuthService {
         }
         return userRepository.findByIdAndDeletedAtIsNull(u.getId())
             .orElseThrow(() -> new BadCredentialsException("Usuário não encontrado"));
-    }
-
-    public Optional<UUID> currentTenantId() {
-        return Optional.ofNullable(TenantContextHolder.getId());
     }
 
     public record LoginResult(String accessToken, String refreshToken, long expiresIn, UserView user) {}

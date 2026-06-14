@@ -3,7 +3,6 @@ package br.com.rizermarketplaces.core.marketplace.controller.tenant;
 import br.com.rizermarketplaces.core.marketplace.context.TenantContextHolder;
 import br.com.rizermarketplaces.core.marketplace.dto.GalleryImageView;
 import br.com.rizermarketplaces.core.marketplace.tenant.PhysicalStoreGalleryService;
-import br.com.rizermarketplaces.core.marketplace.tenant.TenantExceptions;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -38,7 +37,7 @@ public class StoreGalleryController {
 
     @GetMapping
     public List<GalleryImageView> list(@PathVariable UUID storeId) {
-        return service.list(requireTenant(), storeId);
+        return service.list(TenantContextHolder.requireId(), storeId);
     }
 
     @PostMapping(value = "/upload", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
@@ -47,31 +46,26 @@ public class StoreGalleryController {
         @RequestPart("file") MultipartFile file,
         @RequestParam(value = "caption", required = false) String caption
     ) throws IOException {
-        return service.upload(requireTenant(), storeId, file, caption);
+        return service.upload(TenantContextHolder.requireId(), storeId, file, caption);
     }
 
     @PatchMapping("/{id}/cover")
     public GalleryImageView setCover(@PathVariable UUID storeId, @PathVariable UUID id) {
-        return service.setCover(requireTenant(), storeId, id);
+        return service.setCover(TenantContextHolder.requireId(), storeId, id);
     }
 
     @PatchMapping("/reorder")
     public ResponseEntity<Void> reorder(@PathVariable UUID storeId, @RequestBody ReorderRequest req) {
-        service.reorder(requireTenant(), storeId, req.ids());
+        service.reorder(TenantContextHolder.requireId(), storeId, req.ids());
         return ResponseEntity.noContent().build();
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> delete(@PathVariable UUID storeId, @PathVariable UUID id) {
-        service.delete(requireTenant(), storeId, id);
+        service.delete(TenantContextHolder.requireId(), storeId, id);
         return ResponseEntity.noContent().build();
     }
 
     public record ReorderRequest(List<UUID> ids) {}
 
-    private UUID requireTenant() {
-        UUID id = TenantContextHolder.getId();
-        if (id == null) throw TenantExceptions.forbidden("Selecione um tenant antes de continuar");
-        return id;
-    }
 }

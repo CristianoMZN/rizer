@@ -6,7 +6,6 @@ import br.com.rizermarketplaces.core.marketplace.repository.TenantUserRepository
 import br.com.rizermarketplaces.core.marketplace.tenant.TenantExceptions;
 import org.springframework.stereotype.Component;
 
-import java.util.Optional;
 import java.util.UUID;
 
 /**
@@ -36,12 +35,6 @@ public class TenantRoleGuard {
             .findByTenantIdAndUserIdAndIsActiveTrue(tenantId, u.getId())
             .map(TenantUser::getRole)
             .orElseThrow(() -> TenantExceptions.forbidden("Você não é membro deste tenant"));
-    }
-
-    public Optional<TenantUser> currentMember(UUID tenantId) {
-        AuthenticatedUser u = CurrentUser.require();
-        if (tenantId == null) return Optional.empty();
-        return tenantUserRepository.findByTenantIdAndUserIdAndIsActiveTrue(tenantId, u.getId());
     }
 
     public boolean isAtLeast(UUID tenantId, TenantUserRole required) {

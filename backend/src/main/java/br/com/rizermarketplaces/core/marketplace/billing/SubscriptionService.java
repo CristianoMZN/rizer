@@ -1,6 +1,5 @@
 package br.com.rizermarketplaces.core.marketplace.billing;
 
-import br.com.rizermarketplaces.core.marketplace.dto.BillingDtos.PlanView;
 import br.com.rizermarketplaces.core.marketplace.dto.BillingDtos.SubscriptionView;
 import br.com.rizermarketplaces.core.marketplace.model.Plan;
 import br.com.rizermarketplaces.core.marketplace.model.Subscription;
@@ -9,7 +8,6 @@ import br.com.rizermarketplaces.core.marketplace.model.SubscriptionStatus;
 import br.com.rizermarketplaces.core.marketplace.repository.SubscriptionRepository;
 import br.com.rizermarketplaces.core.marketplace.repository.TenantRepository;
 import br.com.rizermarketplaces.core.marketplace.tenant.TenantExceptions;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -26,7 +24,6 @@ public class SubscriptionService {
     private final PlanService planService;
     private final SubscriptionStateMachine stateMachine;
 
-    @Autowired
     public SubscriptionService(
         SubscriptionRepository subscriptionRepository,
         TenantRepository tenantRepository,
@@ -167,16 +164,4 @@ public class SubscriptionService {
         );
     }
 
-    public PlanView toPlanView(Plan plan) {
-        return new PlanView(
-            plan.getCode(), plan.getName(), plan.getDescription(),
-            plan.getMaxPhysicalStores(),
-            plan.isHasPartnerPage(), plan.isHasCustomDomain(),
-            plan.isHasInstagram(), plan.isHasMetaDpa(), plan.isHasGoogleShopping(),
-            BigDecimal.valueOf(plan.getPriceCents(), 2),
-            plan.getCurrency(),
-            plan.getTrialDays(),
-            plan.getSortOrder()
-        );
-    }
 }

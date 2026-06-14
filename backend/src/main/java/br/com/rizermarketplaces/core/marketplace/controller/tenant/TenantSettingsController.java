@@ -64,7 +64,7 @@ public class TenantSettingsController {
 
     @PostMapping("/profile")
     public br.com.rizermarketplaces.core.marketplace.dto.TenantSettingsView updateProfile(@RequestBody UpdateProfileRequest req) {
-        UUID tenantId = requireTenant();
+        UUID tenantId = TenantContextHolder.requireId();
         // Apenas OWNER pode editar o perfil do tenant. MANAGER/SELLER podem
         // visualizar mas não alterar dados cadastrais da empresa.
         roleGuard.requireAtLeast(tenantId, TenantUserRole.OWNER);
@@ -131,7 +131,7 @@ public class TenantSettingsController {
 
     @PostMapping("/custom-domain")
     public CustomDomainView setCustomDomain(@RequestBody SetCustomDomainRequest req) {
-        Tenant t = customDomainService.setCustomDomain(requireTenant(), req.domain());
+        Tenant t = customDomainService.setCustomDomain(TenantContextHolder.requireId(), req.domain());
         return new CustomDomainView(
             t.getCustomDomain(),
             t.getCustomDomainStatus().name(),
@@ -143,23 +143,17 @@ public class TenantSettingsController {
 
     @PostMapping("/custom-domain/verify")
     public CustomDomainCheck verify() {
-        return customDomainService.verify(requireTenant());
+        return customDomainService.verify(TenantContextHolder.requireId());
     }
 
     @GetMapping("/custom-domain/history")
     public List<CustomDomainCheck> history() {
-        return customDomainService.history(requireTenant());
+        return customDomainService.history(TenantContextHolder.requireId());
     }
 
     private Tenant load() {
-        UUID id = requireTenant();
+        UUID id = TenantContextHolder.requireId();
         return tenantRepository.findById(id).orElseThrow(() -> TenantExceptions.notFound("Tenant"));
-    }
-
-    private UUID requireTenant() {
-        UUID id = TenantContextHolder.getId();
-        if (id == null) throw TenantExceptions.forbidden("Selecione um tenant antes de continuar");
-        return id;
     }
 
     private br.com.rizermarketplaces.core.marketplace.dto.TenantSettingsView toView(Tenant t) {

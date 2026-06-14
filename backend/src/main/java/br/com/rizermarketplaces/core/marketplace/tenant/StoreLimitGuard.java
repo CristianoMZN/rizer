@@ -38,7 +38,4 @@ public class StoreLimitGuard {
         planService.requireStoreSlot(plan, active);
     }
 
-    public long currentActive(UUID tenantId) {
-        return physicalStoreRepository.countByTenantIdAndIsActiveTrueAndDeletedAtIsNull(tenantId);
-    }
 }

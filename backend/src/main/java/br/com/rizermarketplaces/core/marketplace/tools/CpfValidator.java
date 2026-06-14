@@ -38,9 +38,4 @@ public final class CpfValidator {
         return d.substring(0, 3) + "." + d.substring(3, 6) + "." + d.substring(6, 9) + "-" + d.substring(9, 11);
     }
 
-    public static String normalize(String cpf) {
-        if (cpf == null) return null;
-        String d = cpf.replaceAll("\\D", "");
-        return d.isEmpty() ? null : d;
-    }
 }

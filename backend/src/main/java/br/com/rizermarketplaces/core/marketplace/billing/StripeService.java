@@ -42,9 +42,6 @@ public class StripeService {
     @Value("${app.stripe.enabled:false}")
     private boolean enabled;
 
-    @Value("${app.stripe.api-key:}")
-    private String apiKey;
-
     @Value("${app.stripe.success-url:http://localhost:3000/app/assinatura/checkout}")
     private String successUrl;
 

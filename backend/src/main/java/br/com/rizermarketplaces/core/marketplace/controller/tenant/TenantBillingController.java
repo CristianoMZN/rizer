@@ -57,36 +57,36 @@ public class TenantBillingController {
 
     @GetMapping("/subscription")
     public SubscriptionView getSubscription() {
-        return subscriptionService.getView(requireTenant());
+        return subscriptionService.getView(TenantContextHolder.requireId());
     }
 
     @PostMapping("/checkout/{planCode}")
     public CheckoutResponse checkout(@PathVariable String planCode) {
-        return stripeService.createCheckoutSession(requireTenant(), planCode);
+        return stripeService.createCheckoutSession(TenantContextHolder.requireId(), planCode);
     }
 
     @PostMapping("/portal")
     public PortalResponse portal() {
-        return stripeService.createBillingPortal(requireTenant());
+        return stripeService.createBillingPortal(TenantContextHolder.requireId());
     }
 
     @PostMapping("/cancel")
     public SubscriptionView cancel() {
-        UUID tenantId = requireTenant();
+        UUID tenantId = TenantContextHolder.requireId();
         subscriptionService.cancelAtPeriodEnd(tenantId);
         return subscriptionService.getView(tenantId);
     }
 
     @PostMapping("/resume")
     public SubscriptionView resume() {
-        UUID tenantId = requireTenant();
+        UUID tenantId = TenantContextHolder.requireId();
         subscriptionService.resume(tenantId);
         return subscriptionService.getView(tenantId);
     }
 
     @PostMapping("/payments")
     public PaymentView recordManualPayment(@RequestBody ManualPaymentRequest req) {
-        UUID tenantId = requireTenant();
+        UUID tenantId = TenantContextHolder.requireId();
         if (req.tenantId() != null && !req.tenantId().equals(tenantId)) {
             throw TenantExceptions.forbidden("Não é possível lançar pagamento em outro tenant");
         }
@@ -104,12 +104,7 @@ public class TenantBillingController {
         @RequestParam(defaultValue = "0") int page,
         @RequestParam(defaultValue = "20") int size
     ) {
-        return manualPaymentService.listByTenant(requireTenant(), page, size);
+        return manualPaymentService.listByTenant(TenantContextHolder.requireId(), page, size);
     }
 
-    private UUID requireTenant() {
-        UUID id = TenantContextHolder.getId();
-        if (id == null) throw TenantExceptions.forbidden("Selecione um tenant antes de continuar");
-        return id;
-    }
 }

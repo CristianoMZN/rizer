@@ -77,9 +77,7 @@ public class LgpdController {
     @GetMapping("/data-export")
     public List<DataExportRequest> myExports() {
         UUID userId = CurrentUser.require().getId();
-        return userRepository.findByIdAndDeletedAtIsNull(userId)
-            .map(u -> dataExportService.requestRepository().findAllByUserIdOrderByRequestedAtDesc(u.getId()))
-            .orElse(List.of());
+        return dataExportService.listRequests(userId);
     }
 
     @DeleteMapping("/account")

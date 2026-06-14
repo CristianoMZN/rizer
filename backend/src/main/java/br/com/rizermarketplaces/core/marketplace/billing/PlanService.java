@@ -32,11 +32,7 @@ public class PlanService {
             .orElseThrow(() -> TenantExceptions.badRequest("Plano inválido: " + code));
     }
 
-    public int getMaxStoresFor(Plan p) {
-        return p.getMaxPhysicalStores() != null ? p.getMaxPhysicalStores() : Integer.MAX_VALUE;
-    }
-
-    public boolean isUnlimited(Plan p) {
+    private boolean isUnlimited(Plan p) {
         return p.getMaxPhysicalStores() == null;
     }
 

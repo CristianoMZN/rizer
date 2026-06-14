@@ -4,6 +4,7 @@ import br.com.rizermarketplaces.core.marketplace.model.Lead;
 import br.com.rizermarketplaces.core.marketplace.model.LeadStatus;
 import br.com.rizermarketplaces.core.marketplace.repository.LeadRepository;
 import br.com.rizermarketplaces.core.marketplace.tenant.TenantExceptions;
+import br.com.rizermarketplaces.core.marketplace.tools.RequestUtils;
 import jakarta.servlet.http.HttpServletRequest;
 import br.com.rizermarketplaces.core.marketplace.lead.LeadDtos.LeadView;
 import org.springframework.stereotype.Service;
@@ -35,7 +36,7 @@ public class LeadService {
         lead.setMessage(message);
         lead.setStatus(LeadStatus.NEW);
         if (request != null) {
-            lead.setIp(extractIp(request));
+            lead.setIp(RequestUtils.extractIp(request));
             lead.setUserAgent(request.getHeader("User-Agent"));
         }
         return leadRepository.save(lead);
@@ -44,11 +45,6 @@ public class LeadService {
     @Transactional(readOnly = true)
     public List<Lead> listByTenant(UUID tenantId) {
         return leadRepository.findByTenantIdOrderByCreatedAtDesc(tenantId);
-    }
-
-    @Transactional(readOnly = true)
-    public List<Lead> listByStore(UUID storeId) {
-        return leadRepository.findByPhysicalStoreIdOrderByCreatedAtDesc(storeId);
     }
 
     @Transactional
@@ -79,12 +75,4 @@ public class LeadService {
         );
     }
 
-    private String extractIp(HttpServletRequest request) {
-        String fwd = request.getHeader("X-Forwarded-For");
-        if (fwd != null && !fwd.isBlank()) {
-            int comma = fwd.indexOf(',');
-            return comma >= 0 ? fwd.substring(0, comma).trim() : fwd.trim();
-        }
-        return request.getRemoteAddr();
-    }
 }

@@ -33,7 +33,6 @@ import java.util.UUID;
 public class DataRetentionJob {
 
     private static final Logger log = LoggerFactory.getLogger(DataRetentionJob.class);
-    private static final int EXPORT_TTL_DAYS = 7;
 
     private final DataExportRequestRepository requestRepository;
     private final S3StorageService s3;

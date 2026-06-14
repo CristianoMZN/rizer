@@ -8,9 +8,7 @@ import javax.naming.directory.Attribute;
 import javax.naming.directory.Attributes;
 import javax.naming.directory.DirContext;
 import javax.naming.directory.InitialDirContext;
-import java.util.ArrayList;
 import java.util.Hashtable;
-import java.util.List;
 
 /**
  * Resolve CNAME e A records via JNDI (puro Java).
@@ -75,27 +73,4 @@ public class DnsLookupService {
         return a.get().toString();
     }
 
-    /**
-     * Lista todos os CNAMEs na cadeia (útil quando o cliente aponta para um
-     * CNAME que aponta para outro CNAME antes do destino final).
-     */
-    public List<String> traceCnameChain(String domain, int maxHops) {
-        List<String> chain = new ArrayList<>();
-        try {
-            Hashtable<String, String> env = new Hashtable<>();
-            env.put("java.naming.factory.initial", "com.sun.jndi.dns.DnsContextFactory");
-            env.put("java.naming.provider.url", "dns://1.1.1.1");
-            DirContext ctx = new InitialDirContext(env);
-            String current = domain;
-            for (int i = 0; i < maxHops; i++) {
-                chain.add(current);
-                String next = queryCname(ctx, current);
-                if (next == null || next.equals(current)) break;
-                current = next;
-            }
-        } catch (Exception e) {
-            log.warn("[dns] trace falhou para {}: {}", domain, e.getMessage());
-        }
-        return chain;
-    }
 }

@@ -1,5 +1,6 @@
 package br.com.rizermarketplaces.core.marketplace.context;
 
+import br.com.rizermarketplaces.core.marketplace.tenant.TenantExceptions;
 import java.util.UUID;
 
 /**
@@ -33,6 +34,12 @@ public final class TenantContextHolder {
     public static String getSlug() {
         TenantRef ref = CURRENT.get();
         return ref != null ? ref.slug() : null;
+    }
+
+    public static UUID requireId() {
+        UUID id = getId();
+        if (id == null) throw TenantExceptions.forbidden("Selecione um tenant antes de continuar");
+        return id;
     }
 
     public static void clear() {

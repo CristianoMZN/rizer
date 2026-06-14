@@ -4,7 +4,6 @@ import br.com.rizermarketplaces.core.marketplace.dto.CepLookupView;
 import org.junit.jupiter.api.Test;
 import org.springframework.test.util.ReflectionTestUtils;
 
-import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
 
 class CepLookupServiceTest {
@@ -36,7 +35,5 @@ class CepLookupServiceTest {
         ReflectionTestUtils.setField(svc, "token", "");
         CepLookupView v = svc.lookup("99150-000");
         assertNull(v);
-        // garantimos que o serviço não lança exceção
-        assertNotNull(svc);
     }
 }

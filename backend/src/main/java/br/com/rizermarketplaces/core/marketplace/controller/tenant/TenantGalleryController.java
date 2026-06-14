@@ -2,7 +2,6 @@ package br.com.rizermarketplaces.core.marketplace.controller.tenant;
 
 import br.com.rizermarketplaces.core.marketplace.context.TenantContextHolder;
 import br.com.rizermarketplaces.core.marketplace.dto.GalleryImageView;
-import br.com.rizermarketplaces.core.marketplace.tenant.TenantExceptions;
 import br.com.rizermarketplaces.core.marketplace.tenant.TenantGalleryService;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.http.MediaType;
@@ -38,7 +37,7 @@ public class TenantGalleryController {
 
     @GetMapping
     public List<GalleryImageView> list() {
-        return service.list(requireTenant());
+        return service.list(TenantContextHolder.requireId());
     }
 
     @PostMapping(value = "/upload", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
@@ -46,31 +45,26 @@ public class TenantGalleryController {
         @RequestPart("file") MultipartFile file,
         @RequestParam(value = "caption", required = false) String caption
     ) throws IOException {
-        return service.upload(requireTenant(), file, caption);
+        return service.upload(TenantContextHolder.requireId(), file, caption);
     }
 
     @PatchMapping("/{id}/cover")
     public GalleryImageView setCover(@PathVariable UUID id) {
-        return service.setCover(requireTenant(), id);
+        return service.setCover(TenantContextHolder.requireId(), id);
     }
 
     @PatchMapping("/reorder")
     public ResponseEntity<Void> reorder(@RequestBody ReorderRequest req) {
-        service.reorder(requireTenant(), req.ids());
+        service.reorder(TenantContextHolder.requireId(), req.ids());
         return ResponseEntity.noContent().build();
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> delete(@PathVariable UUID id) {
-        service.delete(requireTenant(), id);
+        service.delete(TenantContextHolder.requireId(), id);
         return ResponseEntity.noContent().build();
     }
 
     public record ReorderRequest(List<UUID> ids) {}
 
-    private UUID requireTenant() {
-        UUID id = TenantContextHolder.getId();
-        if (id == null) throw TenantExceptions.forbidden("Selecione um tenant antes de continuar");
-        return id;
-    }
 }

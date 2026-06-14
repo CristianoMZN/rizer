@@ -3,6 +3,7 @@ package br.com.rizermarketplaces.core.marketplace.lgpd;
 import br.com.rizermarketplaces.core.marketplace.model.Consent;
 import br.com.rizermarketplaces.core.marketplace.model.ConsentPurpose;
 import br.com.rizermarketplaces.core.marketplace.repository.ConsentRepository;
+import br.com.rizermarketplaces.core.marketplace.tools.RequestUtils;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -46,7 +47,7 @@ public class ConsentService {
         c.setGranted(granted);
         c.setDocumentVersion(documentVersion);
         if (request != null) {
-            c.setIp(extractIp(request));
+            c.setIp(RequestUtils.extractIp(request));
             c.setUserAgent(request.getHeader("User-Agent"));
         }
         return consentRepository.save(c);
@@ -55,14 +56,5 @@ public class ConsentService {
     @Transactional(readOnly = true)
     public List<Consent> latestForUser(UUID userId) {
         return consentRepository.findByUserAndPurpose(userId, ConsentPurpose.terms_of_use);
-    }
-
-    private String extractIp(HttpServletRequest request) {
-        String fwd = request.getHeader("X-Forwarded-For");
-        if (fwd != null && !fwd.isBlank()) {
-            int comma = fwd.indexOf(',');
-            return comma >= 0 ? fwd.substring(0, comma).trim() : fwd.trim();
-        }
-        return request.getRemoteAddr();
     }
 }

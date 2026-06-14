@@ -16,6 +16,7 @@ import br.com.rizermarketplaces.core.marketplace.repository.ProductLocalizationR
 import br.com.rizermarketplaces.core.marketplace.repository.ProductRepository;
 import br.com.rizermarketplaces.core.marketplace.repository.TenantRepository;
 import br.com.rizermarketplaces.core.marketplace.tenant.TenantExceptions;
+import br.com.rizermarketplaces.core.marketplace.tools.StringUtils;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -100,7 +101,7 @@ public class GoogleShoppingFeedService {
         item.append("    <item>\n");
         item.append("      <g:id>").append(escape(p.getId().toString())).append("</g:id>\n");
         item.append("      <g:title>").append(escape(loc != null ? loc.getTitle() : "Veículo")).append("</g:title>\n");
-        item.append("      <g:description>").append(escape(loc != null ? truncate(loc.getDescription(), 5000) : "")).append("</g:description>\n");
+        item.append("      <g:description>").append(escape(loc != null ? StringUtils.truncate(loc.getDescription(), 5000) : "")).append("</g:description>\n");
         item.append("      <g:link>").append(escape("https://" + tenant.getSlug() + ".motorise.com.br/produto/" + p.getId())).append("</g:link>\n");
         item.append("      <g:condition>used</g:condition>\n");
         item.append("      <g:availability>in_stock</g:availability>\n");
@@ -139,8 +140,4 @@ public class GoogleShoppingFeedService {
             .replace("'", "&apos;");
     }
 
-    private String truncate(String s, int max) {
-        if (s == null) return "";
-        return s.length() <= max ? s : s.substring(0, max - 1) + "…";
-    }
 }
