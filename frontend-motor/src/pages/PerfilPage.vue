@@ -234,8 +234,7 @@ import { useQuasar } from 'quasar'
 import { useMe } from 'src/composables/useMe'
 import { useAuthStore } from 'src/stores/authStore'
 import { useFavorites } from 'src/composables/useFavorites'
-import { mediaApi, type AddressView, lgpdApi, MOCK_CONFIG } from 'src/services/api'
-import { api as mockApi } from 'src/services/apiMock'
+import { mediaApi, type AddressView, lgpdApi, utilApi } from 'src/services/api'
 import LoadingSpinner from 'components/layout/LoadingSpinner.vue'
 
 const $q = useQuasar()
@@ -412,7 +411,7 @@ async function lookupCepDialog() {
   if (!addressForm.zipCode || addressForm.zipCode.replace(/\D/g, '').length !== 8) return
   loadingCep.value = true
   try {
-    const r = await mockApi.lookupCep(addressForm.zipCode)
+    const r = await utilApi.cepLookup(addressForm.zipCode)
     if (r) {
       addressForm.street = r.street ?? addressForm.street
       addressForm.neighborhood = r.neighborhood ?? addressForm.neighborhood
@@ -473,10 +472,6 @@ function removeAddress(id: string) {
 }
 
 async function exportData() {
-  if (!MOCK_CONFIG.useBackend) {
-    $q.notify({ message: 'Backend desabilitado.', color: 'warning' })
-    return
-  }
   exporting.value = true
   try {
     await lgpdApi.requestDataExport()
@@ -500,10 +495,6 @@ function confirmDelete() {
     persistent: true,
   }).onOk(() => {
     void (async () => {
-      if (!MOCK_CONFIG.useBackend) {
-        $q.notify({ message: 'Backend desabilitado.', color: 'warning' })
-        return
-      }
       try {
         await lgpdApi.deleteAccount()
         await auth.logout()

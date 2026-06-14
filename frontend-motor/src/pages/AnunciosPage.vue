@@ -15,11 +15,11 @@
         bordered
         class="anuncio-card"
       >
-        <q-img :src="vehicle.images[0]" height="160px" fit="cover" />
+        <q-img :src="vehicle.images[0]?.url" height="160px" fit="cover" />
         <q-card-section class="q-pb-xs">
           <p class="card-title ellipsis">{{ vehicle.title }}</p>
           <p class="card-price text-primary">{{ formatPrice(vehicle.price) }}</p>
-          <p class="text-caption text-grey-5">{{ vehicle.mileage.toLocaleString('pt-BR') }} km · {{ vehicle.year }}</p>
+          <p class="text-caption text-grey-5">{{ (vehicle.mileageKm ?? 0).toLocaleString('pt-BR') }} km · {{ vehicle.yearModel ?? vehicle.yearBuild }}</p>
         </q-card-section>
         <q-card-actions class="row justify-between q-pa-sm">
           <q-btn flat icon="edit" size="sm" color="primary" label="Editar" :to="`/anuncios/${vehicle.id}/editar`" />
@@ -32,15 +32,15 @@
 
 <script setup lang="ts">
 import { ref, onMounted } from 'vue'
-import type { Vehicle } from 'src/data/types'
-import { api } from 'src/services/apiMock'
+import type { ProductView } from 'src/services/api'
+import { tenantProductApi } from 'src/services/api'
 import LoadingSpinner from 'components/layout/LoadingSpinner.vue'
 
-const vehicles = ref<Vehicle[]>([])
+const vehicles = ref<ProductView[]>([])
 const loading = ref(true)
 
 onMounted(async () => {
-  vehicles.value = await api.getVehicles({ storeId: 's1' })
+  vehicles.value = await tenantProductApi.list()
   loading.value = false
 })
 

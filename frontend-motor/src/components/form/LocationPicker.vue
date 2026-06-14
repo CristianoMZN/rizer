@@ -60,7 +60,7 @@
 
 <script setup lang="ts">
 import { ref, reactive, watch } from 'vue'
-import { api } from 'src/services/apiMock'
+import { utilApi } from 'src/services/api'
 
 interface LocationData {
   zipCode: string
@@ -97,7 +97,7 @@ async function onCepChange(val: string | number | null) {
   loading.value = true
   error.value = false
   try {
-    const data = await api.lookupCep(cep)
+    const data = await utilApi.cepLookup(cep)
     if (data) {
       location.zipCode = cep
       location.street = data.street

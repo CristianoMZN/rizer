@@ -6,7 +6,7 @@
 import axios, { type AxiosInstance } from 'axios'
 
 export const MOCK_CONFIG = {
-  useBackend: false,
+  useBackend: true,
   apiBase: import.meta.env.VITE_API_URL || '/api',
   delay: 300,
 }

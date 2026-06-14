@@ -234,10 +234,6 @@
               @click="onFacebook"
             />
 
-            <div v-if="!hasBackend" class="q-mt-md text-center text-caption text-grey-6">
-              Backend desabilitado. Defina <code>VITE_API_URL</code> e ligue
-              <code>MOCK_CONFIG.useBackend = true</code> em <code>src/services/api.ts</code>.
-            </div>
           </q-form>
         </q-card-section>
 
@@ -251,13 +247,12 @@
 </template>
 
 <script setup lang="ts">
-import { reactive, ref, computed } from 'vue'
+import { reactive, ref } from 'vue'
 import { useRouter } from 'vue-router'
 import { useQuasar } from 'quasar'
 import { useAuthStore } from 'src/stores/authStore'
-import { MOCK_CONFIG } from 'src/services/api'
+import { utilApi } from 'src/services/api'
 import { TERMS_VERSION, PRIVACY_VERSION } from 'src/data/legalVersions'
-import { api } from 'src/services/apiMock'
 
 const $q = useQuasar()
 const router = useRouter()
@@ -269,7 +264,6 @@ const loading = ref(false)
 const loadingGoogle = ref(false)
 const loadingFacebook = ref(false)
 const loadingCep = ref(false)
-const hasBackend = computed(() => MOCK_CONFIG.useBackend)
 
 const form = reactive({
   name: '',
@@ -313,7 +307,7 @@ async function lookupCep() {
   if (!address.zipCode || address.zipCode.replace(/\D/g, '').length !== 8) return
   loadingCep.value = true
   try {
-    const r = await api.lookupCep(address.zipCode)
+    const r = await utilApi.cepLookup(address.zipCode)
     if (r) {
       address.street = r.street ?? address.street
       address.neighborhood = r.neighborhood ?? address.neighborhood
@@ -340,10 +334,6 @@ function formatCpfForApi(value: string): string | undefined {
 }
 
 async function onSubmit() {
-  if (!hasBackend.value) {
-    $q.notify({ message: 'Backend desabilitado.', color: 'warning' })
-    return
-  }
   if (!form.acceptTerms) {
     $q.notify({ message: 'Aceite os termos para continuar.', color: 'warning' })
     return
@@ -380,10 +370,6 @@ async function onSubmit() {
 }
 
 async function onGoogle() {
-  if (!hasBackend.value) {
-    $q.notify({ message: 'Backend desabilitado.', color: 'warning' })
-    return
-  }
   loadingGoogle.value = true
   try {
     await auth.loginWithGoogle()
@@ -393,10 +379,6 @@ async function onGoogle() {
 }
 
 async function onFacebook() {
-  if (!hasBackend.value) {
-    $q.notify({ message: 'Backend desabilitado.', color: 'warning' })
-    return
-  }
   loadingFacebook.value = true
   try {
     await auth.loginWithFacebook()
