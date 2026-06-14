@@ -45,6 +45,12 @@ export default defineBoot(async ({ ssrContext }) => {
     return
   }
 
+  // Em desenvolvimento local, não tenta resolver via API
+  if (host === 'localhost' || host === '127.0.0.1' || host === '0.0.0.0') {
+    initFromHostname(hostname)
+    return
+  }
+
   const apiBase = import.meta.env.VITE_API_URL || '/api'
   try {
     const res = await fetch(`${apiBase}/BR/public/tenants/by-host?host=${encodeURIComponent(hostname)}`)
