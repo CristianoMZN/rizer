@@ -1,0 +1,1952 @@
+{
+  "/home/cristiano/Documentos/projetos/rizer-marketplaces/.vscode/settings.json": {
+    "mtime": 1775144165.4028344,
+    "ast_hash": "6d23aa019752c4ede6ebbb894b9f3e00",
+    "semantic_hash": "6d23aa019752c4ede6ebbb894b9f3e00"
+  },
+  "/home/cristiano/Documentos/projetos/rizer-marketplaces/backend/mvnw": {
+    "mtime": 1775092522.0,
+    "ast_hash": "ab50dd89da7da2346b28003352eeeeeb",
+    "semantic_hash": "ab50dd89da7da2346b28003352eeeeeb"
+  },
+  "/home/cristiano/Documentos/projetos/rizer-marketplaces/backend/src/main/java/br/com/rizermarketplaces/core/marketplace/CoreMarketplaceApplication.java": {
+    "mtime": 1781391085.6042793,
+    "ast_hash": "998802c8fcd6c11a965a15b501ca1ad4",
+    "semantic_hash": "998802c8fcd6c11a965a15b501ca1ad4"
+  },
+  "/home/cristiano/Documentos/projetos/rizer-marketplaces/backend/src/main/java/br/com/rizermarketplaces/core/marketplace/admin/AdminTenantService.java": {
+    "mtime": 1781443444.9868934,
+    "ast_hash": "15cf5d80e9d5d1f6fe92ff15de8dac49",
+    "semantic_hash": "15cf5d80e9d5d1f6fe92ff15de8dac49"
+  },
+  "/home/cristiano/Documentos/projetos/rizer-marketplaces/backend/src/main/java/br/com/rizermarketplaces/core/marketplace/audit/AuditEntry.java": {
+    "mtime": 1781443065.5993888,
+    "ast_hash": "e2f38dc5007c3b42b8f8ca44578369ed",
+    "semantic_hash": "e2f38dc5007c3b42b8f8ca44578369ed"
+  },
+  "/home/cristiano/Documentos/projetos/rizer-marketplaces/backend/src/main/java/br/com/rizermarketplaces/core/marketplace/audit/AuditEntryRepository.java": {
+    "mtime": 1781392964.8139362,
+    "ast_hash": "3cd3774f69d6a8741169e6bbb95fa476",
+    "semantic_hash": "3cd3774f69d6a8741169e6bbb95fa476"
+  },
+  "/home/cristiano/Documentos/projetos/rizer-marketplaces/backend/src/main/java/br/com/rizermarketplaces/core/marketplace/audit/AuditService.java": {
+    "mtime": 1781407976.67167,
+    "ast_hash": "8bf99c469c06fd828e8f6bc0cf7a4243",
+    "semantic_hash": "8bf99c469c06fd828e8f6bc0cf7a4243"
+  },
+  "/home/cristiano/Documentos/projetos/rizer-marketplaces/backend/src/main/java/br/com/rizermarketplaces/core/marketplace/audit/AuditSeverity.java": {
+    "mtime": 1781392956.6458845,
+    "ast_hash": "c8a94417915866f8454bdf785e88bcc9",
+    "semantic_hash": "c8a94417915866f8454bdf785e88bcc9"
+  },
+  "/home/cristiano/Documentos/projetos/rizer-marketplaces/backend/src/main/java/br/com/rizermarketplaces/core/marketplace/auth/AuthService.java": {
+    "mtime": 1781407984.795708,
+    "ast_hash": "adca69fe7e94c6764cf4cef2495bff0e",
+    "semantic_hash": "adca69fe7e94c6764cf4cef2495bff0e"
+  },
+  "/home/cristiano/Documentos/projetos/rizer-marketplaces/backend/src/main/java/br/com/rizermarketplaces/core/marketplace/auth/AuthenticatedUser.java": {
+    "mtime": 1781386473.5751605,
+    "ast_hash": "4d1658b0fe1a0d8fee2325f3112475a7",
+    "semantic_hash": "4d1658b0fe1a0d8fee2325f3112475a7"
+  },
+  "/home/cristiano/Documentos/projetos/rizer-marketplaces/backend/src/main/java/br/com/rizermarketplaces/core/marketplace/auth/CurrentUser.java": {
+    "mtime": 1781386500.7392793,
+    "ast_hash": "7ff2159c8f78ae8df39f829712a44450",
+    "semantic_hash": "7ff2159c8f78ae8df39f829712a44450"
+  },
+  "/home/cristiano/Documentos/projetos/rizer-marketplaces/backend/src/main/java/br/com/rizermarketplaces/core/marketplace/auth/JwtAuthenticationFilter.java": {
+    "mtime": 1781386479.4471862,
+    "ast_hash": "c8c0438bf5ba1f9a32ea3a2c640090e6",
+    "semantic_hash": "c8c0438bf5ba1f9a32ea3a2c640090e6"
+  },
+  "/home/cristiano/Documentos/projetos/rizer-marketplaces/backend/src/main/java/br/com/rizermarketplaces/core/marketplace/auth/JwtTokenProvider.java": {
+    "mtime": 1781407983.3917012,
+    "ast_hash": "cefb19960d154877aa0132b4cdc4be00",
+    "semantic_hash": "cefb19960d154877aa0132b4cdc4be00"
+  },
+  "/home/cristiano/Documentos/projetos/rizer-marketplaces/backend/src/main/java/br/com/rizermarketplaces/core/marketplace/auth/OAuth2SuccessHandler.java": {
+    "mtime": 1781386498.5672698,
+    "ast_hash": "e5dea7a7cc87f85036f869c55a09caf0",
+    "semantic_hash": "e5dea7a7cc87f85036f869c55a09caf0"
+  },
+  "/home/cristiano/Documentos/projetos/rizer-marketplaces/backend/src/main/java/br/com/rizermarketplaces/core/marketplace/auth/PasswordEncoderConfig.java": {
+    "mtime": 1781386480.4231904,
+    "ast_hash": "9767cf4a12fc2a4b3a4c74ebb7402fb0",
+    "semantic_hash": "9767cf4a12fc2a4b3a4c74ebb7402fb0"
+  },
+  "/home/cristiano/Documentos/projetos/rizer-marketplaces/backend/src/main/java/br/com/rizermarketplaces/core/marketplace/auth/TenantRoleGuard.java": {
+    "mtime": 1781408238.612884,
+    "ast_hash": "f9b67c7826e1f425c1b915d528677c66",
+    "semantic_hash": "f9b67c7826e1f425c1b915d528677c66"
+  },
+  "/home/cristiano/Documentos/projetos/rizer-marketplaces/backend/src/main/java/br/com/rizermarketplaces/core/marketplace/billing/BillingWebhookService.java": {
+    "mtime": 1781391226.4571276,
+    "ast_hash": "ee462eb17c4683eb1d87b277c35d83fc",
+    "semantic_hash": "ee462eb17c4683eb1d87b277c35d83fc"
+  },
+  "/home/cristiano/Documentos/projetos/rizer-marketplaces/backend/src/main/java/br/com/rizermarketplaces/core/marketplace/billing/ManualPaymentService.java": {
+    "mtime": 1781408087.960187,
+    "ast_hash": "3c284753092af83c7cfd6934229dd3e3",
+    "semantic_hash": "3c284753092af83c7cfd6934229dd3e3"
+  },
+  "/home/cristiano/Documentos/projetos/rizer-marketplaces/backend/src/main/java/br/com/rizermarketplaces/core/marketplace/billing/PlanService.java": {
+    "mtime": 1781407980.8596895,
+    "ast_hash": "c39179dcd1b86e34798f55bd0ee00884",
+    "semantic_hash": "c39179dcd1b86e34798f55bd0ee00884"
+  },
+  "/home/cristiano/Documentos/projetos/rizer-marketplaces/backend/src/main/java/br/com/rizermarketplaces/core/marketplace/billing/StripeService.java": {
+    "mtime": 1781408132.6163938,
+    "ast_hash": "151f7698f1c3b516755332cc892ac232",
+    "semantic_hash": "151f7698f1c3b516755332cc892ac232"
+  },
+  "/home/cristiano/Documentos/projetos/rizer-marketplaces/backend/src/main/java/br/com/rizermarketplaces/core/marketplace/billing/SubscriptionService.java": {
+    "mtime": 1781408092.524208,
+    "ast_hash": "0158290bd40cd11b47f2adc40e791928",
+    "semantic_hash": "0158290bd40cd11b47f2adc40e791928"
+  },
+  "/home/cristiano/Documentos/projetos/rizer-marketplaces/backend/src/main/java/br/com/rizermarketplaces/core/marketplace/billing/SubscriptionStateMachine.java": {
+    "mtime": 1781390935.8433137,
+    "ast_hash": "5152a5416fcccbbcf6aaf97929b5d11b",
+    "semantic_hash": "5152a5416fcccbbcf6aaf97929b5d11b"
+  },
+  "/home/cristiano/Documentos/projetos/rizer-marketplaces/backend/src/main/java/br/com/rizermarketplaces/core/marketplace/billing/TrialExpirationJob.java": {
+    "mtime": 1781391067.2121646,
+    "ast_hash": "476da0d570ca012e943e8300074fe1ba",
+    "semantic_hash": "476da0d570ca012e943e8300074fe1ba"
+  },
+  "/home/cristiano/Documentos/projetos/rizer-marketplaces/backend/src/main/java/br/com/rizermarketplaces/core/marketplace/billing/TrialService.java": {
+    "mtime": 1781391062.7801368,
+    "ast_hash": "04e6608a5ad32a1ca838bd2e2fe89426",
+    "semantic_hash": "04e6608a5ad32a1ca838bd2e2fe89426"
+  },
+  "/home/cristiano/Documentos/projetos/rizer-marketplaces/backend/src/main/java/br/com/rizermarketplaces/core/marketplace/catalog/CatalogService.java": {
+    "mtime": 1781389963.6468356,
+    "ast_hash": "2d62ca8bf47930c86e2e67894ab6d3c5",
+    "semantic_hash": "2d62ca8bf47930c86e2e67894ab6d3c5"
+  },
+  "/home/cristiano/Documentos/projetos/rizer-marketplaces/backend/src/main/java/br/com/rizermarketplaces/core/marketplace/config/ApiErrorAdvice.java": {
+    "mtime": 1781453198.2486677,
+    "ast_hash": "c99750f627641d0392575d026f5dfe84",
+    "semantic_hash": "c99750f627641d0392575d026f5dfe84"
+  },
+  "/home/cristiano/Documentos/projetos/rizer-marketplaces/backend/src/main/java/br/com/rizermarketplaces/core/marketplace/config/CorrelationIdFilter.java": {
+    "mtime": 1781393015.6582544,
+    "ast_hash": "a83ffaf13ebf8f1441dc56990c0b22d9",
+    "semantic_hash": "a83ffaf13ebf8f1441dc56990c0b22d9"
+  },
+  "/home/cristiano/Documentos/projetos/rizer-marketplaces/backend/src/main/java/br/com/rizermarketplaces/core/marketplace/config/CorsFilterConfig.java": {
+    "mtime": 1781441510.4730918,
+    "ast_hash": "3c2221a92641c9791b34e44e5dd2e584",
+    "semantic_hash": "3c2221a92641c9791b34e44e5dd2e584"
+  },
+  "/home/cristiano/Documentos/projetos/rizer-marketplaces/backend/src/main/java/br/com/rizermarketplaces/core/marketplace/config/DocsRedirectController.java": {
+    "mtime": 1775099980.8807323,
+    "ast_hash": "638f0349ec9776076d51674ec84932b4",
+    "semantic_hash": "638f0349ec9776076d51674ec84932b4"
+  },
+  "/home/cristiano/Documentos/projetos/rizer-marketplaces/backend/src/main/java/br/com/rizermarketplaces/core/marketplace/config/FlywayInitializer.java": {
+    "mtime": 1781402685.7231634,
+    "ast_hash": "6ef424d1e306a9ffdec0794d8640db00",
+    "semantic_hash": "6ef424d1e306a9ffdec0794d8640db00"
+  },
+  "/home/cristiano/Documentos/projetos/rizer-marketplaces/backend/src/main/java/br/com/rizermarketplaces/core/marketplace/config/OpenApiConfig.java": {
+    "mtime": 1775099355.489413,
+    "ast_hash": "867e6b286f36898c72cbeff6543c0505",
+    "semantic_hash": "867e6b286f36898c72cbeff6543c0505"
+  },
+  "/home/cristiano/Documentos/projetos/rizer-marketplaces/backend/src/main/java/br/com/rizermarketplaces/core/marketplace/config/RateLimitFilter.java": {
+    "mtime": 1781443071.3794155,
+    "ast_hash": "bc5f2baf668ee9cec6b1b8f9b6f7c2a5",
+    "semantic_hash": "bc5f2baf668ee9cec6b1b8f9b6f7c2a5"
+  },
+  "/home/cristiano/Documentos/projetos/rizer-marketplaces/backend/src/main/java/br/com/rizermarketplaces/core/marketplace/config/SecurityConfig.java": {
+    "mtime": 1781408239.448888,
+    "ast_hash": "b0e0c1e25bc3fc485e20d7d3d2683237",
+    "semantic_hash": "b0e0c1e25bc3fc485e20d7d3d2683237"
+  },
+  "/home/cristiano/Documentos/projetos/rizer-marketplaces/backend/src/main/java/br/com/rizermarketplaces/core/marketplace/config/aws/AwsS3Config.java": {
+    "mtime": 1781447563.3995101,
+    "ast_hash": "8a7e2f20303695dd20565439d41adbee",
+    "semantic_hash": "8a7e2f20303695dd20565439d41adbee"
+  },
+  "/home/cristiano/Documentos/projetos/rizer-marketplaces/backend/src/main/java/br/com/rizermarketplaces/core/marketplace/context/CountryContextFilter.java": {
+    "mtime": 1781386458.0590925,
+    "ast_hash": "7f1b0804f339e3a38ac30b2259728e42",
+    "semantic_hash": "7f1b0804f339e3a38ac30b2259728e42"
+  },
+  "/home/cristiano/Documentos/projetos/rizer-marketplaces/backend/src/main/java/br/com/rizermarketplaces/core/marketplace/context/CountryContextHolder.java": {
+    "mtime": 1781386441.8670218,
+    "ast_hash": "0eb7376c014b5bf95da3b388b403b6fa",
+    "semantic_hash": "0eb7376c014b5bf95da3b388b403b6fa"
+  },
+  "/home/cristiano/Documentos/projetos/rizer-marketplaces/backend/src/main/java/br/com/rizermarketplaces/core/marketplace/context/TenantContextFilter.java": {
+    "mtime": 1781386453.6590734,
+    "ast_hash": "42b027c9a51a3cbbdd588273eeab5f29",
+    "semantic_hash": "42b027c9a51a3cbbdd588273eeab5f29"
+  },
+  "/home/cristiano/Documentos/projetos/rizer-marketplaces/backend/src/main/java/br/com/rizermarketplaces/core/marketplace/context/TenantContextHolder.java": {
+    "mtime": 1781407998.8717732,
+    "ast_hash": "f7a6900bb6152987f177006f4513fa37",
+    "semantic_hash": "f7a6900bb6152987f177006f4513fa37"
+  },
+  "/home/cristiano/Documentos/projetos/rizer-marketplaces/backend/src/main/java/br/com/rizermarketplaces/core/marketplace/controller/AuthController.java": {
+    "mtime": 1781439683.9643779,
+    "ast_hash": "8f62453e5ab601d6e20c692eb1a8667b",
+    "semantic_hash": "8f62453e5ab601d6e20c692eb1a8667b"
+  },
+  "/home/cristiano/Documentos/projetos/rizer-marketplaces/backend/src/main/java/br/com/rizermarketplaces/core/marketplace/controller/BillingWebhookController.java": {
+    "mtime": 1781391175.3608255,
+    "ast_hash": "9057bdc56b923ea7e972c0fa3ad56e5b",
+    "semantic_hash": "9057bdc56b923ea7e972c0fa3ad56e5b"
+  },
+  "/home/cristiano/Documentos/projetos/rizer-marketplaces/backend/src/main/java/br/com/rizermarketplaces/core/marketplace/controller/HealthController.java": {
+    "mtime": 1781393037.7983909,
+    "ast_hash": "da175f08c225ea60e3fed52b58a1a274",
+    "semantic_hash": "da175f08c225ea60e3fed52b58a1a274"
+  },
+  "/home/cristiano/Documentos/projetos/rizer-marketplaces/backend/src/main/java/br/com/rizermarketplaces/core/marketplace/controller/HomeController.java": {
+    "mtime": 1775172265.1477349,
+    "ast_hash": "153c02fdbcf493ec070c26c647029340",
+    "semantic_hash": "153c02fdbcf493ec070c26c647029340"
+  },
+  "/home/cristiano/Documentos/projetos/rizer-marketplaces/backend/src/main/java/br/com/rizermarketplaces/core/marketplace/controller/LgpdController.java": {
+    "mtime": 1781408164.0205393,
+    "ast_hash": "5c50b7a688beb645d6a56714141f537e",
+    "semantic_hash": "5c50b7a688beb645d6a56714141f537e"
+  },
+  "/home/cristiano/Documentos/projetos/rizer-marketplaces/backend/src/main/java/br/com/rizermarketplaces/core/marketplace/controller/MeController.java": {
+    "mtime": 1781442350.692059,
+    "ast_hash": "36ed057262b051d8966c9cec9388dbd4",
+    "semantic_hash": "36ed057262b051d8966c9cec9388dbd4"
+  },
+  "/home/cristiano/Documentos/projetos/rizer-marketplaces/backend/src/main/java/br/com/rizermarketplaces/core/marketplace/controller/MediaController.java": {
+    "mtime": 1781446290.2280266,
+    "ast_hash": "1bf900acd5035c1f9480a1994eacf969",
+    "semantic_hash": "1bf900acd5035c1f9480a1994eacf969"
+  },
+  "/home/cristiano/Documentos/projetos/rizer-marketplaces/backend/src/main/java/br/com/rizermarketplaces/core/marketplace/controller/admin/AdminBillingController.java": {
+    "mtime": 1781391159.1767287,
+    "ast_hash": "4da2350fedb86c2eb62c629fc2e3cd5f",
+    "semantic_hash": "4da2350fedb86c2eb62c629fc2e3cd5f"
+  },
+  "/home/cristiano/Documentos/projetos/rizer-marketplaces/backend/src/main/java/br/com/rizermarketplaces/core/marketplace/controller/admin/AdminTenantController.java": {
+    "mtime": 1781387263.3305652,
+    "ast_hash": "2ce5fb5d1b266c5e5fa2eecff4af1843",
+    "semantic_hash": "2ce5fb5d1b266c5e5fa2eecff4af1843"
+  },
+  "/home/cristiano/Documentos/projetos/rizer-marketplaces/backend/src/main/java/br/com/rizermarketplaces/core/marketplace/controller/publicapi/PublicCatalogController.java": {
+    "mtime": 1781396861.0055306,
+    "ast_hash": "492fb6896dfc60dd0bcc61c18e4fcb94",
+    "semantic_hash": "492fb6896dfc60dd0bcc61c18e4fcb94"
+  },
+  "/home/cristiano/Documentos/projetos/rizer-marketplaces/backend/src/main/java/br/com/rizermarketplaces/core/marketplace/controller/publicapi/PublicFeedsController.java": {
+    "mtime": 1781391713.6717846,
+    "ast_hash": "e906411f95c3e32faca051ffe90bc227",
+    "semantic_hash": "e906411f95c3e32faca051ffe90bc227"
+  },
+  "/home/cristiano/Documentos/projetos/rizer-marketplaces/backend/src/main/java/br/com/rizermarketplaces/core/marketplace/controller/publicapi/PublicLeadController.java": {
+    "mtime": 1781406619.9693809,
+    "ast_hash": "324829460155b572b90222c0f15bbd5a",
+    "semantic_hash": "324829460155b572b90222c0f15bbd5a"
+  },
+  "/home/cristiano/Documentos/projetos/rizer-marketplaces/backend/src/main/java/br/com/rizermarketplaces/core/marketplace/controller/publicapi/PublicPartnerController.java": {
+    "mtime": 1781405660.629082,
+    "ast_hash": "baf4e94dc9d0e2f2b11833ebb4665c45",
+    "semantic_hash": "baf4e94dc9d0e2f2b11833ebb4665c45"
+  },
+  "/home/cristiano/Documentos/projetos/rizer-marketplaces/backend/src/main/java/br/com/rizermarketplaces/core/marketplace/controller/publicapi/PublicPlansController.java": {
+    "mtime": 1781391185.004883,
+    "ast_hash": "da0f1500121596b5665e0323e0fa1495",
+    "semantic_hash": "da0f1500121596b5665e0323e0fa1495"
+  },
+  "/home/cristiano/Documentos/projetos/rizer-marketplaces/backend/src/main/java/br/com/rizermarketplaces/core/marketplace/controller/tenant/StoreGalleryController.java": {
+    "mtime": 1781408060.2200582,
+    "ast_hash": "18d940f76937a9fda22958e4573772d7",
+    "semantic_hash": "18d940f76937a9fda22958e4573772d7"
+  },
+  "/home/cristiano/Documentos/projetos/rizer-marketplaces/backend/src/main/java/br/com/rizermarketplaces/core/marketplace/controller/tenant/TenantBillingController.java": {
+    "mtime": 1781408225.8728254,
+    "ast_hash": "7c4633207cf662602736507ebe9d9737",
+    "semantic_hash": "7c4633207cf662602736507ebe9d9737"
+  },
+  "/home/cristiano/Documentos/projetos/rizer-marketplaces/backend/src/main/java/br/com/rizermarketplaces/core/marketplace/controller/tenant/TenantGalleryController.java": {
+    "mtime": 1781408083.7481673,
+    "ast_hash": "57e02864e96a7ac56a664ecbdb8ae5f6",
+    "semantic_hash": "57e02864e96a7ac56a664ecbdb8ae5f6"
+  },
+  "/home/cristiano/Documentos/projetos/rizer-marketplaces/backend/src/main/java/br/com/rizermarketplaces/core/marketplace/controller/tenant/TenantIntegrationController.java": {
+    "mtime": 1781408209.4007492,
+    "ast_hash": "43a38bc460e453af0acd20f506de8b6c",
+    "semantic_hash": "43a38bc460e453af0acd20f506de8b6c"
+  },
+  "/home/cristiano/Documentos/projetos/rizer-marketplaces/backend/src/main/java/br/com/rizermarketplaces/core/marketplace/controller/tenant/TenantLeadController.java": {
+    "mtime": 1781408210.9767563,
+    "ast_hash": "e17a3aef06aa7dcc7a42cbae0766c321",
+    "semantic_hash": "e17a3aef06aa7dcc7a42cbae0766c321"
+  },
+  "/home/cristiano/Documentos/projetos/rizer-marketplaces/backend/src/main/java/br/com/rizermarketplaces/core/marketplace/controller/tenant/TenantMemberController.java": {
+    "mtime": 1781408212.0167613,
+    "ast_hash": "9c1843858aba88896e47efa392290aef",
+    "semantic_hash": "9c1843858aba88896e47efa392290aef"
+  },
+  "/home/cristiano/Documentos/projetos/rizer-marketplaces/backend/src/main/java/br/com/rizermarketplaces/core/marketplace/controller/tenant/TenantProductController.java": {
+    "mtime": 1781408019.8478708,
+    "ast_hash": "ca424b2276efc8e15a3ca6e141407cf9",
+    "semantic_hash": "ca424b2276efc8e15a3ca6e141407cf9"
+  },
+  "/home/cristiano/Documentos/projetos/rizer-marketplaces/backend/src/main/java/br/com/rizermarketplaces/core/marketplace/controller/tenant/TenantSettingsController.java": {
+    "mtime": 1781408213.040766,
+    "ast_hash": "0a532bc65cca86e6d70db623e140236a",
+    "semantic_hash": "0a532bc65cca86e6d70db623e140236a"
+  },
+  "/home/cristiano/Documentos/projetos/rizer-marketplaces/backend/src/main/java/br/com/rizermarketplaces/core/marketplace/controller/tenant/TenantStoreController.java": {
+    "mtime": 1781408203.4047215,
+    "ast_hash": "1e1a0b26802c57302f67deb64606ce6e",
+    "semantic_hash": "1e1a0b26802c57302f67deb64606ce6e"
+  },
+  "/home/cristiano/Documentos/projetos/rizer-marketplaces/backend/src/main/java/br/com/rizermarketplaces/core/marketplace/controller/tenant/TenantTrialController.java": {
+    "mtime": 1781408044.1999838,
+    "ast_hash": "cf0b61e31e64d3e9e9851bfea4a168bc",
+    "semantic_hash": "cf0b61e31e64d3e9e9851bfea4a168bc"
+  },
+  "/home/cristiano/Documentos/projetos/rizer-marketplaces/backend/src/main/java/br/com/rizermarketplaces/core/marketplace/controller/tenant/UtilController.java": {
+    "mtime": 1781400201.716512,
+    "ast_hash": "4e71bb5b6c76e9e5c14b13fc2584bfcb",
+    "semantic_hash": "4e71bb5b6c76e9e5c14b13fc2584bfcb"
+  },
+  "/home/cristiano/Documentos/projetos/rizer-marketplaces/backend/src/main/java/br/com/rizermarketplaces/core/marketplace/dto/AddressRequest.java": {
+    "mtime": 1781395279.7539742,
+    "ast_hash": "9b0a5dab886ae9643582947cb3c22de2",
+    "semantic_hash": "9b0a5dab886ae9643582947cb3c22de2"
+  },
+  "/home/cristiano/Documentos/projetos/rizer-marketplaces/backend/src/main/java/br/com/rizermarketplaces/core/marketplace/dto/AddressView.java": {
+    "mtime": 1781395284.6539962,
+    "ast_hash": "8edc21548a274cab1449762f6a87385b",
+    "semantic_hash": "8edc21548a274cab1449762f6a87385b"
+  },
+  "/home/cristiano/Documentos/projetos/rizer-marketplaces/backend/src/main/java/br/com/rizermarketplaces/core/marketplace/dto/AttachImageRequest.java": {
+    "mtime": 1781389980.2829115,
+    "ast_hash": "166187e8798f4e59fee25d203404e206",
+    "semantic_hash": "166187e8798f4e59fee25d203404e206"
+  },
+  "/home/cristiano/Documentos/projetos/rizer-marketplaces/backend/src/main/java/br/com/rizermarketplaces/core/marketplace/dto/BillingDtos.java": {
+    "mtime": 1781390913.5751631,
+    "ast_hash": "4197645bb51aeff135ba7a21cc50c671",
+    "semantic_hash": "4197645bb51aeff135ba7a21cc50c671"
+  },
+  "/home/cristiano/Documentos/projetos/rizer-marketplaces/backend/src/main/java/br/com/rizermarketplaces/core/marketplace/dto/CategoryView.java": {
+    "mtime": 1781389964.8748412,
+    "ast_hash": "acb366b4f77284cde56931bc116e38a2",
+    "semantic_hash": "acb366b4f77284cde56931bc116e38a2"
+  },
+  "/home/cristiano/Documentos/projetos/rizer-marketplaces/backend/src/main/java/br/com/rizermarketplaces/core/marketplace/dto/CepLookupView.java": {
+    "mtime": 1781400195.1484833,
+    "ast_hash": "5a545cdba7e86cd433ff4a27d6b7f3e6",
+    "semantic_hash": "5a545cdba7e86cd433ff4a27d6b7f3e6"
+  },
+  "/home/cristiano/Documentos/projetos/rizer-marketplaces/backend/src/main/java/br/com/rizermarketplaces/core/marketplace/dto/ChangeStatusRequest.java": {
+    "mtime": 1781400393.101356,
+    "ast_hash": "e25ea9079d7918bbbd68ac9da5129b30",
+    "semantic_hash": "e25ea9079d7918bbbd68ac9da5129b30"
+  },
+  "/home/cristiano/Documentos/projetos/rizer-marketplaces/backend/src/main/java/br/com/rizermarketplaces/core/marketplace/dto/ConsumerProfileView.java": {
+    "mtime": 1781395288.6860144,
+    "ast_hash": "eaa24a5f213f2b6f3e4ac1a7f56f0a95",
+    "semantic_hash": "eaa24a5f213f2b6f3e4ac1a7f56f0a95"
+  },
+  "/home/cristiano/Documentos/projetos/rizer-marketplaces/backend/src/main/java/br/com/rizermarketplaces/core/marketplace/dto/CreateDraftRequest.java": {
+    "mtime": 1781400388.1733341,
+    "ast_hash": "3770382d4e34c80f13e26ba42803a12f",
+    "semantic_hash": "3770382d4e34c80f13e26ba42803a12f"
+  },
+  "/home/cristiano/Documentos/projetos/rizer-marketplaces/backend/src/main/java/br/com/rizermarketplaces/core/marketplace/dto/CreateProductRequest.java": {
+    "mtime": 1781400359.985209,
+    "ast_hash": "3f8c5b36d7b87b82cff4df2389039903",
+    "semantic_hash": "3f8c5b36d7b87b82cff4df2389039903"
+  },
+  "/home/cristiano/Documentos/projetos/rizer-marketplaces/backend/src/main/java/br/com/rizermarketplaces/core/marketplace/dto/CreateStoreRequest.java": {
+    "mtime": 1781400273.056825,
+    "ast_hash": "b3a35880a369b82120c303a6bc025781",
+    "semantic_hash": "b3a35880a369b82120c303a6bc025781"
+  },
+  "/home/cristiano/Documentos/projetos/rizer-marketplaces/backend/src/main/java/br/com/rizermarketplaces/core/marketplace/dto/CreateTenantRequest.java": {
+    "mtime": 1781387219.6423776,
+    "ast_hash": "8977ab8c7debfe95ea215554d4c7dec6",
+    "semantic_hash": "8977ab8c7debfe95ea215554d4c7dec6"
+  },
+  "/home/cristiano/Documentos/projetos/rizer-marketplaces/backend/src/main/java/br/com/rizermarketplaces/core/marketplace/dto/FavoriteView.java": {
+    "mtime": 1781395290.7860239,
+    "ast_hash": "a51d51304602dd56978084650c67d14f",
+    "semantic_hash": "a51d51304602dd56978084650c67d14f"
+  },
+  "/home/cristiano/Documentos/projetos/rizer-marketplaces/backend/src/main/java/br/com/rizermarketplaces/core/marketplace/dto/GalleryImageView.java": {
+    "mtime": 1781400398.46938,
+    "ast_hash": "3e242daee418d7a83c8927a88dfcfc6c",
+    "semantic_hash": "3e242daee418d7a83c8927a88dfcfc6c"
+  },
+  "/home/cristiano/Documentos/projetos/rizer-marketplaces/backend/src/main/java/br/com/rizermarketplaces/core/marketplace/dto/IntegrationDtos.java": {
+    "mtime": 1781391754.6759956,
+    "ast_hash": "a56cb814f60ff8e6116feadd9fa16455",
+    "semantic_hash": "a56cb814f60ff8e6116feadd9fa16455"
+  },
+  "/home/cristiano/Documentos/projetos/rizer-marketplaces/backend/src/main/java/br/com/rizermarketplaces/core/marketplace/dto/InviteMemberRequest.java": {
+    "mtime": 1781400413.561447,
+    "ast_hash": "1f7af7d9527c2754abc903fd909bb867",
+    "semantic_hash": "1f7af7d9527c2754abc903fd909bb867"
+  },
+  "/home/cristiano/Documentos/projetos/rizer-marketplaces/backend/src/main/java/br/com/rizermarketplaces/core/marketplace/dto/LoginDTO.java": {
+    "mtime": 1776444239.6161675,
+    "ast_hash": "c913b424299263aa01911ba528781720",
+    "semantic_hash": "c913b424299263aa01911ba528781720"
+  },
+  "/home/cristiano/Documentos/projetos/rizer-marketplaces/backend/src/main/java/br/com/rizermarketplaces/core/marketplace/dto/MediaPresignResponse.java": {
+    "mtime": 1781376766.117287,
+    "ast_hash": "40b78b12bf369c565c2736839ce3c86e",
+    "semantic_hash": "40b78b12bf369c565c2736839ce3c86e"
+  },
+  "/home/cristiano/Documentos/projetos/rizer-marketplaces/backend/src/main/java/br/com/rizermarketplaces/core/marketplace/dto/MediaUploadResponse.java": {
+    "mtime": 1781376764.5212812,
+    "ast_hash": "e1669241ed4f5ce7d133749bc3b3731f",
+    "semantic_hash": "e1669241ed4f5ce7d133749bc3b3731f"
+  },
+  "/home/cristiano/Documentos/projetos/rizer-marketplaces/backend/src/main/java/br/com/rizermarketplaces/core/marketplace/dto/MemberView.java": {
+    "mtime": 1781400419.2614722,
+    "ast_hash": "134146cbaa2fdecf26e07e43c5fa602a",
+    "semantic_hash": "134146cbaa2fdecf26e07e43c5fa602a"
+  },
+  "/home/cristiano/Documentos/projetos/rizer-marketplaces/backend/src/main/java/br/com/rizermarketplaces/core/marketplace/dto/ProductView.java": {
+    "mtime": 1781400352.0491738,
+    "ast_hash": "9eb052a1134c1bb2e961b1e96a098438",
+    "semantic_hash": "9eb052a1134c1bb2e961b1e96a098438"
+  },
+  "/home/cristiano/Documentos/projetos/rizer-marketplaces/backend/src/main/java/br/com/rizermarketplaces/core/marketplace/dto/PublicPartnerView.java": {
+    "mtime": 1781400690.5186903,
+    "ast_hash": "ff3dbd40c28304fe87e331f21b4d770f",
+    "semantic_hash": "ff3dbd40c28304fe87e331f21b4d770f"
+  },
+  "/home/cristiano/Documentos/projetos/rizer-marketplaces/backend/src/main/java/br/com/rizermarketplaces/core/marketplace/dto/PublicProductView.java": {
+    "mtime": 1781400678.1706345,
+    "ast_hash": "addeab4e06f7d88d5bdd5bb4fd1d4cb0",
+    "semantic_hash": "addeab4e06f7d88d5bdd5bb4fd1d4cb0"
+  },
+  "/home/cristiano/Documentos/projetos/rizer-marketplaces/backend/src/main/java/br/com/rizermarketplaces/core/marketplace/dto/PublicTenantView.java": {
+    "mtime": 1781400684.8066645,
+    "ast_hash": "6431114d4d659de434c93b68dc6d2945",
+    "semantic_hash": "6431114d4d659de434c93b68dc6d2945"
+  },
+  "/home/cristiano/Documentos/projetos/rizer-marketplaces/backend/src/main/java/br/com/rizermarketplaces/core/marketplace/dto/RegisterConsumerRequest.java": {
+    "mtime": 1781395271.6179376,
+    "ast_hash": "4a6867f1b51f926ba594de32cc44cc67",
+    "semantic_hash": "4a6867f1b51f926ba594de32cc44cc67"
+  },
+  "/home/cristiano/Documentos/projetos/rizer-marketplaces/backend/src/main/java/br/com/rizermarketplaces/core/marketplace/dto/StoreView.java": {
+    "mtime": 1781400284.868877,
+    "ast_hash": "c8082a26056b2b60bb0f3ee99bca7a90",
+    "semantic_hash": "c8082a26056b2b60bb0f3ee99bca7a90"
+  },
+  "/home/cristiano/Documentos/projetos/rizer-marketplaces/backend/src/main/java/br/com/rizermarketplaces/core/marketplace/dto/TenantSettingsView.java": {
+    "mtime": 1781400261.716775,
+    "ast_hash": "af926b5b6d046666460fe4787460abbd",
+    "semantic_hash": "af926b5b6d046666460fe4787460abbd"
+  },
+  "/home/cristiano/Documentos/projetos/rizer-marketplaces/backend/src/main/java/br/com/rizermarketplaces/core/marketplace/dto/TenantView.java": {
+    "mtime": 1781387222.7263908,
+    "ast_hash": "07361c3318ba11b859204fabc8a8b094",
+    "semantic_hash": "07361c3318ba11b859204fabc8a8b094"
+  },
+  "/home/cristiano/Documentos/projetos/rizer-marketplaces/backend/src/main/java/br/com/rizermarketplaces/core/marketplace/dto/UpdateMyProfileRequest.java": {
+    "mtime": 1781442350.084052,
+    "ast_hash": "2ff1b4ac9267147752392ec5478fba50",
+    "semantic_hash": "2ff1b4ac9267147752392ec5478fba50"
+  },
+  "/home/cristiano/Documentos/projetos/rizer-marketplaces/backend/src/main/java/br/com/rizermarketplaces/core/marketplace/dto/UpdateProductRequest.java": {
+    "mtime": 1781400376.3772817,
+    "ast_hash": "78e64eee54d6e7f0a764a65106cde80d",
+    "semantic_hash": "78e64eee54d6e7f0a764a65106cde80d"
+  },
+  "/home/cristiano/Documentos/projetos/rizer-marketplaces/backend/src/main/java/br/com/rizermarketplaces/core/marketplace/dto/UpdateStoreRequest.java": {
+    "mtime": 1781400279.4928532,
+    "ast_hash": "5623716a2ab0b708048ae8e39685bd80",
+    "semantic_hash": "5623716a2ab0b708048ae8e39685bd80"
+  },
+  "/home/cristiano/Documentos/projetos/rizer-marketplaces/backend/src/main/java/br/com/rizermarketplaces/core/marketplace/dto/UpdateTenantRequest.java": {
+    "mtime": 1781387224.7743995,
+    "ast_hash": "3e71c0225211d969e6f64fa8affa0adf",
+    "semantic_hash": "3e71c0225211d969e6f64fa8affa0adf"
+  },
+  "/home/cristiano/Documentos/projetos/rizer-marketplaces/backend/src/main/java/br/com/rizermarketplaces/core/marketplace/dto/UploadResponse.java": {
+    "mtime": 1781390024.687114,
+    "ast_hash": "c36f6f01c166f6c8b56d5c71e12f2827",
+    "semantic_hash": "c36f6f01c166f6c8b56d5c71e12f2827"
+  },
+  "/home/cristiano/Documentos/projetos/rizer-marketplaces/backend/src/main/java/br/com/rizermarketplaces/core/marketplace/dto/VehicleBrandView.java": {
+    "mtime": 1781389965.3588433,
+    "ast_hash": "4f4195399212db4b8883964a618dfe4a",
+    "semantic_hash": "4f4195399212db4b8883964a618dfe4a"
+  },
+  "/home/cristiano/Documentos/projetos/rizer-marketplaces/backend/src/main/java/br/com/rizermarketplaces/core/marketplace/dto/VehicleModelView.java": {
+    "mtime": 1781389966.2668474,
+    "ast_hash": "e114b71206f96cc1e3a0bf8e63a4cbec",
+    "semantic_hash": "e114b71206f96cc1e3a0bf8e63a4cbec"
+  },
+  "/home/cristiano/Documentos/projetos/rizer-marketplaces/backend/src/main/java/br/com/rizermarketplaces/core/marketplace/integration/EncryptionService.java": {
+    "mtime": 1781391558.6789732,
+    "ast_hash": "411a730e597efcba3f0473a2a10739e3",
+    "semantic_hash": "411a730e597efcba3f0473a2a10739e3"
+  },
+  "/home/cristiano/Documentos/projetos/rizer-marketplaces/backend/src/main/java/br/com/rizermarketplaces/core/marketplace/integration/GoogleShoppingFeedService.java": {
+    "mtime": 1781407963.0156064,
+    "ast_hash": "b43ac139df6659ad8380d5a8ce669ac7",
+    "semantic_hash": "b43ac139df6659ad8380d5a8ce669ac7"
+  },
+  "/home/cristiano/Documentos/projetos/rizer-marketplaces/backend/src/main/java/br/com/rizermarketplaces/core/marketplace/integration/InstagramService.java": {
+    "mtime": 1781439685.3683844,
+    "ast_hash": "877de756bcb499ff12870343653bff54",
+    "semantic_hash": "877de756bcb499ff12870343653bff54"
+  },
+  "/home/cristiano/Documentos/projetos/rizer-marketplaces/backend/src/main/java/br/com/rizermarketplaces/core/marketplace/integration/IntegrationAccessGuard.java": {
+    "mtime": 1781391592.3271513,
+    "ast_hash": "7f0721ec1e1ff04f4f6d8ddd42d085f5",
+    "semantic_hash": "7f0721ec1e1ff04f4f6d8ddd42d085f5"
+  },
+  "/home/cristiano/Documentos/projetos/rizer-marketplaces/backend/src/main/java/br/com/rizermarketplaces/core/marketplace/integration/IntegrationSyncJob.java": {
+    "mtime": 1781391672.0955691,
+    "ast_hash": "3a23063d2dbf0db75b818b506f29709b",
+    "semantic_hash": "3a23063d2dbf0db75b818b506f29709b"
+  },
+  "/home/cristiano/Documentos/projetos/rizer-marketplaces/backend/src/main/java/br/com/rizermarketplaces/core/marketplace/integration/MetaCatalogService.java": {
+    "mtime": 1781407960.5035949,
+    "ast_hash": "e88a0de73ba98d429fc2f578f71bf15b",
+    "semantic_hash": "e88a0de73ba98d429fc2f578f71bf15b"
+  },
+  "/home/cristiano/Documentos/projetos/rizer-marketplaces/backend/src/main/java/br/com/rizermarketplaces/core/marketplace/integration/MetaGraphClient.java": {
+    "mtime": 1781439686.9283917,
+    "ast_hash": "419bbf6663b7d7cd316d9d570256091e",
+    "semantic_hash": "419bbf6663b7d7cd316d9d570256091e"
+  },
+  "/home/cristiano/Documentos/projetos/rizer-marketplaces/backend/src/main/java/br/com/rizermarketplaces/core/marketplace/lead/LeadDtos.java": {
+    "mtime": 1781406598.777285,
+    "ast_hash": "ff5faef004e6cb2b2cd3b346ec4b8851",
+    "semantic_hash": "ff5faef004e6cb2b2cd3b346ec4b8851"
+  },
+  "/home/cristiano/Documentos/projetos/rizer-marketplaces/backend/src/main/java/br/com/rizermarketplaces/core/marketplace/lead/LeadService.java": {
+    "mtime": 1781407972.523651,
+    "ast_hash": "3d5acfe55fe21ba5a24b896614d658c9",
+    "semantic_hash": "3d5acfe55fe21ba5a24b896614d658c9"
+  },
+  "/home/cristiano/Documentos/projetos/rizer-marketplaces/backend/src/main/java/br/com/rizermarketplaces/core/marketplace/lgpd/ConsentService.java": {
+    "mtime": 1781407969.0196345,
+    "ast_hash": "d25dbff4eb782928ec6cc0617ed76d35",
+    "semantic_hash": "d25dbff4eb782928ec6cc0617ed76d35"
+  },
+  "/home/cristiano/Documentos/projetos/rizer-marketplaces/backend/src/main/java/br/com/rizermarketplaces/core/marketplace/lgpd/DataExportService.java": {
+    "mtime": 1781439684.676381,
+    "ast_hash": "82232260ff538eeb4b2260245d062219",
+    "semantic_hash": "82232260ff538eeb4b2260245d062219"
+  },
+  "/home/cristiano/Documentos/projetos/rizer-marketplaces/backend/src/main/java/br/com/rizermarketplaces/core/marketplace/lgpd/DataRetentionJob.java": {
+    "mtime": 1781408088.828191,
+    "ast_hash": "320c3704f7f9392b12de75235bde3d2a",
+    "semantic_hash": "320c3704f7f9392b12de75235bde3d2a"
+  },
+  "/home/cristiano/Documentos/projetos/rizer-marketplaces/backend/src/main/java/br/com/rizermarketplaces/core/marketplace/model/Address.java": {
+    "mtime": 1781386370.8947113,
+    "ast_hash": "f213fc228aaed4440bfa52f5b715cb73",
+    "semantic_hash": "f213fc228aaed4440bfa52f5b715cb73"
+  },
+  "/home/cristiano/Documentos/projetos/rizer-marketplaces/backend/src/main/java/br/com/rizermarketplaces/core/marketplace/model/AttributeSchema.java": {
+    "mtime": 1781389867.706396,
+    "ast_hash": "7f7ef705f30d7c04c9f5006945d3f60b",
+    "semantic_hash": "7f7ef705f30d7c04c9f5006945d3f60b"
+  },
+  "/home/cristiano/Documentos/projetos/rizer-marketplaces/backend/src/main/java/br/com/rizermarketplaces/core/marketplace/model/Category.java": {
+    "mtime": 1781389862.6463728,
+    "ast_hash": "fbade472cd7a2ca6d0bc9654ccbd6182",
+    "semantic_hash": "fbade472cd7a2ca6d0bc9654ccbd6182"
+  },
+  "/home/cristiano/Documentos/projetos/rizer-marketplaces/backend/src/main/java/br/com/rizermarketplaces/core/marketplace/model/Consent.java": {
+    "mtime": 1781392507.0397108,
+    "ast_hash": "811047b3440af4404e687c36135c7192",
+    "semantic_hash": "811047b3440af4404e687c36135c7192"
+  },
+  "/home/cristiano/Documentos/projetos/rizer-marketplaces/backend/src/main/java/br/com/rizermarketplaces/core/marketplace/model/ConsentPurpose.java": {
+    "mtime": 1781392503.2556925,
+    "ast_hash": "2d87704e2b125d017d730b8ab6612d36",
+    "semantic_hash": "2d87704e2b125d017d730b8ab6612d36"
+  },
+  "/home/cristiano/Documentos/projetos/rizer-marketplaces/backend/src/main/java/br/com/rizermarketplaces/core/marketplace/model/Country.java": {
+    "mtime": 1781386334.6025522,
+    "ast_hash": "c7b47a0c1ac202f6ab68bc04a590185a",
+    "semantic_hash": "c7b47a0c1ac202f6ab68bc04a590185a"
+  },
+  "/home/cristiano/Documentos/projetos/rizer-marketplaces/backend/src/main/java/br/com/rizermarketplaces/core/marketplace/model/CustomDomainCheck.java": {
+    "mtime": 1781392144.6739488,
+    "ast_hash": "f3de67fe81c011a9dfa8121d504932e7",
+    "semantic_hash": "f3de67fe81c011a9dfa8121d504932e7"
+  },
+  "/home/cristiano/Documentos/projetos/rizer-marketplaces/backend/src/main/java/br/com/rizermarketplaces/core/marketplace/model/CustomDomainStatus.java": {
+    "mtime": 1781386395.7548199,
+    "ast_hash": "74d3a74f5afce824060496bff8ec8da3",
+    "semantic_hash": "74d3a74f5afce824060496bff8ec8da3"
+  },
+  "/home/cristiano/Documentos/projetos/rizer-marketplaces/backend/src/main/java/br/com/rizermarketplaces/core/marketplace/model/DataExportRequest.java": {
+    "mtime": 1781392512.9237392,
+    "ast_hash": "6c7ecb4c6acd6180c0837faa95d69da8",
+    "semantic_hash": "6c7ecb4c6acd6180c0837faa95d69da8"
+  },
+  "/home/cristiano/Documentos/projetos/rizer-marketplaces/backend/src/main/java/br/com/rizermarketplaces/core/marketplace/model/DataExportStatus.java": {
+    "mtime": 1781392508.0677156,
+    "ast_hash": "3191cbb9c15c98764250be7f41cb1258",
+    "semantic_hash": "3191cbb9c15c98764250be7f41cb1258"
+  },
+  "/home/cristiano/Documentos/projetos/rizer-marketplaces/backend/src/main/java/br/com/rizermarketplaces/core/marketplace/model/Favorite.java": {
+    "mtime": 1781395244.117814,
+    "ast_hash": "8b88f9a48b959bc3da658ab4abd49e49",
+    "semantic_hash": "8b88f9a48b959bc3da658ab4abd49e49"
+  },
+  "/home/cristiano/Documentos/projetos/rizer-marketplaces/backend/src/main/java/br/com/rizermarketplaces/core/marketplace/model/IntegrationProvider.java": {
+    "mtime": 1781391532.778835,
+    "ast_hash": "bcf5d54c0e17214cb4ea4ecb0ec9254e",
+    "semantic_hash": "bcf5d54c0e17214cb4ea4ecb0ec9254e"
+  },
+  "/home/cristiano/Documentos/projetos/rizer-marketplaces/backend/src/main/java/br/com/rizermarketplaces/core/marketplace/model/IntegrationStatus.java": {
+    "mtime": 1781391533.4588387,
+    "ast_hash": "bed5d1a80e2fde706735041b2add3d06",
+    "semantic_hash": "bed5d1a80e2fde706735041b2add3d06"
+  },
+  "/home/cristiano/Documentos/projetos/rizer-marketplaces/backend/src/main/java/br/com/rizermarketplaces/core/marketplace/model/Lead.java": {
+    "mtime": 1781406595.9892726,
+    "ast_hash": "79eecb9f9e7eb5ab5463b444107f338f",
+    "semantic_hash": "79eecb9f9e7eb5ab5463b444107f338f"
+  },
+  "/home/cristiano/Documentos/projetos/rizer-marketplaces/backend/src/main/java/br/com/rizermarketplaces/core/marketplace/model/LeadStatus.java": {
+    "mtime": 1781406590.6572485,
+    "ast_hash": "9ea6accfc138f0c6b41b6f8142071872",
+    "semantic_hash": "9ea6accfc138f0c6b41b6f8142071872"
+  },
+  "/home/cristiano/Documentos/projetos/rizer-marketplaces/backend/src/main/java/br/com/rizermarketplaces/core/marketplace/model/Payment.java": {
+    "mtime": 1781390878.926964,
+    "ast_hash": "3488f61823647233539c0c78271f5e59",
+    "semantic_hash": "3488f61823647233539c0c78271f5e59"
+  },
+  "/home/cristiano/Documentos/projetos/rizer-marketplaces/backend/src/main/java/br/com/rizermarketplaces/core/marketplace/model/PaymentMethod.java": {
+    "mtime": 1781390851.9628434,
+    "ast_hash": "37480f330d9f61b717d7567a9405f6db",
+    "semantic_hash": "37480f330d9f61b717d7567a9405f6db"
+  },
+  "/home/cristiano/Documentos/projetos/rizer-marketplaces/backend/src/main/java/br/com/rizermarketplaces/core/marketplace/model/PaymentStatus.java": {
+    "mtime": 1781390852.350845,
+    "ast_hash": "ed020389db2c3d7855bd2e5301b0ab88",
+    "semantic_hash": "ed020389db2c3d7855bd2e5301b0ab88"
+  },
+  "/home/cristiano/Documentos/projetos/rizer-marketplaces/backend/src/main/java/br/com/rizermarketplaces/core/marketplace/model/PhysicalStore.java": {
+    "mtime": 1781400318.1010234,
+    "ast_hash": "2e54cac64ae2a163fd2a0260cdec9c94",
+    "semantic_hash": "2e54cac64ae2a163fd2a0260cdec9c94"
+  },
+  "/home/cristiano/Documentos/projetos/rizer-marketplaces/backend/src/main/java/br/com/rizermarketplaces/core/marketplace/model/PhysicalStoreGalleryImage.java": {
+    "mtime": 1781400014.059702,
+    "ast_hash": "a2a3139dd3bcb59c0a35de9ad464cd8a",
+    "semantic_hash": "a2a3139dd3bcb59c0a35de9ad464cd8a"
+  },
+  "/home/cristiano/Documentos/projetos/rizer-marketplaces/backend/src/main/java/br/com/rizermarketplaces/core/marketplace/model/Plan.java": {
+    "mtime": 1781390861.3508854,
+    "ast_hash": "f753435cb6ccfb8d65fb97d62d97f5f8",
+    "semantic_hash": "f753435cb6ccfb8d65fb97d62d97f5f8"
+  },
+  "/home/cristiano/Documentos/projetos/rizer-marketplaces/backend/src/main/java/br/com/rizermarketplaces/core/marketplace/model/Product.java": {
+    "mtime": 1781399993.2636135,
+    "ast_hash": "c602c5631ff697562503dd9b61f7d46b",
+    "semantic_hash": "c602c5631ff697562503dd9b61f7d46b"
+  },
+  "/home/cristiano/Documentos/projetos/rizer-marketplaces/backend/src/main/java/br/com/rizermarketplaces/core/marketplace/model/ProductImage.java": {
+    "mtime": 1781389892.4505095,
+    "ast_hash": "a19052a7b13a0c542dc5bd7d5695de1b",
+    "semantic_hash": "a19052a7b13a0c542dc5bd7d5695de1b"
+  },
+  "/home/cristiano/Documentos/projetos/rizer-marketplaces/backend/src/main/java/br/com/rizermarketplaces/core/marketplace/model/ProductLocalization.java": {
+    "mtime": 1781389886.0224802,
+    "ast_hash": "a989d9a702f5b78bb923cc9ca18d513d",
+    "semantic_hash": "a989d9a702f5b78bb923cc9ca18d513d"
+  },
+  "/home/cristiano/Documentos/projetos/rizer-marketplaces/backend/src/main/java/br/com/rizermarketplaces/core/marketplace/model/ProductLocationSource.java": {
+    "mtime": 1781389855.1463385,
+    "ast_hash": "46f891d01b273724a76259fdd33e8ec0",
+    "semantic_hash": "46f891d01b273724a76259fdd33e8ec0"
+  },
+  "/home/cristiano/Documentos/projetos/rizer-marketplaces/backend/src/main/java/br/com/rizermarketplaces/core/marketplace/model/ProductRealm.java": {
+    "mtime": 1775100596.464766,
+    "ast_hash": "9c9c676d2acbc7b80b9e405e2519754c",
+    "semantic_hash": "9c9c676d2acbc7b80b9e405e2519754c"
+  },
+  "/home/cristiano/Documentos/projetos/rizer-marketplaces/backend/src/main/java/br/com/rizermarketplaces/core/marketplace/model/ProductStatus.java": {
+    "mtime": 1781389854.634336,
+    "ast_hash": "45f36056c3435557228dd0ea740fd1ef",
+    "semantic_hash": "45f36056c3435557228dd0ea740fd1ef"
+  },
+  "/home/cristiano/Documentos/projetos/rizer-marketplaces/backend/src/main/java/br/com/rizermarketplaces/core/marketplace/model/StripeInvoice.java": {
+    "mtime": 1781390884.7149901,
+    "ast_hash": "12a8a09eb458639e28fdb4f2f76ca6e0",
+    "semantic_hash": "12a8a09eb458639e28fdb4f2f76ca6e0"
+  },
+  "/home/cristiano/Documentos/projetos/rizer-marketplaces/backend/src/main/java/br/com/rizermarketplaces/core/marketplace/model/Subscription.java": {
+    "mtime": 1781443054.698938,
+    "ast_hash": "a28b2c40983a0d0e68529e88b077d1a3",
+    "semantic_hash": "a28b2c40983a0d0e68529e88b077d1a3"
+  },
+  "/home/cristiano/Documentos/projetos/rizer-marketplaces/backend/src/main/java/br/com/rizermarketplaces/core/marketplace/model/SubscriptionSource.java": {
+    "mtime": 1781390850.802838,
+    "ast_hash": "2a7b449a84a353c66bcda2dbf0354a54",
+    "semantic_hash": "2a7b449a84a353c66bcda2dbf0354a54"
+  },
+  "/home/cristiano/Documentos/projetos/rizer-marketplaces/backend/src/main/java/br/com/rizermarketplaces/core/marketplace/model/SubscriptionStatus.java": {
+    "mtime": 1781390850.4028363,
+    "ast_hash": "88ee7619110c0f9503c25dceb2018795",
+    "semantic_hash": "88ee7619110c0f9503c25dceb2018795"
+  },
+  "/home/cristiano/Documentos/projetos/rizer-marketplaces/backend/src/main/java/br/com/rizermarketplaces/core/marketplace/model/SystemRole.java": {
+    "mtime": 1776476240.074332,
+    "ast_hash": "b10151e0baaf380b3af73fac725763a8",
+    "semantic_hash": "b10151e0baaf380b3af73fac725763a8"
+  },
+  "/home/cristiano/Documentos/projetos/rizer-marketplaces/backend/src/main/java/br/com/rizermarketplaces/core/marketplace/model/Tenant.java": {
+    "mtime": 1781399960.0194728,
+    "ast_hash": "acccff172dbd2707c271afc578b15090",
+    "semantic_hash": "acccff172dbd2707c271afc578b15090"
+  },
+  "/home/cristiano/Documentos/projetos/rizer-marketplaces/backend/src/main/java/br/com/rizermarketplaces/core/marketplace/model/TenantGalleryImage.java": {
+    "mtime": 1781400005.639666,
+    "ast_hash": "883246d972e384fb8139db6d7cca9420",
+    "semantic_hash": "883246d972e384fb8139db6d7cca9420"
+  },
+  "/home/cristiano/Documentos/projetos/rizer-marketplaces/backend/src/main/java/br/com/rizermarketplaces/core/marketplace/model/TenantIntegration.java": {
+    "mtime": 1781443062.5512626,
+    "ast_hash": "79531c33d31b87deec7ede2a7035353e",
+    "semantic_hash": "79531c33d31b87deec7ede2a7035353e"
+  },
+  "/home/cristiano/Documentos/projetos/rizer-marketplaces/backend/src/main/java/br/com/rizermarketplaces/core/marketplace/model/TenantStatus.java": {
+    "mtime": 1781386394.5428147,
+    "ast_hash": "3f4a5ba24f0f98df92a13d7f88e86fbd",
+    "semantic_hash": "3f4a5ba24f0f98df92a13d7f88e86fbd"
+  },
+  "/home/cristiano/Documentos/projetos/rizer-marketplaces/backend/src/main/java/br/com/rizermarketplaces/core/marketplace/model/TenantUser.java": {
+    "mtime": 1781386416.0829089,
+    "ast_hash": "930a1f245445b297d9f10197725adc14",
+    "semantic_hash": "930a1f245445b297d9f10197725adc14"
+  },
+  "/home/cristiano/Documentos/projetos/rizer-marketplaces/backend/src/main/java/br/com/rizermarketplaces/core/marketplace/model/TenantUserRole.java": {
+    "mtime": 1781386408.8188772,
+    "ast_hash": "745b9b2a565df8252b563d6e855290dd",
+    "semantic_hash": "745b9b2a565df8252b563d6e855290dd"
+  },
+  "/home/cristiano/Documentos/projetos/rizer-marketplaces/backend/src/main/java/br/com/rizermarketplaces/core/marketplace/model/UnitSystem.java": {
+    "mtime": 1775100596.464766,
+    "ast_hash": "5027c223ed860042d1b3452bed424c7e",
+    "semantic_hash": "5027c223ed860042d1b3452bed424c7e"
+  },
+  "/home/cristiano/Documentos/projetos/rizer-marketplaces/backend/src/main/java/br/com/rizermarketplaces/core/marketplace/model/User.java": {
+    "mtime": 1781395233.9137685,
+    "ast_hash": "34b53b18e273051666865f49535bfb51",
+    "semantic_hash": "34b53b18e273051666865f49535bfb51"
+  },
+  "/home/cristiano/Documentos/projetos/rizer-marketplaces/backend/src/main/java/br/com/rizermarketplaces/core/marketplace/model/VehicleBrand.java": {
+    "mtime": 1781389901.1625495,
+    "ast_hash": "557f1a450adc6493fb4d84202aa62750",
+    "semantic_hash": "557f1a450adc6493fb4d84202aa62750"
+  },
+  "/home/cristiano/Documentos/projetos/rizer-marketplaces/backend/src/main/java/br/com/rizermarketplaces/core/marketplace/model/VehicleModel.java": {
+    "mtime": 1781389904.0425627,
+    "ast_hash": "efca23fa257fc2c744f4ce33bb04e697",
+    "semantic_hash": "efca23fa257fc2c744f4ce33bb04e697"
+  },
+  "/home/cristiano/Documentos/projetos/rizer-marketplaces/backend/src/main/java/br/com/rizermarketplaces/core/marketplace/model/VehicleRealm.java": {
+    "mtime": 1781389853.542331,
+    "ast_hash": "b1ac7429acf74c36fb98448be4b95442",
+    "semantic_hash": "b1ac7429acf74c36fb98448be4b95442"
+  },
+  "/home/cristiano/Documentos/projetos/rizer-marketplaces/backend/src/main/java/br/com/rizermarketplaces/core/marketplace/partner/PublicPartnerService.java": {
+    "mtime": 1781405649.7410338,
+    "ast_hash": "a7486707fdb93123810acb76a8df5cfb",
+    "semantic_hash": "a7486707fdb93123810acb76a8df5cfb"
+  },
+  "/home/cristiano/Documentos/projetos/rizer-marketplaces/backend/src/main/java/br/com/rizermarketplaces/core/marketplace/product/ProductImageService.java": {
+    "mtime": 1781453221.1687794,
+    "ast_hash": "9e54ae526167dc3d7399b67e2cdf1b8a",
+    "semantic_hash": "9e54ae526167dc3d7399b67e2cdf1b8a"
+  },
+  "/home/cristiano/Documentos/projetos/rizer-marketplaces/backend/src/main/java/br/com/rizermarketplaces/core/marketplace/product/ProductService.java": {
+    "mtime": 1781400569.9141467,
+    "ast_hash": "fab25c73fa84273eddefec6211e61610",
+    "semantic_hash": "fab25c73fa84273eddefec6211e61610"
+  },
+  "/home/cristiano/Documentos/projetos/rizer-marketplaces/backend/src/main/java/br/com/rizermarketplaces/core/marketplace/repository/AddressRepository.java": {
+    "mtime": 1781386373.1107209,
+    "ast_hash": "988d7b158262faa144ca73e88c8c1e72",
+    "semantic_hash": "988d7b158262faa144ca73e88c8c1e72"
+  },
+  "/home/cristiano/Documentos/projetos/rizer-marketplaces/backend/src/main/java/br/com/rizermarketplaces/core/marketplace/repository/AttributeSchemaRepository.java": {
+    "mtime": 1781389914.4746106,
+    "ast_hash": "410d9a9cdf88608b2d56c8bf13442adc",
+    "semantic_hash": "410d9a9cdf88608b2d56c8bf13442adc"
+  },
+  "/home/cristiano/Documentos/projetos/rizer-marketplaces/backend/src/main/java/br/com/rizermarketplaces/core/marketplace/repository/CategoryRepository.java": {
+    "mtime": 1781389912.0065992,
+    "ast_hash": "10062f78486282fc004e346bc6945e70",
+    "semantic_hash": "10062f78486282fc004e346bc6945e70"
+  },
+  "/home/cristiano/Documentos/projetos/rizer-marketplaces/backend/src/main/java/br/com/rizermarketplaces/core/marketplace/repository/ConsentRepository.java": {
+    "mtime": 1781392515.995754,
+    "ast_hash": "8c0e103e62d57cd9bda9b580420d1ff2",
+    "semantic_hash": "8c0e103e62d57cd9bda9b580420d1ff2"
+  },
+  "/home/cristiano/Documentos/projetos/rizer-marketplaces/backend/src/main/java/br/com/rizermarketplaces/core/marketplace/repository/CountryRepository.java": {
+    "mtime": 1781386335.8065574,
+    "ast_hash": "c33fb08e66213989efe6df50d5183206",
+    "semantic_hash": "c33fb08e66213989efe6df50d5183206"
+  },
+  "/home/cristiano/Documentos/projetos/rizer-marketplaces/backend/src/main/java/br/com/rizermarketplaces/core/marketplace/repository/CustomDomainCheckRepository.java": {
+    "mtime": 1781392146.4099574,
+    "ast_hash": "d06579e34c4cdd84c863c5fbf4894c4c",
+    "semantic_hash": "d06579e34c4cdd84c863c5fbf4894c4c"
+  },
+  "/home/cristiano/Documentos/projetos/rizer-marketplaces/backend/src/main/java/br/com/rizermarketplaces/core/marketplace/repository/DataExportRequestRepository.java": {
+    "mtime": 1781392516.8797581,
+    "ast_hash": "16519976e1626aebfdb1d780c1412f71",
+    "semantic_hash": "16519976e1626aebfdb1d780c1412f71"
+  },
+  "/home/cristiano/Documentos/projetos/rizer-marketplaces/backend/src/main/java/br/com/rizermarketplaces/core/marketplace/repository/FavoriteRepository.java": {
+    "mtime": 1781395244.981818,
+    "ast_hash": "4fb84332d3bb0268c1eb54b90abef0e8",
+    "semantic_hash": "4fb84332d3bb0268c1eb54b90abef0e8"
+  },
+  "/home/cristiano/Documentos/projetos/rizer-marketplaces/backend/src/main/java/br/com/rizermarketplaces/core/marketplace/repository/LeadRepository.java": {
+    "mtime": 1781406597.001277,
+    "ast_hash": "cdaac454c794dac60ad11552dcbcf85f",
+    "semantic_hash": "cdaac454c794dac60ad11552dcbcf85f"
+  },
+  "/home/cristiano/Documentos/projetos/rizer-marketplaces/backend/src/main/java/br/com/rizermarketplaces/core/marketplace/repository/PaymentRepository.java": {
+    "mtime": 1781390898.3710594,
+    "ast_hash": "925485ac021a59f8b4ee7471cf8676a8",
+    "semantic_hash": "925485ac021a59f8b4ee7471cf8676a8"
+  },
+  "/home/cristiano/Documentos/projetos/rizer-marketplaces/backend/src/main/java/br/com/rizermarketplaces/core/marketplace/repository/PhysicalStoreGalleryImageRepository.java": {
+    "mtime": 1781400025.4997506,
+    "ast_hash": "ba58a3ead77120039e24c8711772bb8f",
+    "semantic_hash": "ba58a3ead77120039e24c8711772bb8f"
+  },
+  "/home/cristiano/Documentos/projetos/rizer-marketplaces/backend/src/main/java/br/com/rizermarketplaces/core/marketplace/repository/PhysicalStoreRepository.java": {
+    "mtime": 1781387173.61418,
+    "ast_hash": "65bc91b7ed9c5c52240084794c21d6cc",
+    "semantic_hash": "65bc91b7ed9c5c52240084794c21d6cc"
+  },
+  "/home/cristiano/Documentos/projetos/rizer-marketplaces/backend/src/main/java/br/com/rizermarketplaces/core/marketplace/repository/PlanRepository.java": {
+    "mtime": 1781390891.4470203,
+    "ast_hash": "026b4b9552bae1c5f36776f755d14a85",
+    "semantic_hash": "026b4b9552bae1c5f36776f755d14a85"
+  },
+  "/home/cristiano/Documentos/projetos/rizer-marketplaces/backend/src/main/java/br/com/rizermarketplaces/core/marketplace/repository/ProductImageRepository.java": {
+    "mtime": 1781389924.7546577,
+    "ast_hash": "67e599505eb3e102d6d9e23f57a3e479",
+    "semantic_hash": "67e599505eb3e102d6d9e23f57a3e479"
+  },
+  "/home/cristiano/Documentos/projetos/rizer-marketplaces/backend/src/main/java/br/com/rizermarketplaces/core/marketplace/repository/ProductLocalizationRepository.java": {
+    "mtime": 1781389922.5546477,
+    "ast_hash": "eb0ab7ac7ca1bff73e650ed9e1f3d135",
+    "semantic_hash": "eb0ab7ac7ca1bff73e650ed9e1f3d135"
+  },
+  "/home/cristiano/Documentos/projetos/rizer-marketplaces/backend/src/main/java/br/com/rizermarketplaces/core/marketplace/repository/ProductRepository.java": {
+    "mtime": 1781396776.097116,
+    "ast_hash": "d21bc428a5ecead0a889f1d699f1a656",
+    "semantic_hash": "d21bc428a5ecead0a889f1d699f1a656"
+  },
+  "/home/cristiano/Documentos/projetos/rizer-marketplaces/backend/src/main/java/br/com/rizermarketplaces/core/marketplace/repository/StripeInvoiceRepository.java": {
+    "mtime": 1781390900.211072,
+    "ast_hash": "0383e2cf751c9f28a0c5729855501d20",
+    "semantic_hash": "0383e2cf751c9f28a0c5729855501d20"
+  },
+  "/home/cristiano/Documentos/projetos/rizer-marketplaces/backend/src/main/java/br/com/rizermarketplaces/core/marketplace/repository/SubscriptionRepository.java": {
+    "mtime": 1781390893.395029,
+    "ast_hash": "1920ff2cd56842629a46e4f7237c2b1f",
+    "semantic_hash": "1920ff2cd56842629a46e4f7237c2b1f"
+  },
+  "/home/cristiano/Documentos/projetos/rizer-marketplaces/backend/src/main/java/br/com/rizermarketplaces/core/marketplace/repository/TenantGalleryImageRepository.java": {
+    "mtime": 1781400019.9517272,
+    "ast_hash": "2db33a0f6a26396910df655e3b71c7d5",
+    "semantic_hash": "2db33a0f6a26396910df655e3b71c7d5"
+  },
+  "/home/cristiano/Documentos/projetos/rizer-marketplaces/backend/src/main/java/br/com/rizermarketplaces/core/marketplace/repository/TenantIntegrationRepository.java": {
+    "mtime": 1781391544.8868997,
+    "ast_hash": "f6358bcba28dc4db371752929011aba0",
+    "semantic_hash": "f6358bcba28dc4db371752929011aba0"
+  },
+  "/home/cristiano/Documentos/projetos/rizer-marketplaces/backend/src/main/java/br/com/rizermarketplaces/core/marketplace/repository/TenantRepository.java": {
+    "mtime": 1781390486.3532026,
+    "ast_hash": "30c1adeeba2ff779293adbcc0bdb25f0",
+    "semantic_hash": "30c1adeeba2ff779293adbcc0bdb25f0"
+  },
+  "/home/cristiano/Documentos/projetos/rizer-marketplaces/backend/src/main/java/br/com/rizermarketplaces/core/marketplace/repository/TenantUserRepository.java": {
+    "mtime": 1781386421.122931,
+    "ast_hash": "2c756a531139f4c20b3ce5be2f175b1b",
+    "semantic_hash": "2c756a531139f4c20b3ce5be2f175b1b"
+  },
+  "/home/cristiano/Documentos/projetos/rizer-marketplaces/backend/src/main/java/br/com/rizermarketplaces/core/marketplace/repository/UserRepository.java": {
+    "mtime": 1781443433.9469504,
+    "ast_hash": "276a740a62ea21e2474c4de0341388f1",
+    "semantic_hash": "276a740a62ea21e2474c4de0341388f1"
+  },
+  "/home/cristiano/Documentos/projetos/rizer-marketplaces/backend/src/main/java/br/com/rizermarketplaces/core/marketplace/repository/VehicleBrandRepository.java": {
+    "mtime": 1781389915.662616,
+    "ast_hash": "9ea0d72fc0ec6ce417b0340236051735",
+    "semantic_hash": "9ea0d72fc0ec6ce417b0340236051735"
+  },
+  "/home/cristiano/Documentos/projetos/rizer-marketplaces/backend/src/main/java/br/com/rizermarketplaces/core/marketplace/repository/VehicleModelRepository.java": {
+    "mtime": 1781389916.9066217,
+    "ast_hash": "90c213d7d5fa525c6060450cfe8551fb",
+    "semantic_hash": "90c213d7d5fa525c6060450cfe8551fb"
+  },
+  "/home/cristiano/Documentos/projetos/rizer-marketplaces/backend/src/main/java/br/com/rizermarketplaces/core/marketplace/rules/DynamicAttributeValidationService.java": {
+    "mtime": 1781389956.8148043,
+    "ast_hash": "f19d46ff94063eb21de2857182fabf38",
+    "semantic_hash": "f19d46ff94063eb21de2857182fabf38"
+  },
+  "/home/cristiano/Documentos/projetos/rizer-marketplaces/backend/src/main/java/br/com/rizermarketplaces/core/marketplace/service/MeService.java": {
+    "mtime": 1781395322.4701672,
+    "ast_hash": "cfe841a66990f0b4bd0aeac96c4882e1",
+    "semantic_hash": "cfe841a66990f0b4bd0aeac96c4882e1"
+  },
+  "/home/cristiano/Documentos/projetos/rizer-marketplaces/backend/src/main/java/br/com/rizermarketplaces/core/marketplace/service/S3StorageService.java": {
+    "mtime": 1781454765.5257256,
+    "ast_hash": "44463d52b505c2a007eda184db6b6afb",
+    "semantic_hash": "44463d52b505c2a007eda184db6b6afb"
+  },
+  "/home/cristiano/Documentos/projetos/rizer-marketplaces/backend/src/main/java/br/com/rizermarketplaces/core/marketplace/tenant/CepLookupService.java": {
+    "mtime": 1781439686.152388,
+    "ast_hash": "2054602d04e36dec3618da7e9aede7ae",
+    "semantic_hash": "2054602d04e36dec3618da7e9aede7ae"
+  },
+  "/home/cristiano/Documentos/projetos/rizer-marketplaces/backend/src/main/java/br/com/rizermarketplaces/core/marketplace/tenant/CloudflareService.java": {
+    "mtime": 1781392213.5262864,
+    "ast_hash": "cdc11583f85635bd08b22f61b778db82",
+    "semantic_hash": "cdc11583f85635bd08b22f61b778db82"
+  },
+  "/home/cristiano/Documentos/projetos/rizer-marketplaces/backend/src/main/java/br/com/rizermarketplaces/core/marketplace/tenant/CustomDomainService.java": {
+    "mtime": 1781408119.8523347,
+    "ast_hash": "2302ac788f16a925e9002fec6b16bab4",
+    "semantic_hash": "2302ac788f16a925e9002fec6b16bab4"
+  },
+  "/home/cristiano/Documentos/projetos/rizer-marketplaces/backend/src/main/java/br/com/rizermarketplaces/core/marketplace/tenant/DnsLookupService.java": {
+    "mtime": 1781407987.175719,
+    "ast_hash": "08aa4b1dcb792ede905ee38b1955d43a",
+    "semantic_hash": "08aa4b1dcb792ede905ee38b1955d43a"
+  },
+  "/home/cristiano/Documentos/projetos/rizer-marketplaces/backend/src/main/java/br/com/rizermarketplaces/core/marketplace/tenant/PhysicalStoreGalleryService.java": {
+    "mtime": 1781400623.3903873,
+    "ast_hash": "ab334cc78cb417d901a6578f6e1d9cbb",
+    "semantic_hash": "ab334cc78cb417d901a6578f6e1d9cbb"
+  },
+  "/home/cristiano/Documentos/projetos/rizer-marketplaces/backend/src/main/java/br/com/rizermarketplaces/core/marketplace/tenant/PhysicalStoreService.java": {
+    "mtime": 1781400344.881142,
+    "ast_hash": "52556f22a68b7c85cd9c438284644aa4",
+    "semantic_hash": "52556f22a68b7c85cd9c438284644aa4"
+  },
+  "/home/cristiano/Documentos/projetos/rizer-marketplaces/backend/src/main/java/br/com/rizermarketplaces/core/marketplace/tenant/StoreLimitGuard.java": {
+    "mtime": 1781408108.296281,
+    "ast_hash": "d1f52adbd04f0fb8abe3f04bb233b7b8",
+    "semantic_hash": "d1f52adbd04f0fb8abe3f04bb233b7b8"
+  },
+  "/home/cristiano/Documentos/projetos/rizer-marketplaces/backend/src/main/java/br/com/rizermarketplaces/core/marketplace/tenant/TenantExceptions.java": {
+    "mtime": 1781393286.7598605,
+    "ast_hash": "c06cf0cbe14652954460ea98611f5060",
+    "semantic_hash": "c06cf0cbe14652954460ea98611f5060"
+  },
+  "/home/cristiano/Documentos/projetos/rizer-marketplaces/backend/src/main/java/br/com/rizermarketplaces/core/marketplace/tenant/TenantGalleryService.java": {
+    "mtime": 1781400634.0984356,
+    "ast_hash": "0a35b9d0d46bb6a255346f37490eb46d",
+    "semantic_hash": "0a35b9d0d46bb6a255346f37490eb46d"
+  },
+  "/home/cristiano/Documentos/projetos/rizer-marketplaces/backend/src/main/java/br/com/rizermarketplaces/core/marketplace/tenant/TenantMapper.java": {
+    "mtime": 1781400326.0290585,
+    "ast_hash": "d71cd1da22530404b80dda8d7c698cfb",
+    "semantic_hash": "d71cd1da22530404b80dda8d7c698cfb"
+  },
+  "/home/cristiano/Documentos/projetos/rizer-marketplaces/backend/src/main/java/br/com/rizermarketplaces/core/marketplace/tenant/TenantMemberService.java": {
+    "mtime": 1781400439.5615628,
+    "ast_hash": "f626d5c69e6781ce2e24ece51cd58d70",
+    "semantic_hash": "f626d5c69e6781ce2e24ece51cd58d70"
+  },
+  "/home/cristiano/Documentos/projetos/rizer-marketplaces/backend/src/main/java/br/com/rizermarketplaces/core/marketplace/tools/CnpjValidator.java": {
+    "mtime": 1781393948.1834235,
+    "ast_hash": "01751cd9b61ba6b52f5d6dd555c86f1e",
+    "semantic_hash": "01751cd9b61ba6b52f5d6dd555c86f1e"
+  },
+  "/home/cristiano/Documentos/projetos/rizer-marketplaces/backend/src/main/java/br/com/rizermarketplaces/core/marketplace/tools/CpfValidator.java": {
+    "mtime": 1781407980.103686,
+    "ast_hash": "d36a0365ce76ef01ef127bd53dec1d30",
+    "semantic_hash": "d36a0365ce76ef01ef127bd53dec1d30"
+  },
+  "/home/cristiano/Documentos/projetos/rizer-marketplaces/backend/src/main/java/br/com/rizermarketplaces/core/marketplace/tools/PhoneNormalizer.java": {
+    "mtime": 1781387200.6702962,
+    "ast_hash": "4344cf98625cf55ab991f513d603ec6b",
+    "semantic_hash": "4344cf98625cf55ab991f513d603ec6b"
+  },
+  "/home/cristiano/Documentos/projetos/rizer-marketplaces/backend/src/main/java/br/com/rizermarketplaces/core/marketplace/tools/RequestUtils.java": {
+    "mtime": 1781407952.3115566,
+    "ast_hash": "706965e3a9af77a6873426bc02a67365",
+    "semantic_hash": "706965e3a9af77a6873426bc02a67365"
+  },
+  "/home/cristiano/Documentos/projetos/rizer-marketplaces/backend/src/main/java/br/com/rizermarketplaces/core/marketplace/tools/SlugGenerator.java": {
+    "mtime": 1781387194.2902687,
+    "ast_hash": "4ebaa5dc700e3099fc57cb1791dff996",
+    "semantic_hash": "4ebaa5dc700e3099fc57cb1791dff996"
+  },
+  "/home/cristiano/Documentos/projetos/rizer-marketplaces/backend/src/main/java/br/com/rizermarketplaces/core/marketplace/tools/StringUtils.java": {
+    "mtime": 1781407951.2475517,
+    "ast_hash": "e22d1e5be1761395f56d7c2ad6f62ac5",
+    "semantic_hash": "e22d1e5be1761395f56d7c2ad6f62ac5"
+  },
+  "/home/cristiano/Documentos/projetos/rizer-marketplaces/backend/src/main/resources/db/migration/V10__create_attribute_schemas.sql": {
+    "mtime": 1781402985.8484874,
+    "ast_hash": "b39373dc111df9bae9b6e10bef6726b9",
+    "semantic_hash": "b39373dc111df9bae9b6e10bef6726b9"
+  },
+  "/home/cristiano/Documentos/projetos/rizer-marketplaces/backend/src/main/resources/db/migration/V11__create_products.sql": {
+    "mtime": 1781402987.0364926,
+    "ast_hash": "ec6ed082fc9516338f4bf96b4d2d10b8",
+    "semantic_hash": "ec6ed082fc9516338f4bf96b4d2d10b8"
+  },
+  "/home/cristiano/Documentos/projetos/rizer-marketplaces/backend/src/main/resources/db/migration/V12__create_plans_and_subscriptions.sql": {
+    "mtime": 1781402987.0364926,
+    "ast_hash": "ebbe71341bc38df1d7ebb181ad27559d",
+    "semantic_hash": "ebbe71341bc38df1d7ebb181ad27559d"
+  },
+  "/home/cristiano/Documentos/projetos/rizer-marketplaces/backend/src/main/resources/db/migration/V13__create_payments.sql": {
+    "mtime": 1781402987.0364926,
+    "ast_hash": "907071692f8fbca92f5116e80fbe5d57",
+    "semantic_hash": "907071692f8fbca92f5116e80fbe5d57"
+  },
+  "/home/cristiano/Documentos/projetos/rizer-marketplaces/backend/src/main/resources/db/migration/V14__create_integrations.sql": {
+    "mtime": 1781391526.0187988,
+    "ast_hash": "269ce3d48146a5740293c00be7b026c4",
+    "semantic_hash": "269ce3d48146a5740293c00be7b026c4"
+  },
+  "/home/cristiano/Documentos/projetos/rizer-marketplaces/backend/src/main/resources/db/migration/V15__create_custom_domain_checks.sql": {
+    "mtime": 1781392139.817925,
+    "ast_hash": "788b8a4ce524ee54c97a5670c209a42f",
+    "semantic_hash": "788b8a4ce524ee54c97a5670c209a42f"
+  },
+  "/home/cristiano/Documentos/projetos/rizer-marketplaces/backend/src/main/resources/db/migration/V16__create_consents_and_exports.sql": {
+    "mtime": 1781392495.9996576,
+    "ast_hash": "5c6c76309e03bc8ad636260fe54d757e",
+    "semantic_hash": "5c6c76309e03bc8ad636260fe54d757e"
+  },
+  "/home/cristiano/Documentos/projetos/rizer-marketplaces/backend/src/main/resources/db/migration/V17__create_audit_log.sql": {
+    "mtime": 1781392955.757879,
+    "ast_hash": "e6ec9e8c5499dd10280cd4d49e327545",
+    "semantic_hash": "e6ec9e8c5499dd10280cd4d49e327545"
+  },
+  "/home/cristiano/Documentos/projetos/rizer-marketplaces/backend/src/main/resources/db/migration/V18__add_consumer_fields_and_favorites.sql": {
+    "mtime": 1781395202.83763,
+    "ast_hash": "c341ce1f68b3c2ba87f81d5163e4cc4a",
+    "semantic_hash": "c341ce1f68b3c2ba87f81d5163e4cc4a"
+  },
+  "/home/cristiano/Documentos/projetos/rizer-marketplaces/backend/src/main/resources/db/migration/V19__attribute_schema_car_v2.sql": {
+    "mtime": 1781396731.400898,
+    "ast_hash": "0949e92c939a005d0a756256fe65415b",
+    "semantic_hash": "0949e92c939a005d0a756256fe65415b"
+  },
+  "/home/cristiano/Documentos/projetos/rizer-marketplaces/backend/src/main/resources/db/migration/V1__enable_extensions.sql": {
+    "mtime": 1776475922.7280219,
+    "ast_hash": "c1725045305cde2e2536b9790ff6cce3",
+    "semantic_hash": "c1725045305cde2e2536b9790ff6cce3"
+  },
+  "/home/cristiano/Documentos/projetos/rizer-marketplaces/backend/src/main/resources/db/migration/V20__logista_profile_and_seller.sql": {
+    "mtime": 1781402870.4759777,
+    "ast_hash": "9a44194ea736638ec67d73920bf891f2",
+    "semantic_hash": "9a44194ea736638ec67d73920bf891f2"
+  },
+  "/home/cristiano/Documentos/projetos/rizer-marketplaces/backend/src/main/resources/db/migration/V21__create_subsubcategories.sql": {
+    "mtime": 1781403051.9647796,
+    "ast_hash": "4cfbaf174aa850bebd768192d082884a",
+    "semantic_hash": "4cfbaf174aa850bebd768192d082884a"
+  },
+  "/home/cristiano/Documentos/projetos/rizer-marketplaces/backend/src/main/resources/db/migration/V22__create_leads.sql": {
+    "mtime": 1781406589.8572447,
+    "ast_hash": "4ebde6d26a19e85310a2c744ad041f33",
+    "semantic_hash": "4ebde6d26a19e85310a2c744ad041f33"
+  },
+  "/home/cristiano/Documentos/projetos/rizer-marketplaces/backend/src/main/resources/db/migration/V23__seed_admin_user.sql": {
+    "mtime": 1781440700.2570868,
+    "ast_hash": "17303fd58df9e024905d42a905ecc715",
+    "semantic_hash": "17303fd58df9e024905d42a905ecc715"
+  },
+  "/home/cristiano/Documentos/projetos/rizer-marketplaces/backend/src/main/resources/db/migration/V24__fix_audit_log_ip_type.sql": {
+    "mtime": 1781443068.483508,
+    "ast_hash": "28c5ea2affa1809aef4def21fab05071",
+    "semantic_hash": "28c5ea2affa1809aef4def21fab05071"
+  },
+  "/home/cristiano/Documentos/projetos/rizer-marketplaces/backend/src/main/resources/db/migration/V25__fix_tenant_unique_constraints.sql": {
+    "mtime": 1781443430.7909687,
+    "ast_hash": "e5153d33f163f84c045555154975d4cb",
+    "semantic_hash": "e5153d33f163f84c045555154975d4cb"
+  },
+  "/home/cristiano/Documentos/projetos/rizer-marketplaces/backend/src/main/resources/db/migration/V2__create_vehicle_brands_and_models.sql": {
+    "mtime": 1781384013.9162464,
+    "ast_hash": "0a368011ddf3b03944d6703e7d740751",
+    "semantic_hash": "0a368011ddf3b03944d6703e7d740751"
+  },
+  "/home/cristiano/Documentos/projetos/rizer-marketplaces/backend/src/main/resources/db/migration/V3__seed_vehicle_brands.sql": {
+    "mtime": 1781384054.1564157,
+    "ast_hash": "4e9a61e28af50e91495917c0700a592f",
+    "semantic_hash": "4e9a61e28af50e91495917c0700a592f"
+  },
+  "/home/cristiano/Documentos/projetos/rizer-marketplaces/backend/src/main/resources/db/migration/V4__seed_vehicle_models.sql": {
+    "mtime": 1781402819.4277525,
+    "ast_hash": "b88a870cb8ecc94ac2d35139905c6b45",
+    "semantic_hash": "b88a870cb8ecc94ac2d35139905c6b45"
+  },
+  "/home/cristiano/Documentos/projetos/rizer-marketplaces/backend/src/main/resources/db/migration/V5__create_countries.sql": {
+    "mtime": 1781402960.2523742,
+    "ast_hash": "aa3a4194b5baf70471321058db76304a",
+    "semantic_hash": "aa3a4194b5baf70471321058db76304a"
+  },
+  "/home/cristiano/Documentos/projetos/rizer-marketplaces/backend/src/main/resources/db/migration/V6__create_users_and_addresses.sql": {
+    "mtime": 1781402934.8042617,
+    "ast_hash": "ff63c6940f01551120fddb274a7fe2c6",
+    "semantic_hash": "ff63c6940f01551120fddb274a7fe2c6"
+  },
+  "/home/cristiano/Documentos/projetos/rizer-marketplaces/backend/src/main/resources/db/migration/V7__create_tenants_and_tenant_users.sql": {
+    "mtime": 1781402972.9044302,
+    "ast_hash": "18f7613b35ee3289edbfe1d69ccb8339",
+    "semantic_hash": "18f7613b35ee3289edbfe1d69ccb8339"
+  },
+  "/home/cristiano/Documentos/projetos/rizer-marketplaces/backend/src/main/resources/db/migration/V8__create_physical_stores.sql": {
+    "mtime": 1781387162.9621344,
+    "ast_hash": "5f867869720fc0a44ce2312184c9ffb0",
+    "semantic_hash": "5f867869720fc0a44ce2312184c9ffb0"
+  },
+  "/home/cristiano/Documentos/projetos/rizer-marketplaces/backend/src/main/resources/db/migration/V9__create_categories.sql": {
+    "mtime": 1781402985.8444872,
+    "ast_hash": "c39ba86966e53f908f6304af697bd6ee",
+    "semantic_hash": "c39ba86966e53f908f6304af697bd6ee"
+  },
+  "/home/cristiano/Documentos/projetos/rizer-marketplaces/backend/src/test/java/br/com/rizermarketplaces/core/marketplace/CoreMarketplaceApplicationTests.java": {
+    "mtime": 1781408269.1570253,
+    "ast_hash": "32d9dd349357947840013e12bd6cc0eb",
+    "semantic_hash": "32d9dd349357947840013e12bd6cc0eb"
+  },
+  "/home/cristiano/Documentos/projetos/rizer-marketplaces/backend/src/test/java/br/com/rizermarketplaces/core/marketplace/auth/TenantRoleGuardTest.java": {
+    "mtime": 1781400101.532077,
+    "ast_hash": "4460084b24cc6ee063861fb344b2987d",
+    "semantic_hash": "4460084b24cc6ee063861fb344b2987d"
+  },
+  "/home/cristiano/Documentos/projetos/rizer-marketplaces/backend/src/test/java/br/com/rizermarketplaces/core/marketplace/billing/SubscriptionStateMachineTest.java": {
+    "mtime": 1781408124.5603566,
+    "ast_hash": "6f4811f3ae501797b0fe4eddd25d61e0",
+    "semantic_hash": "6f4811f3ae501797b0fe4eddd25d61e0"
+  },
+  "/home/cristiano/Documentos/projetos/rizer-marketplaces/backend/src/test/java/br/com/rizermarketplaces/core/marketplace/config/aws/AwsS3ConfigTest.java": {
+    "mtime": 1781447576.9232988,
+    "ast_hash": "e3d535876562ac0b063a09f5e9138de7",
+    "semantic_hash": "e3d535876562ac0b063a09f5e9138de7"
+  },
+  "/home/cristiano/Documentos/projetos/rizer-marketplaces/backend/src/test/java/br/com/rizermarketplaces/core/marketplace/controller/MediaControllerTest.java": {
+    "mtime": 1781454509.1166523,
+    "ast_hash": "7bce2c811290adadc8b3785afd49796c",
+    "semantic_hash": "7bce2c811290adadc8b3785afd49796c"
+  },
+  "/home/cristiano/Documentos/projetos/rizer-marketplaces/backend/src/test/java/br/com/rizermarketplaces/core/marketplace/product/ProductImageServiceTest.java": {
+    "mtime": 1781454378.8921256,
+    "ast_hash": "e415d59b7c65cc8b36d006f949ac64f2",
+    "semantic_hash": "e415d59b7c65cc8b36d006f949ac64f2"
+  },
+  "/home/cristiano/Documentos/projetos/rizer-marketplaces/backend/src/test/java/br/com/rizermarketplaces/core/marketplace/service/S3StorageServiceTest.java": {
+    "mtime": 1781454840.6580472,
+    "ast_hash": "711853e8b1bc65b4fe6cd0f50731c361",
+    "semantic_hash": "711853e8b1bc65b4fe6cd0f50731c361"
+  },
+  "/home/cristiano/Documentos/projetos/rizer-marketplaces/backend/src/test/java/br/com/rizermarketplaces/core/marketplace/tenant/CepLookupServiceTest.java": {
+    "mtime": 1781408125.9803631,
+    "ast_hash": "be546dc63622d4def577f7bbf27eecb0",
+    "semantic_hash": "be546dc63622d4def577f7bbf27eecb0"
+  },
+  "/home/cristiano/Documentos/projetos/rizer-marketplaces/backend/src/test/java/br/com/rizermarketplaces/core/marketplace/tenant/TenantGalleryServiceTest.java": {
+    "mtime": 1781454228.1595385,
+    "ast_hash": "57eaa076367f8aebe4f5abbf094c8261",
+    "semantic_hash": "57eaa076367f8aebe4f5abbf094c8261"
+  },
+  "/home/cristiano/Documentos/projetos/rizer-marketplaces/backend/src/test/java/br/com/rizermarketplaces/core/marketplace/tools/CnpjValidatorTest.java": {
+    "mtime": 1781393392.4364555,
+    "ast_hash": "85b82da5985d4c76de44ed6c971e43b3",
+    "semantic_hash": "85b82da5985d4c76de44ed6c971e43b3"
+  },
+  "/home/cristiano/Documentos/projetos/rizer-marketplaces/backend/src/test/java/br/com/rizermarketplaces/core/marketplace/tools/CpfValidatorTest.java": {
+    "mtime": 1781408123.8923535,
+    "ast_hash": "3b0faebe73e49002dbd6cfcac5606c5c",
+    "semantic_hash": "3b0faebe73e49002dbd6cfcac5606c5c"
+  },
+  "/home/cristiano/Documentos/projetos/rizer-marketplaces/backend/src/test/java/br/com/rizermarketplaces/core/marketplace/tools/PhoneNormalizerTest.java": {
+    "mtime": 1781393111.4588377,
+    "ast_hash": "1392448f01ffe2ab30b82761723a9d5a",
+    "semantic_hash": "1392448f01ffe2ab30b82761723a9d5a"
+  },
+  "/home/cristiano/Documentos/projetos/rizer-marketplaces/backend/src/test/java/br/com/rizermarketplaces/core/marketplace/tools/SlugGeneratorTest.java": {
+    "mtime": 1781393393.788463,
+    "ast_hash": "a3fb0ce5dc41fe6b1938bc7bdb7d13a5",
+    "semantic_hash": "a3fb0ce5dc41fe6b1938bc7bdb7d13a5"
+  },
+  "/home/cristiano/Documentos/projetos/rizer-marketplaces/docker/postgres/init/01-enable-postgis.sql": {
+    "mtime": 1775096887.6890469,
+    "ast_hash": "c1725045305cde2e2536b9790ff6cce3",
+    "semantic_hash": "c1725045305cde2e2536b9790ff6cce3"
+  },
+  "/home/cristiano/Documentos/projetos/rizer-marketplaces/frontend-motor/.prettierrc.json": {
+    "mtime": 1775074236.0748541,
+    "ast_hash": "e67ec0157998f00e154d370409f35625",
+    "semantic_hash": "e67ec0157998f00e154d370409f35625"
+  },
+  "/home/cristiano/Documentos/projetos/rizer-marketplaces/frontend-motor/.quasar/dev-spa/app.js": {
+    "mtime": 1781378106.830374,
+    "ast_hash": "7d2b7d962564b75d99db22ad6bd2e8d4",
+    "semantic_hash": "7d2b7d962564b75d99db22ad6bd2e8d4"
+  },
+  "/home/cristiano/Documentos/projetos/rizer-marketplaces/frontend-motor/.quasar/dev-spa/client-entry.js": {
+    "mtime": 1781378106.830374,
+    "ast_hash": "bc251affac9fcbf0de8eb2c159c13998",
+    "semantic_hash": "bc251affac9fcbf0de8eb2c159c13998"
+  },
+  "/home/cristiano/Documentos/projetos/rizer-marketplaces/frontend-motor/.quasar/dev-spa/client-prefetch.js": {
+    "mtime": 1781378106.830374,
+    "ast_hash": "37464ff209d7fdb678837f2296088694",
+    "semantic_hash": "37464ff209d7fdb678837f2296088694"
+  },
+  "/home/cristiano/Documentos/projetos/rizer-marketplaces/frontend-motor/.quasar/dev-spa/quasar-user-options.js": {
+    "mtime": 1781378106.834374,
+    "ast_hash": "88fe27cfdbca769c49933d804bc6aa64",
+    "semantic_hash": "88fe27cfdbca769c49933d804bc6aa64"
+  },
+  "/home/cristiano/Documentos/projetos/rizer-marketplaces/frontend-motor/.quasar/dev-ssr/app.js": {
+    "mtime": 1781455193.691584,
+    "ast_hash": "a7f72cec3c9e71140a84a8ac6ff49484",
+    "semantic_hash": "a7f72cec3c9e71140a84a8ac6ff49484"
+  },
+  "/home/cristiano/Documentos/projetos/rizer-marketplaces/frontend-motor/.quasar/dev-ssr/client-entry.js": {
+    "mtime": 1781455193.691584,
+    "ast_hash": "1a3e65873784ce3239cc7323a8d5666c",
+    "semantic_hash": "1a3e65873784ce3239cc7323a8d5666c"
+  },
+  "/home/cristiano/Documentos/projetos/rizer-marketplaces/frontend-motor/.quasar/dev-ssr/client-prefetch.js": {
+    "mtime": 1781455193.691584,
+    "ast_hash": "55f6e7b70e2cd91baf1b3fa971a1c840",
+    "semantic_hash": "55f6e7b70e2cd91baf1b3fa971a1c840"
+  },
+  "/home/cristiano/Documentos/projetos/rizer-marketplaces/frontend-motor/.quasar/dev-ssr/compiled-dev-webserver.js": {
+    "mtime": 1781455194.8435893,
+    "ast_hash": "138041f33f2a3ad1448cb80016e985cd",
+    "semantic_hash": "138041f33f2a3ad1448cb80016e985cd"
+  },
+  "/home/cristiano/Documentos/projetos/rizer-marketplaces/frontend-motor/.quasar/dev-ssr/quasar-user-options.js": {
+    "mtime": 1781455193.691584,
+    "ast_hash": "88fe27cfdbca769c49933d804bc6aa64",
+    "semantic_hash": "88fe27cfdbca769c49933d804bc6aa64"
+  },
+  "/home/cristiano/Documentos/projetos/rizer-marketplaces/frontend-motor/.quasar/dev-ssr/server-entry.js": {
+    "mtime": 1781455193.691584,
+    "ast_hash": "f1b2381f808872daaba75a45519ebeeb",
+    "semantic_hash": "f1b2381f808872daaba75a45519ebeeb"
+  },
+  "/home/cristiano/Documentos/projetos/rizer-marketplaces/frontend-motor/.quasar/dev-ssr/service-worker/sw.js": {
+    "mtime": 1781455194.827589,
+    "ast_hash": "b3992db89dac01f6defea9c2e6418388",
+    "semantic_hash": "b3992db89dac01f6defea9c2e6418388"
+  },
+  "/home/cristiano/Documentos/projetos/rizer-marketplaces/frontend-motor/.quasar/dev-ssr/ssr-dev-webserver.js": {
+    "mtime": 1781455193.691584,
+    "ast_hash": "87fb18c0a95c213075800775a7be5382",
+    "semantic_hash": "87fb18c0a95c213075800775a7be5382"
+  },
+  "/home/cristiano/Documentos/projetos/rizer-marketplaces/frontend-motor/.quasar/dev-ssr/ssr-middlewares.js": {
+    "mtime": 1781455193.691584,
+    "ast_hash": "b06ce2b7db0164c85dfc595ae65568b4",
+    "semantic_hash": "b06ce2b7db0164c85dfc595ae65568b4"
+  },
+  "/home/cristiano/Documentos/projetos/rizer-marketplaces/frontend-motor/.quasar/feature-flags.d.ts": {
+    "mtime": 1775074294.9633067,
+    "ast_hash": "cfde96a8dcdf4fcfa6f55f4b7edce243",
+    "semantic_hash": "cfde96a8dcdf4fcfa6f55f4b7edce243"
+  },
+  "/home/cristiano/Documentos/projetos/rizer-marketplaces/frontend-motor/.quasar/prod-spa/app.js": {
+    "mtime": 1781408305.2491918,
+    "ast_hash": "f077fddcd7ff2799fdb4af871dcb59a9",
+    "semantic_hash": "f077fddcd7ff2799fdb4af871dcb59a9"
+  },
+  "/home/cristiano/Documentos/projetos/rizer-marketplaces/frontend-motor/.quasar/prod-spa/client-entry.js": {
+    "mtime": 1781408305.2491918,
+    "ast_hash": "34e0414140b7bacbbbf2cb9146d2fe7d",
+    "semantic_hash": "34e0414140b7bacbbbf2cb9146d2fe7d"
+  },
+  "/home/cristiano/Documentos/projetos/rizer-marketplaces/frontend-motor/.quasar/prod-spa/client-prefetch.js": {
+    "mtime": 1781408305.2491918,
+    "ast_hash": "37464ff209d7fdb678837f2296088694",
+    "semantic_hash": "37464ff209d7fdb678837f2296088694"
+  },
+  "/home/cristiano/Documentos/projetos/rizer-marketplaces/frontend-motor/.quasar/prod-spa/quasar-user-options.js": {
+    "mtime": 1781408305.2491918,
+    "ast_hash": "88fe27cfdbca769c49933d804bc6aa64",
+    "semantic_hash": "88fe27cfdbca769c49933d804bc6aa64"
+  },
+  "/home/cristiano/Documentos/projetos/rizer-marketplaces/frontend-motor/.quasar/quasar.d.ts": {
+    "mtime": 1775074235.7148514,
+    "ast_hash": "97a51151ae8ec5d88e931dabd1368766",
+    "semantic_hash": "97a51151ae8ec5d88e931dabd1368766"
+  },
+  "/home/cristiano/Documentos/projetos/rizer-marketplaces/frontend-motor/.quasar/shims-vue.d.ts": {
+    "mtime": 1775074235.7148514,
+    "ast_hash": "36f61a2dfa65f93ac5c64a206817cc2b",
+    "semantic_hash": "36f61a2dfa65f93ac5c64a206817cc2b"
+  },
+  "/home/cristiano/Documentos/projetos/rizer-marketplaces/frontend-motor/.quasar/tsconfig.json": {
+    "mtime": 1781378102.3343563,
+    "ast_hash": "a5626d3a94cc6bcd30b35abe2f4763b2",
+    "semantic_hash": "a5626d3a94cc6bcd30b35abe2f4763b2"
+  },
+  "/home/cristiano/Documentos/projetos/rizer-marketplaces/frontend-motor/.vscode/extensions.json": {
+    "mtime": 1775074236.082854,
+    "ast_hash": "dbad84a2ae2ba869221fa5ddcea8c2a7",
+    "semantic_hash": "dbad84a2ae2ba869221fa5ddcea8c2a7"
+  },
+  "/home/cristiano/Documentos/projetos/rizer-marketplaces/frontend-motor/.vscode/settings.json": {
+    "mtime": 1775074236.082854,
+    "ast_hash": "bd831d8ce5a8e486fc3b83d2eb45506a",
+    "semantic_hash": "bd831d8ce5a8e486fc3b83d2eb45506a"
+  },
+  "/home/cristiano/Documentos/projetos/rizer-marketplaces/frontend-motor/eslint.config.js": {
+    "mtime": 1775074236.1068542,
+    "ast_hash": "b2a3e1eff48862b8f9a7c167f2605b35",
+    "semantic_hash": "b2a3e1eff48862b8f9a7c167f2605b35"
+  },
+  "/home/cristiano/Documentos/projetos/rizer-marketplaces/frontend-motor/package.json": {
+    "mtime": 1775081607.3093424,
+    "ast_hash": "e8b6c1cfe9eb41bc7b80c142041b7f89",
+    "semantic_hash": "e8b6c1cfe9eb41bc7b80c142041b7f89"
+  },
+  "/home/cristiano/Documentos/projetos/rizer-marketplaces/frontend-motor/postcss.config.js": {
+    "mtime": 1775074236.2508554,
+    "ast_hash": "3067fa4511f69ff64f1cd36b44c9c396",
+    "semantic_hash": "3067fa4511f69ff64f1cd36b44c9c396"
+  },
+  "/home/cristiano/Documentos/projetos/rizer-marketplaces/frontend-motor/quasar.config.ts": {
+    "mtime": 1781395746.7281413,
+    "ast_hash": "1eb5a53b06cace91eafb5bc096d0b01b",
+    "semantic_hash": "1eb5a53b06cace91eafb5bc096d0b01b"
+  },
+  "/home/cristiano/Documentos/projetos/rizer-marketplaces/frontend-motor/src-pwa/custom-service-worker.ts": {
+    "mtime": 1775083396.2167149,
+    "ast_hash": "9fca8eed6dc88de6786f4c2a5c38dcd0",
+    "semantic_hash": "9fca8eed6dc88de6786f4c2a5c38dcd0"
+  },
+  "/home/cristiano/Documentos/projetos/rizer-marketplaces/frontend-motor/src-pwa/manifest.json": {
+    "mtime": 1775074294.739305,
+    "ast_hash": "287a631d5abfbdc43045ac3d9704bbb8",
+    "semantic_hash": "287a631d5abfbdc43045ac3d9704bbb8"
+  },
+  "/home/cristiano/Documentos/projetos/rizer-marketplaces/frontend-motor/src-pwa/pwa-env.d.ts": {
+    "mtime": 1775083396.2167149,
+    "ast_hash": "f0d46fe953a625392cf7fab7d709065a",
+    "semantic_hash": "f0d46fe953a625392cf7fab7d709065a"
+  },
+  "/home/cristiano/Documentos/projetos/rizer-marketplaces/frontend-motor/src-pwa/register-service-worker.ts": {
+    "mtime": 1775074294.739305,
+    "ast_hash": "3170b5050194cdcbbd10b90a452c32bc",
+    "semantic_hash": "3170b5050194cdcbbd10b90a452c32bc"
+  },
+  "/home/cristiano/Documentos/projetos/rizer-marketplaces/frontend-motor/src-pwa/tsconfig.json": {
+    "mtime": 1775074294.739305,
+    "ast_hash": "69114bf74ad0dd86d938033f1484f961",
+    "semantic_hash": "69114bf74ad0dd86d938033f1484f961"
+  },
+  "/home/cristiano/Documentos/projetos/rizer-marketplaces/frontend-motor/src-ssr/middlewares/render.ts": {
+    "mtime": 1775074272.775132,
+    "ast_hash": "e4e53deec9ffc62616aaa214096d0148",
+    "semantic_hash": "e4e53deec9ffc62616aaa214096d0148"
+  },
+  "/home/cristiano/Documentos/projetos/rizer-marketplaces/frontend-motor/src-ssr/server.ts": {
+    "mtime": 1775083396.220715,
+    "ast_hash": "1653f8c62a61be7c7a2b995695a33a7d",
+    "semantic_hash": "1653f8c62a61be7c7a2b995695a33a7d"
+  },
+  "/home/cristiano/Documentos/projetos/rizer-marketplaces/frontend-motor/src/App.vue": {
+    "mtime": 1775084937.4542682,
+    "ast_hash": "d1724c3226ddb3ebfc00aca01bfd4998",
+    "semantic_hash": "d1724c3226ddb3ebfc00aca01bfd4998"
+  },
+  "/home/cristiano/Documentos/projetos/rizer-marketplaces/frontend-motor/src/boot/animate.ts": {
+    "mtime": 1775081798.7229822,
+    "ast_hash": "687ebc5866dbb71edfade33ccdf0a2c7",
+    "semantic_hash": "687ebc5866dbb71edfade33ccdf0a2c7"
+  },
+  "/home/cristiano/Documentos/projetos/rizer-marketplaces/frontend-motor/src/boot/appReady.ts": {
+    "mtime": 1775084825.4216657,
+    "ast_hash": "cc250aa290794ae5986e78a54fb3c9a7",
+    "semantic_hash": "cc250aa290794ae5986e78a54fb3c9a7"
+  },
+  "/home/cristiano/Documentos/projetos/rizer-marketplaces/frontend-motor/src/boot/auth.ts": {
+    "mtime": 1781395538.303161,
+    "ast_hash": "b65dc0fb63211cee0eb34d38f95a842d",
+    "semantic_hash": "b65dc0fb63211cee0eb34d38f95a842d"
+  },
+  "/home/cristiano/Documentos/projetos/rizer-marketplaces/frontend-motor/src/boot/axios.ts": {
+    "mtime": 1781386876.4489107,
+    "ast_hash": "dd7df8d8f0a31fb4df25dc772e9bd5cc",
+    "semantic_hash": "dd7df8d8f0a31fb4df25dc772e9bd5cc"
+  },
+  "/home/cristiano/Documentos/projetos/rizer-marketplaces/frontend-motor/src/boot/facebook.ts": {
+    "mtime": 1781410089.0935287,
+    "ast_hash": "2e108d9dfc1b32b8097f1c21285d3003",
+    "semantic_hash": "2e108d9dfc1b32b8097f1c21285d3003"
+  },
+  "/home/cristiano/Documentos/projetos/rizer-marketplaces/frontend-motor/src/boot/i18n.ts": {
+    "mtime": 1781386811.2966342,
+    "ast_hash": "7cc253ea70e0efc9b28ce6d6301476cd",
+    "semantic_hash": "7cc253ea70e0efc9b28ce6d6301476cd"
+  },
+  "/home/cristiano/Documentos/projetos/rizer-marketplaces/frontend-motor/src/boot/tenant.ts": {
+    "mtime": 1781443074.771261,
+    "ast_hash": "2791a680b21d0aa3bfee256f0b01707c",
+    "semantic_hash": "2791a680b21d0aa3bfee256f0b01707c"
+  },
+  "/home/cristiano/Documentos/projetos/rizer-marketplaces/frontend-motor/src/components/business/LeadDashboard.vue": {
+    "mtime": 1781406647.3695045,
+    "ast_hash": "67c22529bd730f2868c45b2a0c3dd2b7",
+    "semantic_hash": "67c22529bd730f2868c45b2a0c3dd2b7"
+  },
+  "/home/cristiano/Documentos/projetos/rizer-marketplaces/frontend-motor/src/components/business/NotificationBell.vue": {
+    "mtime": 1781406647.9855072,
+    "ast_hash": "adce1f746e29dba2c81978d8f515fb18",
+    "semantic_hash": "adce1f746e29dba2c81978d8f515fb18"
+  },
+  "/home/cristiano/Documentos/projetos/rizer-marketplaces/frontend-motor/src/components/common/ConsentBanner.vue": {
+    "mtime": 1781392709.600684,
+    "ast_hash": "37935d351848a753f1bf9ef5a782b599",
+    "semantic_hash": "37935d351848a753f1bf9ef5a782b599"
+  },
+  "/home/cristiano/Documentos/projetos/rizer-marketplaces/frontend-motor/src/components/common/LoadingOverlay.vue": {
+    "mtime": 1781394011.6997519,
+    "ast_hash": "5e72946432d0c3ce98c644eda325fccb",
+    "semantic_hash": "5e72946432d0c3ce98c644eda325fccb"
+  },
+  "/home/cristiano/Documentos/projetos/rizer-marketplaces/frontend-motor/src/components/form/FilterPanel.vue": {
+    "mtime": 1781406737.6979127,
+    "ast_hash": "89568df577e351ebdfc7b985fd6690a9",
+    "semantic_hash": "89568df577e351ebdfc7b985fd6690a9"
+  },
+  "/home/cristiano/Documentos/projetos/rizer-marketplaces/frontend-motor/src/components/form/SmartSearch.vue": {
+    "mtime": 1781406740.9099271,
+    "ast_hash": "bda2cc7bc4fdbc8da7da4e5afd927b5a",
+    "semantic_hash": "bda2cc7bc4fdbc8da7da4e5afd927b5a"
+  },
+  "/home/cristiano/Documentos/projetos/rizer-marketplaces/frontend-motor/src/components/layout/AppHeader.vue": {
+    "mtime": 1781396008.9253938,
+    "ast_hash": "ff6a933771701977252c7cda682c9c7f",
+    "semantic_hash": "ff6a933771701977252c7cda682c9c7f"
+  },
+  "/home/cristiano/Documentos/projetos/rizer-marketplaces/frontend-motor/src/components/layout/LoadingScreen.vue": {
+    "mtime": 1775084825.4216657,
+    "ast_hash": "77b25a09ff613e9ff3e267ba5274d3de",
+    "semantic_hash": "77b25a09ff613e9ff3e267ba5274d3de"
+  },
+  "/home/cristiano/Documentos/projetos/rizer-marketplaces/frontend-motor/src/components/layout/LoadingSpinner.vue": {
+    "mtime": 1775083878.9918652,
+    "ast_hash": "02dae4d7c90e8769c0d942328da6d666",
+    "semantic_hash": "02dae4d7c90e8769c0d942328da6d666"
+  },
+  "/home/cristiano/Documentos/projetos/rizer-marketplaces/frontend-motor/src/components/vehicle/AttributeRow.vue": {
+    "mtime": 1781396382.8992014,
+    "ast_hash": "3c706c0c03635784fd1f1720131fed60",
+    "semantic_hash": "3c706c0c03635784fd1f1720131fed60"
+  },
+  "/home/cristiano/Documentos/projetos/rizer-marketplaces/frontend-motor/src/components/vehicle/FavoriteVehicleCard.vue": {
+    "mtime": 1781395791.256353,
+    "ast_hash": "a1cd72ac592d770b295d857268af0c09",
+    "semantic_hash": "a1cd72ac592d770b295d857268af0c09"
+  },
+  "/home/cristiano/Documentos/projetos/rizer-marketplaces/frontend-motor/src/components/vehicle/PublicProductCard.vue": {
+    "mtime": 1781402118.556688,
+    "ast_hash": "03fe058a322b6bb56122c4de64dc98ed",
+    "semantic_hash": "03fe058a322b6bb56122c4de64dc98ed"
+  },
+  "/home/cristiano/Documentos/projetos/rizer-marketplaces/frontend-motor/src/components/vehicle/SimilarVehicleCard.vue": {
+    "mtime": 1781402129.3727348,
+    "ast_hash": "eb32b495197f050c176672b56823c6e6",
+    "semantic_hash": "eb32b495197f050c176672b56823c6e6"
+  },
+  "/home/cristiano/Documentos/projetos/rizer-marketplaces/frontend-motor/src/composables/useCepLookup.ts": {
+    "mtime": 1781400871.491511,
+    "ast_hash": "13ed40e904f3e58389401eb18c67201f",
+    "semantic_hash": "13ed40e904f3e58389401eb18c67201f"
+  },
+  "/home/cristiano/Documentos/projetos/rizer-marketplaces/frontend-motor/src/composables/useConsent.ts": {
+    "mtime": 1781406436.9205546,
+    "ast_hash": "10e8a07bdf6427df5adce169d95e88eb",
+    "semantic_hash": "10e8a07bdf6427df5adce169d95e88eb"
+  },
+  "/home/cristiano/Documentos/projetos/rizer-marketplaces/frontend-motor/src/composables/useFavorites.ts": {
+    "mtime": 1781395522.7470884,
+    "ast_hash": "f6a24aec8ff6aaa69a0a1f095b742d72",
+    "semantic_hash": "f6a24aec8ff6aaa69a0a1f095b742d72"
+  },
+  "/home/cristiano/Documentos/projetos/rizer-marketplaces/frontend-motor/src/composables/useGeolocation.ts": {
+    "mtime": 1781400879.0435455,
+    "ast_hash": "ac6605830f46ee89e84dd8c90c21b14e",
+    "semantic_hash": "ac6605830f46ee89e84dd8c90c21b14e"
+  },
+  "/home/cristiano/Documentos/projetos/rizer-marketplaces/frontend-motor/src/composables/useLoading.ts": {
+    "mtime": 1781394009.8197422,
+    "ast_hash": "737c558d35d156251afba0a77c22cf5e",
+    "semantic_hash": "737c558d35d156251afba0a77c22cf5e"
+  },
+  "/home/cristiano/Documentos/projetos/rizer-marketplaces/frontend-motor/src/composables/useMe.ts": {
+    "mtime": 1781395527.8151119,
+    "ast_hash": "1c3334cf2f8eab5f4b42e8113b5046d5",
+    "semantic_hash": "1c3334cf2f8eab5f4b42e8113b5046d5"
+  },
+  "/home/cristiano/Documentos/projetos/rizer-marketplaces/frontend-motor/src/composables/useTenant.ts": {
+    "mtime": 1781405736.6934185,
+    "ast_hash": "dc3f62477ad32c7eb1a7989cf672c20c",
+    "semantic_hash": "dc3f62477ad32c7eb1a7989cf672c20c"
+  },
+  "/home/cristiano/Documentos/projetos/rizer-marketplaces/frontend-motor/src/composables/useTenantRole.ts": {
+    "mtime": 1781400887.5355842,
+    "ast_hash": "0b1db555b9e9a108e73f5459c7aa09f1",
+    "semantic_hash": "0b1db555b9e9a108e73f5459c7aa09f1"
+  },
+  "/home/cristiano/Documentos/projetos/rizer-marketplaces/frontend-motor/src/data/legalVersions.ts": {
+    "mtime": 1781386729.5482788,
+    "ast_hash": "b62d8886d4471d8f42a13705215d1e39",
+    "semantic_hash": "b62d8886d4471d8f42a13705215d1e39"
+  },
+  "/home/cristiano/Documentos/projetos/rizer-marketplaces/frontend-motor/src/data/tenants.ts": {
+    "mtime": 1781410090.8095367,
+    "ast_hash": "7a3cf2735e1c7219dd8e175e86be16e6",
+    "semantic_hash": "7a3cf2735e1c7219dd8e175e86be16e6"
+  },
+  "/home/cristiano/Documentos/projetos/rizer-marketplaces/frontend-motor/src/data/types.ts": {
+    "mtime": 1781395900.9488761,
+    "ast_hash": "530a280b2a32a937055e5dcce9f674db",
+    "semantic_hash": "530a280b2a32a937055e5dcce9f674db"
+  },
+  "/home/cristiano/Documentos/projetos/rizer-marketplaces/frontend-motor/src/env.d.ts": {
+    "mtime": 1775074181.3344467,
+    "ast_hash": "38e4bfbf28fadeb48dcbda668bbf7850",
+    "semantic_hash": "38e4bfbf28fadeb48dcbda668bbf7850"
+  },
+  "/home/cristiano/Documentos/projetos/rizer-marketplaces/frontend-motor/src/i18n/index.ts": {
+    "mtime": 1781386774.4124746,
+    "ast_hash": "85acbfcef65eb25744d838b96274f83d",
+    "semantic_hash": "85acbfcef65eb25744d838b96274f83d"
+  },
+  "/home/cristiano/Documentos/projetos/rizer-marketplaces/frontend-motor/src/i18n/pt-BR/index.ts": {
+    "mtime": 1781406923.3747525,
+    "ast_hash": "e41e36a2044c7620cee7ad3f0370c652",
+    "semantic_hash": "e41e36a2044c7620cee7ad3f0370c652"
+  },
+  "/home/cristiano/Documentos/projetos/rizer-marketplaces/frontend-motor/src/i18n/vehicle.ts": {
+    "mtime": 1781395864.4047015,
+    "ast_hash": "e1afe8e4f3e633183fc97762d6ba7fbb",
+    "semantic_hash": "e1afe8e4f3e633183fc97762d6ba7fbb"
+  },
+  "/home/cristiano/Documentos/projetos/rizer-marketplaces/frontend-motor/src/layouts/AdminLayout.vue": {
+    "mtime": 1781386695.6521308,
+    "ast_hash": "5b6f2ef93dc931c0b7281070643fd48c",
+    "semantic_hash": "5b6f2ef93dc931c0b7281070643fd48c"
+  },
+  "/home/cristiano/Documentos/projetos/rizer-marketplaces/frontend-motor/src/layouts/AppLayout.vue": {
+    "mtime": 1781401131.2566965,
+    "ast_hash": "07e5202d6559646eefad2e70dba7e958",
+    "semantic_hash": "07e5202d6559646eefad2e70dba7e958"
+  },
+  "/home/cristiano/Documentos/projetos/rizer-marketplaces/frontend-motor/src/layouts/MainLayout.vue": {
+    "mtime": 1781396001.485358,
+    "ast_hash": "91f928c375a856cbc280b732e6bbbe93",
+    "semantic_hash": "91f928c375a856cbc280b732e6bbbe93"
+  },
+  "/home/cristiano/Documentos/projetos/rizer-marketplaces/frontend-motor/src/pages/AnunciosPage.vue": {
+    "mtime": 1781406358.9802034,
+    "ast_hash": "c22a6f84b55cc5010cf31878a475f933",
+    "semantic_hash": "c22a6f84b55cc5010cf31878a475f933"
+  },
+  "/home/cristiano/Documentos/projetos/rizer-marketplaces/frontend-motor/src/pages/CompararPage.vue": {
+    "mtime": 1781406706.9857738,
+    "ast_hash": "6a51ba460bf0c285e5f9894acf1af811",
+    "semantic_hash": "6a51ba460bf0c285e5f9894acf1af811"
+  },
+  "/home/cristiano/Documentos/projetos/rizer-marketplaces/frontend-motor/src/pages/EntrarPage.vue": {
+    "mtime": 1781406922.7107494,
+    "ast_hash": "81e76b823480b7fb82458e107e4d3a0c",
+    "semantic_hash": "81e76b823480b7fb82458e107e4d3a0c"
+  },
+  "/home/cristiano/Documentos/projetos/rizer-marketplaces/frontend-motor/src/pages/ErrorNotFound.vue": {
+    "mtime": 1781393137.5629933,
+    "ast_hash": "14e75c0cd77dde9794e215ef5bb3505b",
+    "semantic_hash": "14e75c0cd77dde9794e215ef5bb3505b"
+  },
+  "/home/cristiano/Documentos/projetos/rizer-marketplaces/frontend-motor/src/pages/FavoritosPage.vue": {
+    "mtime": 1781406423.3084934,
+    "ast_hash": "b7dd7c3d2e6e026f536d7e7b68c51683",
+    "semantic_hash": "b7dd7c3d2e6e026f536d7e7b68c51683"
+  },
+  "/home/cristiano/Documentos/projetos/rizer-marketplaces/frontend-motor/src/pages/HomePage.vue": {
+    "mtime": 1781406475.4847286,
+    "ast_hash": "712a310e98c9144980f3f4ea3e0c757b",
+    "semantic_hash": "712a310e98c9144980f3f4ea3e0c757b"
+  },
+  "/home/cristiano/Documentos/projetos/rizer-marketplaces/frontend-motor/src/pages/LeadsPage.vue": {
+    "mtime": 1775081798.7229822,
+    "ast_hash": "15525015dfe7b979c92d9acb9b87df8c",
+    "semantic_hash": "15525015dfe7b979c92d9acb9b87df8c"
+  },
+  "/home/cristiano/Documentos/projetos/rizer-marketplaces/frontend-motor/src/pages/LojaPage.vue": {
+    "mtime": 1781406483.2847638,
+    "ast_hash": "65eeb0d70c50b34546c59c99ad01de22",
+    "semantic_hash": "65eeb0d70c50b34546c59c99ad01de22"
+  },
+  "/home/cristiano/Documentos/projetos/rizer-marketplaces/frontend-motor/src/pages/PerfilPage.vue": {
+    "mtime": 1781406369.512251,
+    "ast_hash": "3c9b22aa35aaa74864e34f49cfa79058",
+    "semantic_hash": "3c9b22aa35aaa74864e34f49cfa79058"
+  },
+  "/home/cristiano/Documentos/projetos/rizer-marketplaces/frontend-motor/src/pages/ProdutoPage.vue": {
+    "mtime": 1781406634.7214475,
+    "ast_hash": "75d6de49b2a80e68613669b5c9aa3323",
+    "semantic_hash": "75d6de49b2a80e68613669b5c9aa3323"
+  },
+  "/home/cristiano/Documentos/projetos/rizer-marketplaces/frontend-motor/src/pages/ProdutosPage.vue": {
+    "mtime": 1781406391.8923519,
+    "ast_hash": "be0157d1e2c9be35643360e9c0b191f0",
+    "semantic_hash": "be0157d1e2c9be35643360e9c0b191f0"
+  },
+  "/home/cristiano/Documentos/projetos/rizer-marketplaces/frontend-motor/src/pages/RegistroPage.vue": {
+    "mtime": 1781406365.972235,
+    "ast_hash": "c13cbf3954b747a934dd7968f273faa1",
+    "semantic_hash": "c13cbf3954b747a934dd7968f273faa1"
+  },
+  "/home/cristiano/Documentos/projetos/rizer-marketplaces/frontend-motor/src/pages/SejaParceiroPage.vue": {
+    "mtime": 1781391391.3060656,
+    "ast_hash": "052601fe3a173ba1371203858e7f174c",
+    "semantic_hash": "052601fe3a173ba1371203858e7f174c"
+  },
+  "/home/cristiano/Documentos/projetos/rizer-marketplaces/frontend-motor/src/pages/admin/AdminDashboardPage.vue": {
+    "mtime": 1781386770.4044573,
+    "ast_hash": "10c179a4892010831e0ddc446be52dcd",
+    "semantic_hash": "10c179a4892010831e0ddc446be52dcd"
+  },
+  "/home/cristiano/Documentos/projetos/rizer-marketplaces/frontend-motor/src/pages/admin/AdminPaymentsPage.vue": {
+    "mtime": 1781406424.8805006,
+    "ast_hash": "e3b691574b48f020577b25c06d9173ce",
+    "semantic_hash": "e3b691574b48f020577b25c06d9173ce"
+  },
+  "/home/cristiano/Documentos/projetos/rizer-marketplaces/frontend-motor/src/pages/admin/AdminPlansPage.vue": {
+    "mtime": 1781386772.7524674,
+    "ast_hash": "43136d88a23a100dc7c2de0dfb95c536",
+    "semantic_hash": "43136d88a23a100dc7c2de0dfb95c536"
+  },
+  "/home/cristiano/Documentos/projetos/rizer-marketplaces/frontend-motor/src/pages/admin/AdminTenantsPage.vue": {
+    "mtime": 1781387611.372065,
+    "ast_hash": "c4c109406c8a04172df89a3d2d682437",
+    "semantic_hash": "c4c109406c8a04172df89a3d2d682437"
+  },
+  "/home/cristiano/Documentos/projetos/rizer-marketplaces/frontend-motor/src/pages/admin/AdminUsersPage.vue": {
+    "mtime": 1781386771.4124618,
+    "ast_hash": "c5480e667294ac823ae6dfb8f16a17be",
+    "semantic_hash": "c5480e667294ac823ae6dfb8f16a17be"
+  },
+  "/home/cristiano/Documentos/projetos/rizer-marketplaces/frontend-motor/src/pages/app/BillingPage.vue": {
+    "mtime": 1781391431.7742887,
+    "ast_hash": "8d149c540d00ed647e666b2eb34fcdf1",
+    "semantic_hash": "8d149c540d00ed647e666b2eb34fcdf1"
+  },
+  "/home/cristiano/Documentos/projetos/rizer-marketplaces/frontend-motor/src/pages/app/CompanyPage.vue": {
+    "mtime": 1781401270.4012086,
+    "ast_hash": "5b1c57154b5132ebfba607777b2ca6cd",
+    "semantic_hash": "5b1c57154b5132ebfba607777b2ca6cd"
+  },
+  "/home/cristiano/Documentos/projetos/rizer-marketplaces/frontend-motor/src/pages/app/DashboardPage.vue": {
+    "mtime": 1781386762.7524238,
+    "ast_hash": "981d3e777d76c95725f4e089ee36c81e",
+    "semantic_hash": "981d3e777d76c95725f4e089ee36c81e"
+  },
+  "/home/cristiano/Documentos/projetos/rizer-marketplaces/frontend-motor/src/pages/app/IntegrationsPage.vue": {
+    "mtime": 1781392020.8413372,
+    "ast_hash": "328f40625a7c604338c4e153d2ef90b3",
+    "semantic_hash": "328f40625a7c604338c4e153d2ef90b3"
+  },
+  "/home/cristiano/Documentos/projetos/rizer-marketplaces/frontend-motor/src/pages/app/LeadsPage.vue": {
+    "mtime": 1781386765.2844348,
+    "ast_hash": "53be931b202a14aa7465ce6a2d5c5247",
+    "semantic_hash": "53be931b202a14aa7465ce6a2d5c5247"
+  },
+  "/home/cristiano/Documentos/projetos/rizer-marketplaces/frontend-motor/src/pages/app/MembersPage.vue": {
+    "mtime": 1781387634.1921635,
+    "ast_hash": "d731fcc2048e5fd9a7605bcfb9b211d4",
+    "semantic_hash": "d731fcc2048e5fd9a7605bcfb9b211d4"
+  },
+  "/home/cristiano/Documentos/projetos/rizer-marketplaces/frontend-motor/src/pages/app/ProductEditPage.vue": {
+    "mtime": 1781401465.8779635,
+    "ast_hash": "f92117fe4704b9e1a99d3d93005edc8d",
+    "semantic_hash": "f92117fe4704b9e1a99d3d93005edc8d"
+  },
+  "/home/cristiano/Documentos/projetos/rizer-marketplaces/frontend-motor/src/pages/app/ProductWizardPage.vue": {
+    "mtime": 1781404264.0067427,
+    "ast_hash": "fe4b846b8b274d50a93368824c40e2b5",
+    "semantic_hash": "fe4b846b8b274d50a93368824c40e2b5"
+  },
+  "/home/cristiano/Documentos/projetos/rizer-marketplaces/frontend-motor/src/pages/app/ProductsPage.vue": {
+    "mtime": 1781401389.7616644,
+    "ast_hash": "e7b2b831cdbcf0b38dadc5f638e46a44",
+    "semantic_hash": "e7b2b831cdbcf0b38dadc5f638e46a44"
+  },
+  "/home/cristiano/Documentos/projetos/rizer-marketplaces/frontend-motor/src/pages/app/SellersPage.vue": {
+    "mtime": 1781404264.5587454,
+    "ast_hash": "3eb56162b8208b8d77d429833c9f2120",
+    "semantic_hash": "3eb56162b8208b8d77d429833c9f2120"
+  },
+  "/home/cristiano/Documentos/projetos/rizer-marketplaces/frontend-motor/src/pages/app/SettingsPage.vue": {
+    "mtime": 1781392414.3712633,
+    "ast_hash": "8c3cc9c0dcdff86dc95f47b82bc054ea",
+    "semantic_hash": "8c3cc9c0dcdff86dc95f47b82bc054ea"
+  },
+  "/home/cristiano/Documentos/projetos/rizer-marketplaces/frontend-motor/src/pages/app/StoresPage.vue": {
+    "mtime": 1781387607.468048,
+    "ast_hash": "f43b86554ed5a995c80e2c551a8ea9a5",
+    "semantic_hash": "f43b86554ed5a995c80e2c551a8ea9a5"
+  },
+  "/home/cristiano/Documentos/projetos/rizer-marketplaces/frontend-motor/src/pages/app/company/GalleryTab.vue": {
+    "mtime": 1781404265.0947478,
+    "ast_hash": "dbdac873c1d76edce2752850c6f62846",
+    "semantic_hash": "dbdac873c1d76edce2752850c6f62846"
+  },
+  "/home/cristiano/Documentos/projetos/rizer-marketplaces/frontend-motor/src/pages/app/company/StoreEditDialog.vue": {
+    "mtime": 1781401316.821384,
+    "ast_hash": "bc2ebf2f79fa69930efcf168bf3f548a",
+    "semantic_hash": "bc2ebf2f79fa69930efcf168bf3f548a"
+  },
+  "/home/cristiano/Documentos/projetos/rizer-marketplaces/frontend-motor/src/pages/app/company/StoreGalleryDialog.vue": {
+    "mtime": 1781401174.1368551,
+    "ast_hash": "8636dda45a59583d47a601ebe35c609a",
+    "semantic_hash": "8636dda45a59583d47a601ebe35c609a"
+  },
+  "/home/cristiano/Documentos/projetos/rizer-marketplaces/frontend-motor/src/pages/app/company/StoresTab.vue": {
+    "mtime": 1781401034.9522562,
+    "ast_hash": "156ebb558c4dd8493f67aba53dda8e4b",
+    "semantic_hash": "156ebb558c4dd8493f67aba53dda8e4b"
+  },
+  "/home/cristiano/Documentos/projetos/rizer-marketplaces/frontend-motor/src/pages/legal/PoliticaCookiesPage.vue": {
+    "mtime": 1781386727.1882687,
+    "ast_hash": "9774c00fa9562f9e11b07c2f3497144d",
+    "semantic_hash": "9774c00fa9562f9e11b07c2f3497144d"
+  },
+  "/home/cristiano/Documentos/projetos/rizer-marketplaces/frontend-motor/src/pages/legal/PoliticaPrivacidadePage.vue": {
+    "mtime": 1781392792.777082,
+    "ast_hash": "4e2516ce93d667c600efeb80a08a6a78",
+    "semantic_hash": "4e2516ce93d667c600efeb80a08a6a78"
+  },
+  "/home/cristiano/Documentos/projetos/rizer-marketplaces/frontend-motor/src/pages/legal/TermosDeUsoPage.vue": {
+    "mtime": 1781386711.260199,
+    "ast_hash": "25fc912d919d1f741dbfcbddd126fa0f",
+    "semantic_hash": "25fc912d919d1f741dbfcbddd126fa0f"
+  },
+  "/home/cristiano/Documentos/projetos/rizer-marketplaces/frontend-motor/src/pages/partner/PartnerListPage.vue": {
+    "mtime": 1781406407.6244228,
+    "ast_hash": "e43765cd9b88401d88859fee23608560",
+    "semantic_hash": "e43765cd9b88401d88859fee23608560"
+  },
+  "/home/cristiano/Documentos/projetos/rizer-marketplaces/frontend-motor/src/pages/partner/PartnerPage.vue": {
+    "mtime": 1781406414.8724554,
+    "ast_hash": "f476fdb0aa85ac8f2f322a57369e5419",
+    "semantic_hash": "f476fdb0aa85ac8f2f322a57369e5419"
+  },
+  "/home/cristiano/Documentos/projetos/rizer-marketplaces/frontend-motor/src/pages/partner/PartnerStorePage.vue": {
+    "mtime": 1781406421.444485,
+    "ast_hash": "c8974a3ef6258650c2f187e976fc0c3c",
+    "semantic_hash": "c8974a3ef6258650c2f187e976fc0c3c"
+  },
+  "/home/cristiano/Documentos/projetos/rizer-marketplaces/frontend-motor/src/router/guards.ts": {
+    "mtime": 1781386748.9483635,
+    "ast_hash": "76d44a6b9438c54cc935bf209ae52a5a",
+    "semantic_hash": "76d44a6b9438c54cc935bf209ae52a5a"
+  },
+  "/home/cristiano/Documentos/projetos/rizer-marketplaces/frontend-motor/src/router/index.ts": {
+    "mtime": 1781386796.5365713,
+    "ast_hash": "6c8eb3e99e69cb716950949b6e601e4e",
+    "semantic_hash": "6c8eb3e99e69cb716950949b6e601e4e"
+  },
+  "/home/cristiano/Documentos/projetos/rizer-marketplaces/frontend-motor/src/router/routes.ts": {
+    "mtime": 1781401119.9606447,
+    "ast_hash": "f5effadc986ec9af8753acc5a4958287",
+    "semantic_hash": "f5effadc986ec9af8753acc5a4958287"
+  },
+  "/home/cristiano/Documentos/projetos/rizer-marketplaces/frontend-motor/src/services/api.ts": {
+    "mtime": 1781406937.6708171,
+    "ast_hash": "64a02faf1a0361703b4210bfe11d4a04",
+    "semantic_hash": "64a02faf1a0361703b4210bfe11d4a04"
+  },
+  "/home/cristiano/Documentos/projetos/rizer-marketplaces/frontend-motor/src/stores/appStore.ts": {
+    "mtime": 1775084825.4216657,
+    "ast_hash": "5d32df9d7ed5a6ad98c8e3d79d159b87",
+    "semantic_hash": "5d32df9d7ed5a6ad98c8e3d79d159b87"
+  },
+  "/home/cristiano/Documentos/projetos/rizer-marketplaces/frontend-motor/src/stores/authStore.ts": {
+    "mtime": 1781406434.7965453,
+    "ast_hash": "de94420cded0a377260efedfe98f7cf6",
+    "semantic_hash": "de94420cded0a377260efedfe98f7cf6"
+  },
+  "/home/cristiano/Documentos/projetos/rizer-marketplaces/frontend-motor/tsconfig.json": {
+    "mtime": 1775074236.462857,
+    "ast_hash": "b7a37ce49acdcef5b4abb29553fb5d06",
+    "semantic_hash": "b7a37ce49acdcef5b4abb29553fb5d06"
+  },
+  "/home/cristiano/Documentos/projetos/rizer-marketplaces/AGENTS.md": {
+    "mtime": 1781455071.039046,
+    "ast_hash": "7985297458e3985df582e7fba47bb87f",
+    "semantic_hash": "7985297458e3985df582e7fba47bb87f"
+  },
+  "/home/cristiano/Documentos/projetos/rizer-marketplaces/DESIGN.md": {
+    "mtime": 1781457934.4586315,
+    "ast_hash": "02ca484ef7196d4015913a85bb5ba3d9",
+    "semantic_hash": "02ca484ef7196d4015913a85bb5ba3d9"
+  },
+  "/home/cristiano/Documentos/projetos/rizer-marketplaces/README.md": {
+    "mtime": 1781455114.8072376,
+    "ast_hash": "b5f5d8a2f06900f758439e554fd5e8c5",
+    "semantic_hash": "b5f5d8a2f06900f758439e554fd5e8c5"
+  },
+  "/home/cristiano/Documentos/projetos/rizer-marketplaces/backend/README.md": {
+    "mtime": 1781376248.523336,
+    "ast_hash": "9c8b3072e853f38d0b46a966d6ce2ad2",
+    "semantic_hash": "9c8b3072e853f38d0b46a966d6ce2ad2"
+  },
+  "/home/cristiano/Documentos/projetos/rizer-marketplaces/backend/src/main/resources/application.yaml": {
+    "mtime": 1781446267.5238755,
+    "ast_hash": "d307a93c027cb0c0e09f1191006ad412",
+    "semantic_hash": "d307a93c027cb0c0e09f1191006ad412"
+  },
+  "/home/cristiano/Documentos/projetos/rizer-marketplaces/backend/src/main/resources/static/docs/index.html": {
+    "mtime": 1775245159.7175126,
+    "ast_hash": "4f4d2db658eb02d5411e55f3b03dd36c",
+    "semantic_hash": "4f4d2db658eb02d5411e55f3b03dd36c"
+  },
+  "/home/cristiano/Documentos/projetos/rizer-marketplaces/docker-compose.prod.yml": {
+    "mtime": 1781377375.8235283,
+    "ast_hash": "108ebe99ac322c65ef86c6f59a3544e7",
+    "semantic_hash": "108ebe99ac322c65ef86c6f59a3544e7"
+  },
+  "/home/cristiano/Documentos/projetos/rizer-marketplaces/docker-compose.yml": {
+    "mtime": 1776470315.9153488,
+    "ast_hash": "0caabb37cb63b1eee8a5ebe987b7f437",
+    "semantic_hash": "0caabb37cb63b1eee8a5ebe987b7f437"
+  },
+  "/home/cristiano/Documentos/projetos/rizer-marketplaces/docs/PLAN-saas-b2b.md": {
+    "mtime": 1781386301.4784071,
+    "ast_hash": "ad76c0a17a04e57113a319697094e0ed",
+    "semantic_hash": "ad76c0a17a04e57113a319697094e0ed"
+  },
+  "/home/cristiano/Documentos/projetos/rizer-marketplaces/frontend-motor/README.md": {
+    "mtime": 1775087093.630063,
+    "ast_hash": "2904de8700528fab87dfa4976afa6410",
+    "semantic_hash": "2904de8700528fab87dfa4976afa6410"
+  },
+  "/home/cristiano/Documentos/projetos/rizer-marketplaces/frontend-motor/index.html": {
+    "mtime": 1775084937.4542682,
+    "ast_hash": "2535d4f35e1c85c3b377d422dc2307a8",
+    "semantic_hash": "2535d4f35e1c85c3b377d422dc2307a8"
+  },
+  "/home/cristiano/Documentos/projetos/rizer-marketplaces/frontend-motor/pnpm-workspace.yaml": {
+    "mtime": 1775074181.3224466,
+    "ast_hash": "a7a3a8b8d67d53965661149e92a2e179",
+    "semantic_hash": "a7a3a8b8d67d53965661149e92a2e179"
+  },
+  "/home/cristiano/Documentos/projetos/rizer-marketplaces/teste-magalu.txt": {
+    "mtime": 1781452495.8853781,
+    "ast_hash": "26e71657bf4137cbc676dc982aad3c5b",
+    "semantic_hash": "26e71657bf4137cbc676dc982aad3c5b"
+  },
+  "/home/cristiano/Documentos/projetos/rizer-marketplaces/frontend-motor/public/icons/apple-icon-120x120.png": {
+    "mtime": 1775074294.743305,
+    "ast_hash": "d082235f6e6d2109e84e397f66fa868d",
+    "semantic_hash": "d082235f6e6d2109e84e397f66fa868d"
+  },
+  "/home/cristiano/Documentos/projetos/rizer-marketplaces/frontend-motor/public/icons/apple-icon-152x152.png": {
+    "mtime": 1775074294.739305,
+    "ast_hash": "3c728ce3e709b7395be487becf76283a",
+    "semantic_hash": "3c728ce3e709b7395be487becf76283a"
+  },
+  "/home/cristiano/Documentos/projetos/rizer-marketplaces/frontend-motor/public/icons/apple-icon-167x167.png": {
+    "mtime": 1775074294.739305,
+    "ast_hash": "3fec89672a18e4b402ede58646917c2d",
+    "semantic_hash": "3fec89672a18e4b402ede58646917c2d"
+  },
+  "/home/cristiano/Documentos/projetos/rizer-marketplaces/frontend-motor/public/icons/apple-icon-180x180.png": {
+    "mtime": 1775074294.739305,
+    "ast_hash": "aa47843bd47f34b7ca4b99f65dd25955",
+    "semantic_hash": "aa47843bd47f34b7ca4b99f65dd25955"
+  },
+  "/home/cristiano/Documentos/projetos/rizer-marketplaces/frontend-motor/public/icons/favicon-128x128.png": {
+    "mtime": 1775074181.3264465,
+    "ast_hash": "ab92df0270f054ca388127c9703a4911",
+    "semantic_hash": "ab92df0270f054ca388127c9703a4911"
+  },
+  "/home/cristiano/Documentos/projetos/rizer-marketplaces/frontend-motor/public/icons/favicon-16x16.png": {
+    "mtime": 1775074181.3264465,
+    "ast_hash": "e4b046d41e08e6fa06626d6410ab381d",
+    "semantic_hash": "e4b046d41e08e6fa06626d6410ab381d"
+  },
+  "/home/cristiano/Documentos/projetos/rizer-marketplaces/frontend-motor/public/icons/favicon-32x32.png": {
+    "mtime": 1775074181.3264465,
+    "ast_hash": "410858b01fa6d3d66b7bf21447c5f1fc",
+    "semantic_hash": "410858b01fa6d3d66b7bf21447c5f1fc"
+  },
+  "/home/cristiano/Documentos/projetos/rizer-marketplaces/frontend-motor/public/icons/favicon-96x96.png": {
+    "mtime": 1775074181.3304467,
+    "ast_hash": "db2bde7f824fb4057ffd1c42f6ed756e",
+    "semantic_hash": "db2bde7f824fb4057ffd1c42f6ed756e"
+  },
+  "/home/cristiano/Documentos/projetos/rizer-marketplaces/frontend-motor/public/icons/icon-128x128.png": {
+    "mtime": 1775074294.739305,
+    "ast_hash": "ab92df0270f054ca388127c9703a4911",
+    "semantic_hash": "ab92df0270f054ca388127c9703a4911"
+  },
+  "/home/cristiano/Documentos/projetos/rizer-marketplaces/frontend-motor/public/icons/icon-192x192.png": {
+    "mtime": 1775074294.739305,
+    "ast_hash": "7659f0d3e9602e71811f8b7cf2ce0e8e",
+    "semantic_hash": "7659f0d3e9602e71811f8b7cf2ce0e8e"
+  },
+  "/home/cristiano/Documentos/projetos/rizer-marketplaces/frontend-motor/public/icons/icon-256x256.png": {
+    "mtime": 1775074294.739305,
+    "ast_hash": "cf5ad3498fb6fda43bdafd3c6ce9b824",
+    "semantic_hash": "cf5ad3498fb6fda43bdafd3c6ce9b824"
+  },
+  "/home/cristiano/Documentos/projetos/rizer-marketplaces/frontend-motor/public/icons/icon-384x384.png": {
+    "mtime": 1775074294.739305,
+    "ast_hash": "fdfc1b3612b6833a27a7b260c9990247",
+    "semantic_hash": "fdfc1b3612b6833a27a7b260c9990247"
+  },
+  "/home/cristiano/Documentos/projetos/rizer-marketplaces/frontend-motor/public/icons/icon-512x512.png": {
+    "mtime": 1775074294.743305,
+    "ast_hash": "2c2dc987945806196bd18cb6028d8bf4",
+    "semantic_hash": "2c2dc987945806196bd18cb6028d8bf4"
+  },
+  "/home/cristiano/Documentos/projetos/rizer-marketplaces/frontend-motor/public/icons/ms-icon-144x144.png": {
+    "mtime": 1775074294.739305,
+    "ast_hash": "8de1b0e67a62b881cd22d935f102a0e6",
+    "semantic_hash": "8de1b0e67a62b881cd22d935f102a0e6"
+  },
+  "/home/cristiano/Documentos/projetos/rizer-marketplaces/frontend-motor/public/icons/safari-pinned-tab.svg": {
+    "mtime": 1775074294.739305,
+    "ast_hash": "3e4c3730b00c89591de9505efb73afd3",
+    "semantic_hash": "3e4c3730b00c89591de9505efb73afd3"
+  },
+  "/home/cristiano/Documentos/projetos/rizer-marketplaces/frontend-motor/src/assets/quasar-logo-vertical.svg": {
+    "mtime": 1775074181.3304467,
+    "ast_hash": "ef0c03f0d188f763626d94f6d2318d5d",
+    "semantic_hash": "ef0c03f0d188f763626d94f6d2318d5d"
+  }
+}
