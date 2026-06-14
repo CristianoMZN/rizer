@@ -100,10 +100,10 @@ async function onCepChange(val: string | number | null) {
     const data = await utilApi.cepLookup(cep)
     if (data) {
       location.zipCode = cep
-      location.street = data.street
-      location.neighborhood = data.neighborhood
-      location.city = data.city
-      location.state = data.state
+      location.street = data.street ?? ''
+      location.neighborhood = data.neighborhood ?? ''
+      location.city = data.city ?? ''
+      location.state = data.state ?? ''
     } else {
       error.value = true
     }

@@ -41,13 +41,10 @@
       <LoadingSpinner v-if="loading" />
 
       <div v-else class="vehicles-grid">
-        <VehicleCard
-          v-for="vehicle in featured"
-          :key="vehicle.id"
-          :vehicle="vehicle"
-          :is-wishlisted="wishlist.includes(vehicle.id)"
-          @toggle-wishlist="toggleWishlist"
-          @click="goToVehicle"
+        <PublicProductCard
+          v-for="product in featured"
+          :key="product.id"
+          :product="product"
         />
       </div>
     </section>
@@ -104,19 +101,16 @@
 <script setup lang="ts">
 import { ref, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
-import type { Vehicle } from 'src/data/types'
 import type { VehicleFilters } from 'src/data/types'
-import { api } from 'src/services/apiMock'
-import { MOCK_VEHICLES } from 'src/data/mock'
+import { catalogApi, type PublicProductView } from 'src/services/api'
 import SmartSearch from 'components/form/SmartSearch.vue'
-import VehicleCard from 'components/vehicle/VehicleCard.vue'
+import PublicProductCard from 'components/vehicle/PublicProductCard.vue'
 import LoadingSpinner from 'components/layout/LoadingSpinner.vue'
 
 const router = useRouter()
-const featured = ref<Vehicle[]>([])
+const featured = ref<PublicProductView[]>([])
 const loading = ref(true)
-const wishlist = ref<string[]>([])
-const totalVehicles = MOCK_VEHICLES.length
+const totalVehicles = '4.200+'
 
 const vehicleTypes = [
   { label: 'Carros', icon: 'directions_car' },
@@ -144,7 +138,11 @@ const stats = [
 ]
 
 onMounted(async () => {
-  featured.value = await api.getFeaturedVehicles()
+  try {
+    featured.value = await catalogApi.searchProducts({ limit: 6 })
+  } catch {
+    featured.value = []
+  }
   loading.value = false
 })
 
@@ -173,15 +171,7 @@ function searchByType(type: string) {
   void router.push({ path: '/produtos', query: { type: typeMap[type] || 'Carro' } })
 }
 
-function goToVehicle(v: Vehicle) {
-  void router.push(`/produto/${v.id}`)
-}
 
-function toggleWishlist(id: string) {
-  const idx = wishlist.value.indexOf(id)
-  if (idx >= 0) wishlist.value.splice(idx, 1)
-  else wishlist.value.push(id)
-}
 </script>
 
 <style scoped lang="scss">

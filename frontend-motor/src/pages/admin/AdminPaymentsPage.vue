@@ -82,9 +82,7 @@
 <script setup lang="ts">
 import { ref, reactive, onMounted } from 'vue'
 import { useQuasar, type QTableColumn } from 'quasar'
-import { billingApi, type PaymentView, type AdminPaymentStats } from 'src/services/api'
-import { MOCK_CONFIG } from 'src/services/api'
-import { http } from 'src/services/api'
+import { billingApi, type PaymentView, type AdminPaymentStats, http } from 'src/services/api'
 
 const $q = useQuasar()
 const rows = ref<PaymentView[]>([])
@@ -171,6 +169,6 @@ function onExport() {
 const csvUrl = '/admin/billing/payments/export.csv'
 
 onMounted(() => {
-  if (MOCK_CONFIG.useBackend) void load()
+  void load()
 })
 </script>

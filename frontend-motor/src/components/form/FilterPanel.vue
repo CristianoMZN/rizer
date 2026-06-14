@@ -254,8 +254,7 @@
 import { ref, reactive, watch, onMounted } from 'vue'
 import { useQuasar } from 'quasar'
 import type { VehicleFilters, VehicleType } from 'src/data/types'
-import { MOCK_BRANDS } from 'src/data/mock'
-import { catalogApi, MOCK_CONFIG } from 'src/services/api'
+import { catalogApi } from 'src/services/api'
 import {
   COLOR_OPTIONS,
   ENGINE_DISPLACEMENT_OPTIONS,
@@ -287,7 +286,7 @@ watch(
 )
 
 const vehicleTypes: VehicleType[] = ['Carro', 'Moto', 'Van/Furgão', 'Caminhão', 'Ônibus']
-const brandOptions = ref(MOCK_BRANDS.map((b) => ({ label: b, value: b })))
+const brandOptions = ref<{ label: string; value: string; brandId?: number }[]>([])
 const modelOptions = ref<{ label: string; value: string }[]>([])
 
 const conditionOptions = Object.entries(CONDITION_LABELS).map(([k, v]) => ({ label: v, value: k }))
@@ -306,14 +305,9 @@ const yesNoOptions = [
 
 function filterBrands(val: string, update: (cb: () => void) => void) {
   update(() => {
-    if (!val) {
-      brandOptions.value = MOCK_BRANDS.map((b) => ({ label: b, value: b }))
-      return
-    }
-    const needle = val.toLowerCase()
-    brandOptions.value = MOCK_BRANDS
-      .filter((b) => b.toLowerCase().includes(needle))
-      .map((b) => ({ label: b, value: b }))
+    const needle = val?.toLowerCase() ?? ''
+    if (!needle) return
+    brandOptions.value = brandOptions.value.filter((b) => b.label.toLowerCase().includes(needle))
   })
 }
 
@@ -335,14 +329,10 @@ watch(
       modelOptions.value = []
       return
     }
-    if (!MOCK_CONFIG.useBackend) {
-      modelOptions.value = []
-      return
-    }
     try {
-      const map = (MOCK_BRANDS as unknown as { __ids__?: Record<string, number> }).__ids__
-      const brandId = map?.[newBrand]
-      if (!brandId) return
+      const entry = brandOptions.value.find((b) => b.value === newBrand)
+      const brandId = entry?.brandId
+      if (!brandId) { modelOptions.value = []; return }
       const models = await catalogApi.listModels(brandId)
       modelOptions.value = models.map((m) => ({ label: m.name, value: m.name }))
     } catch {
@@ -378,8 +368,14 @@ function applyFilters() {
   emit('update:modelValue', { ...filters })
 }
 
-onMounted(() => {
+onMounted(async () => {
   expanded.value = !$q.screen.lt.md
+  try {
+    const brands = await catalogApi.listBrands('CAR')
+    brandOptions.value = brands.map((b) => ({ label: b.name, value: b.name, brandId: b.id }))
+  } catch {
+    brandOptions.value = []
+  }
 })
 </script>
 

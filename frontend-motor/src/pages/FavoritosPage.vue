@@ -37,21 +37,16 @@ import { onMounted } from 'vue'
 import { useQuasar } from 'quasar'
 import { useAuthStore } from 'src/stores/authStore'
 import { useFavorites } from 'src/composables/useFavorites'
-import { MOCK_CONFIG } from 'src/services/api'
 import LoadingSpinner from 'components/layout/LoadingSpinner.vue'
 import FavoriteVehicleCard from 'components/vehicle/FavoriteVehicleCard.vue'
 
 const $q = useQuasar()
 const auth = useAuthStore()
-const { favorites, loading, loadFavorites, loadIds, toggle } = useFavorites()
+const { favorites, loading, loadFavorites, toggle } = useFavorites()
 
 onMounted(async () => {
   if (!auth.isAuthenticated.value) return
-  if (MOCK_CONFIG.useBackend) {
-    await loadFavorites()
-  } else {
-    await loadIds()
-  }
+  await loadFavorites()
 })
 
 async function onRemove(productId: string) {

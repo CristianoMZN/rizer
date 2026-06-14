@@ -82,13 +82,6 @@
           <router-link to="/registro" class="text-primary">Criar conta</router-link>
         </div>
 
-        <div v-if="!hasBackend" class="q-mt-md text-center text-caption text-grey-6">
-          Backend desabilitado. Defina
-          <code>VITE_API_URL</code> e ligue
-          <code>MOCK_CONFIG.useBackend = true</code>
-          em
-          <code>src/services/api.ts</code>.
-        </div>
       </q-card-section>
 
       <q-card-actions class="justify-center q-pb-lg q-pt-none">
@@ -101,11 +94,10 @@
 </template>
 
 <script setup lang="ts">
-import { reactive, ref, computed } from 'vue'
+import { reactive, ref } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { useQuasar } from 'quasar'
 import { useAuthStore } from 'src/stores/authStore'
-import { MOCK_CONFIG } from 'src/services/api'
 
 const $q = useQuasar()
 const router = useRouter()
@@ -117,13 +109,8 @@ const showPass = ref(false)
 const loading = ref(false)
 const loadingGoogle = ref(false)
 const loadingFacebook = ref(false)
-const hasBackend = computed(() => MOCK_CONFIG.useBackend)
 
 async function onSubmit() {
-  if (!hasBackend.value) {
-    $q.notify({ message: 'Backend desabilitado.', color: 'warning' })
-    return
-  }
   loading.value = true
   try {
     await auth.login(form.email, form.password)
@@ -145,10 +132,6 @@ async function onSubmit() {
 }
 
 async function onGoogle() {
-  if (!hasBackend.value) {
-    $q.notify({ message: 'Backend desabilitado.', color: 'warning' })
-    return
-  }
   loadingGoogle.value = true
   try {
     await auth.loginWithGoogle()
@@ -158,10 +141,6 @@ async function onGoogle() {
 }
 
 async function onFacebook() {
-  if (!hasBackend.value) {
-    $q.notify({ message: 'Backend desabilitado.', color: 'warning' })
-    return
-  }
   loadingFacebook.value = true
   try {
     await auth.loginWithFacebook()

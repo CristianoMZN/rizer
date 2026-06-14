@@ -263,8 +263,7 @@ cp .env.example .env       # preencher
   - `useConsent.ts` — LGPD banner state (cookie `motorise_consent`)
   - `useLoading.ts` — loading overlay state (singleton)
 - `src/services/`
-  - `api.ts` — cliente HTTP real (`adminApi`, `tenantApi`, `tenantProductApi`, `billingApi`, `integrationApi`, `partnerApi`, `lgpdApi`, `settingsApi`, `catalogApi`)
-  - `apiMock.ts` — mocks legados para `MOCK_CONFIG.useBackend=false` (mantido por compat)
+  - `api.ts` — cliente HTTP real (`adminApi`, `tenantApi`, `tenantProductApi`, `billingApi`, `integrationApi`, `partnerApi`, `lgpdApi`, `settingsApi`, `catalogApi`, `leadApi`)
 - `src/data/`
   - `tenants.ts` — registro estático (em migração para API)
   - `types.ts` — Vehicle, Store, User, Lead, Notification, FinancingOption, etc.
@@ -316,8 +315,9 @@ npx vue-tsc --noEmit        # typecheck (0 erros)
 - 5 filtros HTTP (JWT, Country, Tenant, CorrelationId, RateLimit)
 - 5 DTOs principais + 8 services de DTO
 - 23 testes JUnit passando
-- ~40 pages no frontend, 4 layouts, 1 store (authStore), 3 composables, 2 services
+- ~40 pages no frontend, 4 layouts, 1 store (authStore), 3 composables, 1 service (api.ts)
 - Typecheck + lint limpos em ambos os projetos
+- **Mocks removidos** — frontend depende exclusivamente da API real
 
 ## Próximos passos (fora do MVP)
 
@@ -331,12 +331,10 @@ Itens intencionalmente fora do escopo macro. Marcados como `TODO(fase-*-prod)` n
 6. **Meta App Review** — submeter scopes (`instagram_basic`, `instagram_content_publish`, `business_management`, `catalog_management`) para aprovação antes de produção.
 7. **Tests E2E** — Testcontainers + WebMvcTest no backend; Vitest no frontend.
 8. **CI/CD pipeline** — GitHub Actions ou GitLab CI com build, test, push, deploy.
-9. **LeadCapture (V18)** — tabela `leads` com captura de leads via formulário público.
-10. **Export CSV de payments** — endpoint `/admin/billing/payments/export.csv`.
-11. **Notifications WebSocket** — Spring WebSocket está no pom mas não usado.
-12. **Frontend i18n real** — adicionar en-US, es-AR, etc.
-13. **Melhorias no marketplace search** — busca full-text + filtros avançados (ano, km, preço).
-14. **Mobile app (React Native ou Flutter)** — para anunciantes gerenciarem anúncios em campo.
+9. **Notifications WebSocket** — Spring WebSocket está no pom mas não usado.
+10. **Frontend i18n real** — adicionar en-US, es-AR, etc.
+11. **Melhorias no marketplace search** — busca full-text + filtros avançados (ano, km, preço).
+12. **Mobile app (React Native ou Flutter)** — para anunciantes gerenciarem anúncios em campo.
 
 ## Docker & Deploy
 

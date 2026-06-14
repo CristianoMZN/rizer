@@ -88,8 +88,6 @@
 import { ref, computed, watch, onMounted } from 'vue'
 import { useRoute } from 'vue-router'
 import { partnerApi, type PublicTenantView, type PublicProductView } from 'src/services/api'
-import { MOCK_CONFIG } from 'src/services/api'
-import { MOCK_STORES, MOCK_VEHICLES } from 'src/data/mock'
 
 const route = useRoute()
 const slug = computed(() => route.params.slug as string)
@@ -150,48 +148,6 @@ function coverOf(p: PublicProductView): string | undefined {
 async function load() {
   loading.value = true
   error.value = null
-  if (!MOCK_CONFIG.useBackend) {
-    const store = MOCK_STORES.find((s) => s.slug === slug.value)
-    if (!store) { error.value = 'Parceiro não encontrado'; loading.value = false; return }
-    const mockTenant: PublicTenantView = {
-      id: store.id, slug: store.slug, tradeName: store.name,
-      ...(store.description ? { description: store.description } : {}),
-      ...(store.logo ? { logoUrl: store.logo } : {}),
-      ...(store.banner ? { bannerUrl: store.banner } : {}),
-      ...(store.phone ? { phone: store.phone, whatsapp: store.phone } : {}),
-      ...(store.email ? { email: store.email } : {}),
-      ...(store.website ? { website: store.website } : {}),
-      theme: { primary: '#667eea', secondary: '#11998e', accent: '#764ba2' },
-      stores: [{
-        id: store.id, name: store.name, slug: store.slug,
-        ...(store.phone ? { phone: store.phone } : {}),
-        city: store.address.city, state: store.address.state,
-        isMain: true,
-        isBranch: false,
-        gallery: [],
-      }],
-      activeProductsCount: MOCK_VEHICLES.filter((v) => v.store.id === store.id).length,
-      realms: [],
-      gallery: [],
-    }
-    tenant.value = mockTenant
-    products.value = MOCK_VEHICLES
-      .filter((v) => v.store.id === store.id)
-      .map((v): PublicProductView => ({
-        id: v.id,
-        ...(v.title ? { title: v.title } : {}),
-        price: v.price, currency: 'BRL',
-        realm: v.type === 'Moto' ? 'MOTORCYCLE' : 'CAR',
-        yearModel: v.year, mileageKm: v.mileage, fuel: v.fuel, transmission: v.transmission,
-        brandName: v.brand, modelName: v.model, categoryName: v.subtype ?? v.type,
-        physicalStoreId: store.id, physicalStoreName: store.name,
-        physicalStoreCity: store.address.city, physicalStoreState: store.address.state,
-        attributes: {},
-        images: v.images.map((url, i) => ({ id: String(i), url, isCover: i === 0 })),
-      }))
-    loading.value = false
-    return
-  }
   try {
     const t = await partnerApi.getPartner(slug.value, 'BR')
     tenant.value = t

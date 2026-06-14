@@ -1,18 +1,9 @@
 // ─── API Real (Axios) ─────────────────────────────────────────────────────────
-// Clientes tipados para os endpoints do backend. Quando o backend não
-// está acessível, o caller trata o erro. Mantemos isto isolado dos
-// mocks de `api` (legado), para que a UI possa alternar via MOCK_CONFIG.
 
 import axios, { type AxiosInstance } from 'axios'
 
-export const MOCK_CONFIG = {
-  useBackend: true,
-  apiBase: import.meta.env.VITE_API_URL || '/api',
-  delay: 300,
-}
-
 const http: AxiosInstance = axios.create({
-  baseURL: MOCK_CONFIG.apiBase,
+  baseURL: import.meta.env.VITE_API_URL || '/api',
   withCredentials: true,
 })
 
@@ -1188,6 +1179,48 @@ export const meApi = {
   },
   async removeFavorite(productId: string): Promise<void> {
     await http.delete(`/me/favorites/${productId}`)
+  },
+}
+
+// ─── Leads ──────────────────────────────────────────────────────────────────
+
+export type LeadStatus = 'NEW' | 'CONTACTED' | 'NEGOTIATING' | 'CLOSED_WON' | 'CLOSED_LOST'
+
+export interface LeadView {
+  id: string
+  tenantId: string
+  productId?: string
+  physicalStoreId?: string
+  buyerName: string
+  buyerEmail?: string
+  buyerPhone: string
+  message?: string
+  status: LeadStatus
+  createdAt: string
+  updatedAt: string
+}
+
+export interface CreateLeadRequest {
+  productId?: string
+  storeId?: string
+  buyerName: string
+  buyerEmail?: string
+  buyerPhone: string
+  message?: string
+}
+
+export const leadApi = {
+  async create(req: CreateLeadRequest): Promise<LeadView> {
+    const res = await http.post<LeadView>('/BR/public/leads', req)
+    return res.data
+  },
+  async list(): Promise<LeadView[]> {
+    const res = await http.get<LeadView[]>('/tenant/leads')
+    return res.data
+  },
+  async updateStatus(id: string, status: LeadStatus): Promise<LeadView> {
+    const res = await http.patch<LeadView>(`/tenant/leads/${id}/status`, { status })
+    return res.data
   },
 }
 

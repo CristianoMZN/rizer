@@ -149,7 +149,12 @@ Roda em `http://localhost:8080`. As 17 migrations do Flyway aplicam automaticame
 | V14 | `tenant_integrations` (tokens encriptados para Instagram/META/Google) |
 | V15 | `custom_domain_checks` (log de auditoria das verificações CNAME) |
 | V16 | `consents` (LGPD) + `data_export_requests` (JSON + S3 presigned 7d) |
-| V17 | `audit_log` (ação, recurso, severidade, payload, correlationId) |
+| V17 | `audit_log` (ação, recurso, severidade, payload, correlation_id) |
+| V18 | `leads` (captura de leads via formulário público) |
+| V19 | `lead_sources` (origem do lead: site, instagram, facebook) |
+| V20 | `catalog_visibility` (controle de visibilidade de produtos por tenant) |
+| V21 | `product_bookmarks` (favoritos do usuário) |
+| V22 | `partner_widgets` (widgets customizáveis para parceiros) |
 
 ### 3.6 Layout de pacotes (17 packages)
 ```
@@ -196,6 +201,9 @@ br.com.rizermarketplaces.core.marketplace
 - Composables manuais (sem Pinia nesta fase)
 
 ### 4.2 Subir
+> **Requisito:** o backend deve estar rodando em `http://localhost:8080` (ver §3.2).  
+> O frontend **não possui mais mocks** — todas as páginas consomem a API real.
+
 ```bash
 cd frontend-motor
 pnpm install           # ou: npm install
@@ -214,8 +222,7 @@ npm run format         # Prettier write
 - `src/boot/` — `i18n, axios, auth, animate, appReady, tenant` (axios injeta `X-Tenant-Slug` e faz retry 1x em 401)
 - `src/stores/authStore.ts` — `useAuthStore` (singleton reativo: user, memberships, currentTenantId, login/logout/refresh)
 - `src/composables/` — `useTenant` (multi-tenant), `useConsent` (LGPD), `useLoading` (overlay)
-- `src/services/api.ts` — cliente HTTP real (`adminApi`, `tenantApi`, `billingApi`, `integrationApi`, `partnerApi`, `lgpdApi`, `settingsApi`, `catalogApi`, `tenantProductApi`)
-- `src/services/apiMock.ts` — mocks legados para `MOCK_CONFIG.useBackend=false`
+- `src/services/api.ts` — cliente HTTP real (`adminApi`, `tenantApi`, `billingApi`, `integrationApi`, `partnerApi`, `lgpdApi`, `settingsApi`, `catalogApi`, `tenantProductApi`, `leadApi`)
 - `src/data/` — `tenants.ts` (registro estático), `types.ts` (Vehicle, Store, User, Lead, etc.), `legalVersions.ts`
 
 ### 4.5 Páginas (~40)
@@ -344,10 +351,10 @@ Atualmente o `GoogleShoppingFeedService` gera feed XML estático. Para usar Cont
 
 | Variável | Obrigatório | Default | Descrição |
 |----------|-------------|---------|-----------|
-| `VITE_API_URL` | em dev com backend | `/api` | URL base da API. Em dev local: `http://localhost:8080` |
+| `VITE_API_URL` | **sim** | `/api` | URL base da API. Em dev local: `http://localhost:8080` |
 | `VITE_BASE_DOMAIN` | não | `motorise.com.br` | Domínio base para multi-tenant por subdomínio |
 
-Para ligar o backend real, defina `MOCK_CONFIG.useBackend = true` em `src/services/api.ts` e configure `VITE_API_URL`.
+> ⚠️ O frontend **não possui mais mocks**. O backend deve estar rodando e o `VITE_API_URL` deve apontar para ele (ex: `http://localhost:8080`).
 
 ---
 
@@ -551,7 +558,7 @@ Para ativar em produção:
 | 401 no login do frontend | CORS bloqueando o cookie cross-origin | Verificar `SecurityConfig.corsConfigurationSource` — `http://localhost:9000` deve estar em `allowedOriginPatterns` | `backend/src/main/java/.../config/SecurityConfig.java` |
 | `Tenants.custom_domain_status` fica em `FAILED` | CNAME não aponta para `slug.motorise.com.br`, ou DNS ainda não propagou | Conferir com `dig CNAME meucliente.com.br` no host. Aguardar TTL. | `/app/configuracoes` aba Domínio |
 | Posts no Instagram falham com "Invalid OAuth access token" | Token expirado ou revogado | Desconectar e reconectar via `/app/integracoes`. Verificar `APP_META_APP_ID/SECRET`. | `InstagramService.completeOAuth` |
-| Frontend em branco após login | `MOCK_CONFIG.useBackend=false` no `src/services/api.ts` | Setar `useBackend = true` e `VITE_API_URL` no `.env` | `frontend-motor/src/services/api.ts` |
+| Frontend em branco ou 401 | Backend não está rodando ou `VITE_API_URL` aponta para lugar errado | Subir backend (`./mvnw spring-boot:run`) e verificar `VITE_API_URL` | `frontend-motor/.env`, logs do backend |
 | `ddl-auto: validate` falhou — schema não bate | Entidade JPA diverge de migration | Verificar se migration existe; se sim, ajustar entidade; nunca `ddl-auto: update` em prod | Hibernate logs |
 | `429 Too Many Requests` em testes locais | Rate limit bateu (5/min em auth) | Esperar 60s ou desabilitar temporariamente via env `APP_RATELIMIT_*_CAPACITY=999999` | `RateLimitFilter` |
 

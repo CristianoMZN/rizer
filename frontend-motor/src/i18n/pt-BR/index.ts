@@ -10,7 +10,7 @@ export default {
     invalid: 'E-mail ou senha inválidos.',
     inactive: 'Conta inativa. Fale com o administrador.',
     error: 'Não foi possível entrar. Tente novamente.',
-    backendOff: 'Backend desabilitado. Configure VITE_API_URL e MOCK_CONFIG.useBackend=true.',
+
   },
   consent: {
     title: 'Sua privacidade',

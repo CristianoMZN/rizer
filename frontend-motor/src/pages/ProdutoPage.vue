@@ -202,9 +202,7 @@ import { useRoute } from 'vue-router'
 import { useQuasar } from 'quasar'
 import { useFavorites } from 'src/composables/useFavorites'
 import { useAuthStore } from 'src/stores/authStore'
-import { partnerApi, catalogApi, MOCK_CONFIG, type PublicProductView, type PublicProductImageView } from 'src/services/api'
-import { api as mockApi } from 'src/services/apiMock'
-import type { Vehicle } from 'src/data/types'
+import { partnerApi, catalogApi, leadApi, type PublicProductView, type PublicProductImageView } from 'src/services/api'
 import LoadingSpinner from 'components/layout/LoadingSpinner.vue'
 import AttributeRow from 'components/vehicle/AttributeRow.vue'
 import SimilarVehicleCard from 'components/vehicle/SimilarVehicleCard.vue'
@@ -289,77 +287,29 @@ watch(() => route.params.id, () => load())
 async function load() {
   loading.value = true
   const id = route.params.id as string
-  if (MOCK_CONFIG.useBackend) {
-    try {
-      // Tenta buscar pelos produtos do parceiro que também listam tudo
-      const partners = await partnerApi.listPartners('BR').catch(() => [])
-      let found: PublicProductView | null = null
-      for (const p of partners) {
-        const prods = await partnerApi.listProducts(p.slug, 'BR', 100).catch(() => [])
-        const match = prods.find((x) => x.id === id)
-        if (match) { found = match; break }
-      }
-      if (!found) {
-        // fallback: search via catalog sem filtro
-        const prods = await catalogApi.searchProducts({ limit: 200 })
-        found = prods.find((x) => x.id === id) ?? null
-      }
-      vehicle.value = found
-      if (found?.categoryName && found.categoryId) {
-        const more = await catalogApi.searchProducts({ categoryId: found.categoryId, limit: 8 }).catch(() => [])
-        similar.value = more.filter((x) => x.id !== found.id).slice(0, 4)
-      }
-    } catch {
-      vehicle.value = null
+  try {
+    const partners = await partnerApi.listPartners('BR').catch(() => [])
+    let found: PublicProductView | null = null
+    for (const p of partners) {
+      const prods = await partnerApi.listProducts(p.slug, 'BR', 100).catch(() => [])
+      const match = prods.find((x) => x.id === id)
+      if (match) { found = match; break }
     }
-  } else {
-    const v = await mockApi.getVehicleById(id)
-    if (v) {
-      vehicle.value = toPublic(v)
+    if (!found) {
+      const prods = await catalogApi.searchProducts({ limit: 200 })
+      found = prods.find((x) => x.id === id) ?? null
     }
-    similar.value = []
+    vehicle.value = found
+    if (found?.categoryName && found.categoryId) {
+      const more = await catalogApi.searchProducts({ categoryId: found.categoryId, limit: 8 }).catch(() => [])
+      similar.value = more.filter((x) => x.id !== found.id).slice(0, 4)
+    }
+  } catch {
+    vehicle.value = null
   }
   loading.value = false
   if (vehicle.value) {
     if (auth.isAuthenticated.value) await favs.loadIds()
-  }
-}
-
-function toPublic(v: Vehicle): PublicProductView {
-  const realmRaw = v.type?.toUpperCase?.()
-  const realm = (['CAR', 'MOTORCYCLE', 'TRUCK', 'NAUTICAL', 'BUS'] as const).find((r) => r === realmRaw) ?? 'CAR'
-  return {
-    id: v.id,
-    title: v.title,
-    ...(v.description ? { description: v.description } : {}),
-    price: v.price,
-    currency: 'BRL',
-    realm,
-    yearModel: v.year,
-    yearBuild: v.year,
-    mileageKm: v.mileage,
-    ...(v.fuel ? { fuel: v.fuel } : {}),
-    ...(v.transmission ? { transmission: v.transmission } : {}),
-    ...(v.brand ? { brandName: v.brand } : {}),
-    ...(v.model ? { modelName: v.model } : {}),
-    ...(v.subtype ? { categoryName: v.subtype } : {}),
-    ...(v.store?.id ? { physicalStoreId: v.store.id } : {}),
-    ...(v.store?.name ? { physicalStoreName: v.store.name } : {}),
-    ...(v.store?.address?.city ? { physicalStoreCity: v.store.address.city } : {}),
-    ...(v.store?.address?.state ? { physicalStoreState: v.store.address.state } : {}),
-    attributes: {
-      color: v.color,
-      doors: v.doors,
-      engine: v.engine,
-      abs_brakes: (v.features ?? []).includes('ABS'),
-      previous_owners: 0,
-    },
-    images: (v.images ?? []).map((url: string, i: number) => ({
-      id: `${v.id}-${i}`,
-      url,
-      isCover: i === 0,
-    })),
-    createdAt: v.createdAt,
   }
 }
 
@@ -369,7 +319,7 @@ function formatPrice(val: number) {
 
 const whatsappLink = computed(() => {
   if (!vehicle.value) return '#'
-  const phone = (vehicle.value.physicalStoreName ?? '').replace(/\D/g, '')
+  const phone = (vehicle.value.tenantWhatsapp ?? vehicle.value.sellerWhatsapp ?? vehicle.value.physicalStoreName ?? '').replace(/\D/g, '')
   const text = encodeURIComponent(`Olá! Tenho interesse no ${vehicle.value.title || 'veículo'} anunciado no Motorise.`)
   return `https://wa.me/55${phone}?text=${text}`
 })
@@ -397,8 +347,8 @@ async function sendLead() {
   }
   sendingLead.value = true
   try {
-    await mockApi.createLead({
-      vehicleId: vehicle.value.id,
+    await leadApi.create({
+      productId: vehicle.value.id,
       buyerName: lead.value.name,
       buyerEmail: lead.value.email,
       buyerPhone: lead.value.phone,

@@ -1,6 +1,5 @@
 import { ref, readonly } from 'vue'
 import { TERMS_VERSION, PRIVACY_VERSION, COOKIES_VERSION } from 'src/data/legalVersions'
-import { MOCK_CONFIG } from 'src/services/api'
 import { lgpdApi, type ConsentPurpose } from 'src/services/api'
 
 // ─── Estado singleton ───────────────────────────────────────────────────────
@@ -131,7 +130,6 @@ export function useConsent() {
   }
 
   async function recordToServer(stored: Record<string, { v: boolean; version: string }>) {
-    if (!MOCK_CONFIG.useBackend) return
     try {
       // Para usuários logados, podemos enviar para /me/consents.
       // Visitantes anônimos não persistem (LGPD art. 7° — consentimento inequívoco).

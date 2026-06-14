@@ -136,7 +136,6 @@
 <script setup lang="ts">
 import { ref, watch } from 'vue'
 import { QInput } from 'quasar'
-import { MOCK_VEHICLES } from 'src/data/mock'
 import type { VehicleFilters } from 'src/data/types'
 
 interface Props {
@@ -165,10 +164,10 @@ const showSuggestions = ref(false)
 const suggestions = ref<string[]>([])
 const quickFilters = ref<QuickFilters>({})
 
-const typeOptions = Array.from(new Set(MOCK_VEHICLES.map((v) => v.type)))
-const brandOptions = Array.from(new Set(MOCK_VEHICLES.map((v) => v.brand))).sort((a, b) => a.localeCompare(b))
-const fuelOptions = Array.from(new Set(MOCK_VEHICLES.map((v) => v.fuel)))
-const maxPrice = Math.max(...MOCK_VEHICLES.map((v) => v.price))
+const typeOptions = ['Carro', 'Moto', 'Caminhão', 'Van/Furgão', 'Ônibus']
+const brandOptions: string[] = []
+const fuelOptions = ['Flex', 'Gasolina', 'Álcool', 'Diesel', 'GNV', 'Elétrico', 'Híbrido']
+const maxPrice = 500000
 
 watch(query, (val) => emit('update:modelValue', val))
 
@@ -179,15 +178,8 @@ function onInput(val: string | number | null) {
     showSuggestions.value = false
     return
   }
-  const q = str.toLowerCase()
-  const matches = new Set<string>()
-  MOCK_VEHICLES.forEach((v) => {
-    if (v.brand.toLowerCase().includes(q)) matches.add(v.brand)
-    if (v.model.toLowerCase().includes(q)) matches.add(`${v.brand} ${v.model}`)
-    if (v.title.toLowerCase().includes(q)) matches.add(v.title)
-  })
-  suggestions.value = [...matches].slice(0, 6)
-  showSuggestions.value = suggestions.value.length > 0
+  suggestions.value = []
+  showSuggestions.value = false
 }
 
 function handleSearch() {

@@ -58,9 +58,8 @@
 <script setup lang="ts">
 import { ref, onMounted, watch } from 'vue'
 import { useRoute } from 'vue-router'
-import type { Vehicle, VehicleFilters, VehicleType } from 'src/data/types'
-import { catalogApi, MOCK_CONFIG, type PublicProductView } from 'src/services/api'
-import { api as mockApi } from 'src/services/apiMock'
+import type { VehicleFilters, VehicleType } from 'src/data/types'
+import { catalogApi, type PublicProductView } from 'src/services/api'
 import FilterPanel from 'components/form/FilterPanel.vue'
 import LoadingSpinner from 'components/layout/LoadingSpinner.vue'
 import PublicProductCard from 'components/vehicle/PublicProductCard.vue'
@@ -98,19 +97,13 @@ watch(() => route.query, () => {
 
 async function loadVehicles() {
   loading.value = true
-  if (MOCK_CONFIG.useBackend) {
-    try {
-      const params = buildBackendParams(filters.value)
-      const result = await catalogApi.searchProducts({ ...params, limit: 60 })
-      vehicles.value = result
-      hasMore.value = result.length >= 60
-    } catch {
-      vehicles.value = []
-      hasMore.value = false
-    }
-  } else {
-    const mockList = await mockApi.getVehicles(filters.value)
-    vehicles.value = mockList.map(toPublic)
+  try {
+    const params = buildBackendParams(filters.value)
+    const result = await catalogApi.searchProducts({ ...params, limit: 60 })
+    vehicles.value = result
+    hasMore.value = result.length >= 60
+  } catch {
+    vehicles.value = []
     hasMore.value = false
   }
   loading.value = false
@@ -147,36 +140,6 @@ function toRealm(t: VehicleType): 'CAR' | 'MOTORCYCLE' | 'TRUCK' | 'NAUTICAL' | 
   }
 }
 
-function toPublic(v: Vehicle): PublicProductView {
-  return {
-    id: v.id,
-    title: v.title,
-    ...(v.description ? { description: v.description } : {}),
-    price: v.price,
-    currency: 'BRL',
-    realm: toRealm(v.type),
-    yearModel: v.year,
-    yearBuild: v.year,
-    ...(v.mileage !== undefined ? { mileageKm: v.mileage } : {}),
-    ...(v.fuel ? { fuel: v.fuel } : {}),
-    ...(v.transmission ? { transmission: v.transmission } : {}),
-    ...(v.brand ? { brandName: v.brand } : {}),
-    ...(v.model ? { modelName: v.model } : {}),
-    ...(v.subtype ? { categoryName: v.subtype } : {}),
-    ...(v.store?.id ? { physicalStoreId: v.store.id } : {}),
-    ...(v.store?.name ? { physicalStoreName: v.store.name } : {}),
-    ...(v.store?.address?.city ? { physicalStoreCity: v.store.address.city } : {}),
-    ...(v.store?.address?.state ? { physicalStoreState: v.store.address.state } : {}),
-    attributes: {},
-    images: (v.images ?? []).map((url: string, i: number) => ({
-      id: `${v.id}-${i}`,
-      url,
-      isCover: i === 0,
-    })),
-    createdAt: v.createdAt,
-  }
-}
-
 function onFiltersChange(f: VehicleFilters) {
   filters.value = f
   void loadVehicles()
@@ -189,16 +152,12 @@ function clearFilters() {
 
 async function loadMore() {
   loadingMore.value = true
-  if (MOCK_CONFIG.useBackend) {
-    const params = buildBackendParams(filters.value)
-    const more = await catalogApi.searchProducts({ ...params, limit: 60, offset: vehicles.value.length }).catch(() => [])
-    if (more.length === 0) {
-      hasMore.value = false
-    } else {
-      vehicles.value = [...vehicles.value, ...more]
-    }
-  } else {
+  const params = buildBackendParams(filters.value)
+  const more = await catalogApi.searchProducts({ ...params, limit: 60, offset: vehicles.value.length }).catch(() => [])
+  if (more.length === 0) {
     hasMore.value = false
+  } else {
+    vehicles.value = [...vehicles.value, ...more]
   }
   loadingMore.value = false
 }

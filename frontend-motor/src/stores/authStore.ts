@@ -1,6 +1,5 @@
 import { ref, computed } from 'vue'
 import axios, { type AxiosInstance } from 'axios'
-import { MOCK_CONFIG } from 'src/services/api'
 
 // ─── Tipos públicos ────────────────────────────────────────────────────────────
 
@@ -56,7 +55,7 @@ function readCookie(name: string): string | null {
 // Instância axios dedicada para chamadas de auth (sempre com credentials).
 // Não depende do boot/axios para evitar ciclo de imports.
 const http: AxiosInstance = axios.create({
-  baseURL: MOCK_CONFIG.apiBase,
+  baseURL: import.meta.env.VITE_API_URL || '/api',
   withCredentials: true,
 })
 
@@ -82,30 +81,21 @@ export function useAuthStore() {
   })
 
   async function login(email: string, password: string): Promise<AuthUser> {
-    if (!MOCK_CONFIG.useBackend) {
-      throw new Error('Backend desabilitado (MOCK_CONFIG.useBackend = false)')
-    }
     const res = await http.post<LoginResult>('/auth/login', { email, password })
     applyLogin(res.data)
     return res.data.user
   }
 
   async function loginWithGoogle(): Promise<void> {
-    if (!MOCK_CONFIG.useBackend) {
-      throw new Error('Backend desabilitado (MOCK_CONFIG.useBackend = false)')
-    }
     if (typeof window === 'undefined') {
       await Promise.resolve()
       return
     }
-    window.location.href = `${MOCK_CONFIG.apiBase}/oauth2/authorization/google`
+    window.location.href = `${import.meta.env.VITE_API_URL || '/api'}/oauth2/authorization/google`
     await Promise.resolve()
   }
 
   async function loginWithFacebook(): Promise<void> {
-    if (!MOCK_CONFIG.useBackend) {
-      throw new Error('Backend desabilitado (MOCK_CONFIG.useBackend = false)')
-    }
     if (typeof window === 'undefined') {
       throw new Error('Indisponível no servidor')
     }
@@ -145,19 +135,12 @@ export function useAuthStore() {
     termsVersion: string
     privacyVersion: string
   }): Promise<AuthUser> {
-    if (!MOCK_CONFIG.useBackend) {
-      throw new Error('Backend desabilitado (MOCK_CONFIG.useBackend = false)')
-    }
     const res = await http.post<LoginResult>('/auth/register', payload)
     applyLogin(res.data)
     return res.data.user
   }
 
   async function refreshMe(): Promise<AuthUser | null> {
-    if (!MOCK_CONFIG.useBackend) {
-      initialized.value = true
-      return null
-    }
     try {
       const res = await http.get<AuthUser>('/auth/me')
       user.value = res.data
@@ -171,15 +154,12 @@ export function useAuthStore() {
   }
 
   async function logout(): Promise<void> {
-    if (MOCK_CONFIG.useBackend) {
-      try { await http.post('/auth/logout') } catch { /* ignore */ }
-    }
+    try { await http.post('/auth/logout') } catch { /* ignore */ }
     user.value = null
     accessToken.value = null
   }
 
   async function switchTenant(tenantId: string): Promise<void> {
-    if (!MOCK_CONFIG.useBackend) return
     const res = await http.post<LoginResult>('/auth/switch-tenant', { tenantId })
     applyLogin(res.data)
   }

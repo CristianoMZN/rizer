@@ -98,8 +98,6 @@
 import { ref, computed, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
 import { partnerApi, type PublicPartnerView } from 'src/services/api'
-import { MOCK_CONFIG } from 'src/services/api'
-import { MOCK_STORES } from 'src/data/mock'
 
 const router = useRouter()
 
@@ -150,26 +148,6 @@ function open(p: PublicPartnerView) {
 async function load() {
   loading.value = true
   error.value = null
-  if (!MOCK_CONFIG.useBackend) {
-    // Mapeia as MOCK_STORES para formato de parceiro
-    partners.value = MOCK_STORES.map((s) => ({
-      id: s.id,
-      slug: s.slug,
-      tradeName: s.name,
-      description: s.description ?? '',
-      logoUrl: s.logo ?? '',
-      bannerUrl: s.banner ?? '',
-      website: s.website ?? '',
-      stores: [{
-        id: s.id, name: s.name, slug: s.slug,
-        city: s.address?.city ?? '', state: s.address?.state ?? '', isMain: true,
-      }],
-      activeProductsCount: 0,
-      realms: [],
-    }))
-    loading.value = false
-    return
-  }
   try {
     partners.value = await partnerApi.listPartners('BR')
   } catch (e: unknown) {
